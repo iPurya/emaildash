@@ -9,8 +9,17 @@ import (
 	"github.com/purya/emaildash/backend/internal/domain"
 )
 
-func RequireAuth(cookieName string, authService interface{ Authenticate(ctx context.Context, token string) (domain.Session, error) }) gin.HandlerFunc {
+func RequireAuth(cookieName string, authService interface {
+	Authenticate(ctx context.Context, token string) (domain.Session, error)
+	AuthenticateAPIKey(ctx context.Context, apiKey string) error
+}) gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if apiKey := c.Query("api_key"); apiKey != "" {
+			if err := authService.AuthenticateAPIKey(c.Request.Context(), apiKey); err == nil {
+				c.Next()
+				return
+			}
+		}
 		token, err := c.Cookie(cookieName)
 		if err != nil || token == "" {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "authentication required"})

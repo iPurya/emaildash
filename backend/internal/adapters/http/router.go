@@ -18,7 +18,10 @@ type Services struct {
 	Ingest     handlers.IngestHandler
 	Emails     handlers.EmailsHandler
 	Pages      handlers.PagesHandler
-	AuthSvc    interface{ Authenticate(ctx context.Context, token string) (domain.Session, error) }
+	AuthSvc    interface {
+		Authenticate(ctx context.Context, token string) (domain.Session, error)
+		AuthenticateAPIKey(ctx context.Context, apiKey string) error
+	}
 }
 
 func NewRouter(cfg config.Config, services Services) *gin.Engine {

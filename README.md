@@ -87,28 +87,39 @@ data/      SQLite DB, secrets, attachments at runtime
 
 ### Example API usage
 
-List all emails:
+List all emails with session cookie:
 
 ```bash
 curl -b cookies.txt http://localhost:8080/api/emails
 ```
 
+List all emails with API key:
+
+```bash
+curl "http://localhost:8080/api/emails?api_key=YOUR_API_KEY"
+```
+
+API key behavior:
+- password changes rotate the API key automatically
+- the new key is shown once on the dashboard password tab after a successful password change
+- protected REST API endpoints accept either a valid session cookie or `api_key` query parameter
+
 Filter by sender:
 
 ```bash
-curl -b cookies.txt "http://localhost:8080/api/emails?from_mail=alice@example.com"
+curl "http://localhost:8080/api/emails?api_key=YOUR_API_KEY&from_mail=alice@example.com"
 ```
 
 Filter by recipient:
 
 ```bash
-curl -b cookies.txt "http://localhost:8080/api/emails?to_mail=team@example.com"
+curl "http://localhost:8080/api/emails?api_key=YOUR_API_KEY&to_mail=team@example.com"
 ```
 
 Filter by sender and recipient:
 
 ```bash
-curl -b cookies.txt "http://localhost:8080/api/emails?from_mail=alice@example.com&to_mail=team@example.com"
+curl "http://localhost:8080/api/emails?api_key=YOUR_API_KEY&from_mail=alice@example.com&to_mail=team@example.com"
 ```
 
 ## Local setup

@@ -15,6 +15,7 @@ type DashboardData struct {
 	ActiveTab       string
 	Error           string
 	Notice          string
+	APIKey          string
 	ActiveRecipient string
 	SelectedEmailID int64
 	Recipients      []domain.RecipientSummary

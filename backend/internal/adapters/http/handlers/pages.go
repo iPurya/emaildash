@@ -72,6 +72,10 @@ func (h PagesHandler) SetupSubmit(c *gin.Context) {
 		h.redirect(c, "/setup", url.Values{"error": {err.Error()}})
 		return
 	}
+	if _, err := h.auth.EnsureAPIKey(c.Request.Context()); err != nil {
+		h.redirect(c, "/setup", url.Values{"error": {err.Error()}})
+		return
+	}
 	token, session, err := h.auth.Login(c.Request.Context(), password)
 	if err != nil {
 		h.redirect(c, "/setup", url.Values{"error": {err.Error()}})
@@ -156,11 +160,12 @@ func (h PagesHandler) ViewerFragment(c *gin.Context) {
 func (h PagesHandler) PasswordSubmit(c *gin.Context) {
 	oldPassword := c.PostForm("oldPassword")
 	newPassword := c.PostForm("newPassword")
-	if err := h.auth.ChangePassword(c.Request.Context(), oldPassword, newPassword); err != nil {
+	apiKey, err := h.auth.ChangePassword(c.Request.Context(), oldPassword, newPassword)
+	if err != nil {
 		h.redirectDashboard(c, "password", "", 0, url.Values{"error": {err.Error()}})
 		return
 	}
-	h.redirectDashboard(c, "password", "", 0, url.Values{"updated": {"1"}})
+		h.redirectDashboard(c, "password", "", 0, url.Values{"updated": {"1"}, "api_key": {apiKey}})
 }
 
 func (h PagesHandler) CloudflareCredentialsSubmit(c *gin.Context) {
@@ -194,6 +199,7 @@ func (h PagesHandler) dashboardData(c *gin.Context) (ui.DashboardData, error) {
 		ActiveTab:       c.DefaultQuery("tab", "inbox"),
 		Error:           c.Query("error"),
 		Notice:          h.notice(c),
+		APIKey:          c.Query("api_key"),
 		ActiveRecipient: c.Query("recipient"),
 	}
 	selectedID, _ := strconv.ParseInt(c.Query("email"), 10, 64)
@@ -238,7 +244,7 @@ func (h PagesHandler) dashboardData(c *gin.Context) (ui.DashboardData, error) {
 func (h PagesHandler) notice(c *gin.Context) string {
 	switch {
 	case c.Query("updated") == "1":
-		return "Password updated."
+		return "Password updated and API key rotated."
 	case c.Query("saved") == "1":
 		return "Cloudflare credentials saved."
 	case c.Query("provisioned") == "1":

@@ -39,7 +39,7 @@ func main() {
 	cloudflareClient := cloudflareadapter.NewClient()
 
 	setupService := setupusecase.NewService(store, hasher)
-	authService := authusecase.NewService(store, hasher, time.Duration(cfg.SessionTTLHours)*time.Hour)
+	authService := authusecase.NewService(store, hasher, sealer, time.Duration(cfg.SessionTTLHours)*time.Hour)
 	cloudflareService := cloudflareusecase.NewService(store, cloudflareClient, sealer, cfg.WorkerScriptName, cfg.WorkerSubdomain, cfg.WorkerBundlePath, cfg.PublicBaseURL)
 	ingestService := ingestusecase.NewService(store, sealer, signer, cfg.AttachmentDir)
 	inboxService := inboxusecase.NewService(store)

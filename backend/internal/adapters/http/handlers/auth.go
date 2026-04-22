@@ -64,9 +64,10 @@ func (h AuthHandler) ChangePassword(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
 		return
 	}
-	if err := h.service.ChangePassword(c.Request.Context(), body.OldPassword, body.NewPassword); err != nil {
+	apiKey, err := h.service.ChangePassword(c.Request.Context(), body.OldPassword, body.NewPassword)
+	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	c.Status(http.StatusNoContent)
+	c.JSON(http.StatusOK, gin.H{"apiKey": apiKey})
 }
