@@ -1,0 +1,14 @@
+FROM golang:1.24 AS builder
+WORKDIR /app/backend
+COPY backend/go.mod ./
+COPY backend .
+RUN go mod download && go build -o /emaildash ./cmd/emaildash
+
+FROM debian:bookworm-slim
+WORKDIR /app
+COPY --from=builder /emaildash /usr/local/bin/emaildash
+COPY frontend/dist /app/frontend/dist
+COPY worker/dist /app/worker/dist
+ENV PORT=8080 EMAILDASH_FRONTEND_DIST=/app/frontend/dist EMAILDASH_WORKER_BUNDLE=/app/worker/dist/index.js EMAILDASH_DATA_DIR=/data
+EXPOSE 8080
+CMD ["emaildash"]
