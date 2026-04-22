@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { api, setCSRFToken, type Zone } from '../lib/api'
+import { api, type Zone } from '../lib/api'
 
-type Props = { onReady: (csrfToken: string) => void }
+type Props = { onReady: () => void }
 
 type Stage = {
   id: string
@@ -24,10 +24,8 @@ export function SetupWizard({ onReady }: Props) {
   const initMutation = useMutation({
     mutationFn: async () => {
       await api.initialize(password)
-      const auth = await api.login(password)
-      setCSRFToken(auth.csrfToken)
+      await api.login(password)
       setReadyForCloudflare(true)
-      return auth
     },
   })
 
@@ -40,7 +38,7 @@ export function SetupWizard({ onReady }: Props) {
     mutationFn: () => api.provisionZone(selectedZone),
     onSuccess: () => {
       setProvisionedZone(selectedZone)
-      onReady(initMutation.data?.csrfToken ?? '')
+      onReady()
     },
   })
 

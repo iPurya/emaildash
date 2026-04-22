@@ -1,17 +1,3 @@
-let csrfToken = ''
-
-export function setCSRFToken(next: string) {
-  csrfToken = next
-}
-
-export function clearCSRFToken() {
-  csrfToken = ''
-}
-
-export function getCSRFToken() {
-  return csrfToken
-}
-
 export type SetupStatus = { initialized: boolean }
 export type Zone = { id: string; name: string; accountId: string; selected: boolean; status: string }
 export type CloudflareStatus = {
@@ -54,9 +40,6 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   if (!headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json')
   }
-  if (csrfToken && !headers.has('X-CSRF-Token')) {
-    headers.set('X-CSRF-Token', csrfToken)
-  }
   const response = await fetch(path, {
     credentials: 'include',
     ...init,
@@ -64,9 +47,6 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   })
   if (!response.ok) {
     const data = await response.json().catch(() => ({ error: response.statusText }))
-    if (response.status === 401) {
-      clearCSRFToken()
-    }
     throw new Error(data.error ?? 'Request failed')
   }
   if (response.status === 204) {

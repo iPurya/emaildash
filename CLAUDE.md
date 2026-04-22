@@ -67,7 +67,6 @@ Backend follows light clean-architecture split:
   - splits public routes from authenticated routes
   - public: setup status/init, login/logout, ingest webhook
   - authenticated: auth/me, Cloudflare, inbox, settings
-  - CSRF middleware wraps authenticated write routes
   - also serves embedded static fallback from `internal/adapters/http/static/`
 
 - `internal/adapters/sqlite/db.go`
@@ -104,9 +103,7 @@ Frontend is Vite + React Router + TanStack Query.
 - calls setup-status query
 - calls auth/me query
 - decides between `SetupWizard`, `Login`, or authenticated shell
-- stores CSRF token in module-level API state via `setCSRFToken`
-
-Important consequence: authenticated write requests rely on frontend having called auth/me or login first so `frontend/src/lib/api.ts` can attach CSRF header automatically.
+- session auth is cookie-based; frontend only needs authenticated session cookie for protected requests
 
 Inbox UI is three-pane layout:
 - recipient groups

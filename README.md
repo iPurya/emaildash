@@ -55,7 +55,6 @@ PLAN.md    Original implementation plan
 ### Backend
 - single-user setup and password auth
 - session cookie auth
-- CSRF check on authenticated write endpoints
 - encrypted secret storage for Cloudflare credentials and webhook secret
 - SQLite schema and migration bootstrap
 - inbox list/detail/read endpoints
@@ -177,7 +176,6 @@ Backend reads these environment variables:
 | `EMAILDASH_MASTER_KEY_PATH` | `<data>/.masterkey` | AES key file for secrets |
 | `EMAILDASH_PUBLIC_BASE_URL` | `http://localhost:8080` | public backend URL used by Worker webhook |
 | `EMAILDASH_COOKIE_NAME` | `emaildash_session` | auth cookie name |
-| `EMAILDASH_CSRF_HEADER` | `X-CSRF-Token` | CSRF header name |
 | `EMAILDASH_WORKER_SCRIPT_NAME` | `emaildash-ingest` | deployed Worker script name |
 | `EMAILDASH_WORKER_SUBDOMAIN` | `emaildash-receiver` | Cloudflare Workers subdomain |
 | `EMAILDASH_FRONTEND_DIST` | `../frontend/dist` | built frontend path |
@@ -211,7 +209,7 @@ Recommended staging flow:
 - Cloudflare credentials encrypted at rest with local AES-GCM master key
 - Worker webhook signed with HMAC SHA-256
 - session token stored hashed in DB
-- authenticated write endpoints protected by CSRF token
+- authenticated write endpoints rely on session cookie auth
 
 ## Important files
 

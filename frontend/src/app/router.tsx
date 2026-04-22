@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { AppShell } from '../components/layout/AppShell'
-import { api, clearCSRFToken, setCSRFToken } from '../lib/api'
+import { api } from '../lib/api'
 import { Inbox } from '../pages/Inbox'
 import { Login } from '../pages/Login'
 import { Settings } from '../pages/Settings'
@@ -30,39 +29,22 @@ function AppLoadingState() {
 }
 
 function Root() {
-  const [csrfToken, setCSRFTokenState] = useState('')
   const setupQuery = useQuery({ queryKey: ['setup-status'], queryFn: api.setupStatus })
   const meQuery = useQuery({ queryKey: ['me'], queryFn: api.me, retry: false })
-
-  useEffect(() => {
-    if (meQuery.data?.csrfToken) {
-      setCSRFToken(meQuery.data.csrfToken)
-      setCSRFTokenState(meQuery.data.csrfToken)
-      return
-    }
-    if (meQuery.isError) {
-      clearCSRFToken()
-      setCSRFTokenState('')
-    }
-  }, [meQuery.data?.csrfToken, meQuery.isError])
 
   if (setupQuery.isLoading || meQuery.isLoading) {
     return <AppLoadingState />
   }
 
   if (!setupQuery.data?.initialized) {
-    return <SetupWizard onReady={(token) => {
-      setCSRFToken(token)
-      setCSRFTokenState(token)
+    return <SetupWizard onReady={() => {
       void setupQuery.refetch()
       void meQuery.refetch()
     }} />
   }
 
-  if (meQuery.error && !csrfToken) {
-    return <Login onLogin={(token) => {
-      setCSRFToken(token)
-      setCSRFTokenState(token)
+  if (meQuery.error) {
+    return <Login onLogin={() => {
       void meQuery.refetch()
     }} />
   }

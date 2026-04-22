@@ -34,7 +34,7 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{cfg.AllowedOrigin, cfg.PublicBaseURL},
 		AllowMethods:     []string{"GET", "POST", "PATCH", "OPTIONS"},
-		AllowHeaders:     []string{"Content-Type", cfg.CSRFHeader},
+		AllowHeaders:     []string{"Content-Type"},
 		AllowCredentials: true,
 	}))
 
@@ -53,7 +53,6 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 	authed.GET("/emails", services.Emails.List)
 	authed.GET("/emails/:id", services.Emails.Get)
 	authed.GET("/recipients", services.Emails.ListRecipients)
-	authed.Use(middleware.RequireCSRF(cfg.CSRFHeader))
 	authed.POST("/settings/password", services.Auth.ChangePassword)
 	authed.POST("/cloudflare/credentials", services.Cloudflare.SaveCredentials)
 	authed.POST("/cloudflare/zones/:zoneId/provision", services.Cloudflare.Provision)

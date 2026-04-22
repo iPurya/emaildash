@@ -2,13 +2,13 @@ import { useState } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { api } from '../lib/api'
 
-type Props = { onLogin: (csrfToken: string) => void }
+type Props = { onLogin: () => void }
 
 export function Login({ onLogin }: Props) {
   const [password, setPassword] = useState('')
   const mutation = useMutation({
     mutationFn: () => api.login(password),
-    onSuccess: (data) => onLogin(data.csrfToken),
+    onSuccess: () => onLogin(),
   })
 
   return (
@@ -40,7 +40,7 @@ export function Login({ onLogin }: Props) {
           <div className="section-label">Sign in</div>
           <h2 className="mt-3 text-2xl font-semibold tracking-tight text-white">Unlock dashboard</h2>
           <p className="mt-3 text-sm leading-6 text-slate-400">
-            Use dashboard password created during setup. Session and CSRF token restore automatically after login.
+            Use dashboard password created during setup. After login, app reloads current session state automatically.
           </p>
 
           <div className="mt-8 grid gap-4">
@@ -67,7 +67,7 @@ export function Login({ onLogin }: Props) {
           </div>
 
           {mutation.isError && <div className="notice-error mt-5">{(mutation.error as Error).message}</div>}
-          {!mutation.isError && <div className="notice-info mt-5">If session expired, sign in again and app will reopen current workspace state.</div>}
+          {!mutation.isError && <div className="notice-info mt-5">Session uses secure cookie auth only. No extra request token required.</div>}
         </section>
       </div>
     </div>
