@@ -1,4 +1,4 @@
 emaildash.purya.dev {
   encode zstd gzip
-  reverse_proxy backend:8080
+  reverse_proxy app:8080
 }

@@ -4,8 +4,8 @@ services:
       context: ..
       dockerfile: deploy/docker/Dockerfile.backend
     restart: unless-stopped
-    ports:
-      - "8080:8080"
+    expose:
+      - "8080"
     environment:
       PORT: 8080
       EMAILDASH_PUBLIC_BASE_URL: https://emaildash.purya.dev
@@ -14,3 +14,20 @@ services:
       EMAILDASH_WORKER_BUNDLE: /app/worker/dist/index.js
     volumes:
       - ../../data:/data
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
