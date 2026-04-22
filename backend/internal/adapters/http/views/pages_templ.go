@@ -1182,19 +1182,19 @@ func PasswordTab(data DashboardData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "\" class=\"d-grid gap-3\"><input class=\"form-control bg-dark text-light border-secondary\" name=\"oldPassword\" type=\"password\" placeholder=\"Current password\" required> <input class=\"form-control bg-dark text-light border-secondary\" name=\"newPassword\" type=\"password\" placeholder=\"New password\" required> <button class=\"btn btn-primary\" type=\"submit\">Update password</button></form></div></div></div><div class=\"col-xl-6\"><div class=\"card border-secondary\"><div class=\"card-body\"><h2 class=\"h5\">REST API key</h2><p class=\"text-secondary\">Password changes rotate the API key automatically. Save the new key immediately.</p>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "\" class=\"d-grid gap-3\"><input class=\"form-control bg-dark text-light border-secondary\" name=\"oldPassword\" type=\"password\" placeholder=\"Current password\" required> <input class=\"form-control bg-dark text-light border-secondary\" name=\"newPassword\" type=\"password\" placeholder=\"New password\" required> <button class=\"btn btn-primary\" type=\"submit\">Update password</button></form></div></div></div><div class=\"col-xl-6\"><div class=\"card border-secondary\"><div class=\"card-body\"><h2 class=\"h5\">REST API key</h2><p class=\"text-secondary\">This key is always visible here. Every password change rotates it automatically.</p>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if data.APIKey != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "<div class=\"alert alert-warning\">Shown once after password change. Copy it now.</div><div class=\"border rounded p-3 bg-dark api-key-box\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "<div class=\"border rounded p-3 bg-dark api-key-box\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var65 string
 			templ_7745c5c3_Var65, templ_7745c5c3_Err = templ.JoinStringErrs(data.APIKey)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 293, Col: 71}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 292, Col: 71}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var65))
 			if templ_7745c5c3_Err != nil {
@@ -1207,7 +1207,7 @@ func PasswordTab(data DashboardData) templ.Component {
 			var templ_7745c5c3_Var66 string
 			templ_7745c5c3_Var66, templ_7745c5c3_Err = templ.JoinStringErrs(data.APIKey)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 294, Col: 82}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 293, Col: 82}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var66))
 			if templ_7745c5c3_Err != nil {
@@ -1218,7 +1218,7 @@ func PasswordTab(data DashboardData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "<div class=\"text-secondary\">Change password to rotate and reveal a new API key.</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "<div class=\"text-secondary\">API key not available yet.</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -165,7 +165,7 @@ func (h PagesHandler) PasswordSubmit(c *gin.Context) {
 		h.redirectDashboard(c, "password", "", 0, url.Values{"error": {err.Error()}})
 		return
 	}
-		h.redirectDashboard(c, "password", "", 0, url.Values{"updated": {"1"}, "api_key": {apiKey}})
+	h.redirectDashboard(c, "password", "", 0, url.Values{"updated": {"1"}, "api_key": {apiKey}})
 }
 
 func (h PagesHandler) CloudflareCredentialsSubmit(c *gin.Context) {
@@ -215,6 +215,12 @@ func (h PagesHandler) dashboardData(c *gin.Context) (ui.DashboardData, error) {
 			data.Status = &status
 		}
 	case "password":
+		if data.APIKey == "" {
+			apiKey, err := h.auth.EnsureAPIKey(c.Request.Context())
+			if err == nil {
+				data.APIKey = apiKey
+			}
+		}
 	default:
 		data.ActiveTab = "inbox"
 		recipients, err := h.inbox.ListRecipients(c.Request.Context())
