@@ -421,7 +421,10 @@ type scanner interface {
 }
 
 func scanEmail(row scanner) (domain.Email, error) {
-	var email domain.Email
+	email := domain.Email{
+		Recipients:  []string{},
+		Attachments: []domain.Attachment{},
+	}
 	var headersJSON string
 	var readAt sql.NullString
 	var receivedAt string

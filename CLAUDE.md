@@ -137,3 +137,10 @@ Worker build output goes to `worker/dist/index.js`. Backend Cloudflare provision
 - Cloudflare adapter is scaffolded but still needs real staging validation against live Cloudflare account/domain. If Cloudflare API requests fail, check request shape first before changing usecase flow.
 - Attachment persistence currently writes `Attachment.Content` string directly to disk. If attachment corruption appears, inspect Worker encoding and ingest decode path first.
 - No dedicated lint script exists yet. Do not document or rely on nonexistent lint command.
+
+## Deployment workflow defaults
+
+- After code changes in this repo, default workflow is: finish code changes, run relevant builds/tests, create a git commit, push to remote, then deploy to VPS — unless user explicitly says not to for that change.
+- Deployment target is VPS `178.104.215.90` for `emaildash.purya.dev`.
+- Deployment goal is Docker Compose. Prefer compose-based rollout for this project instead of ad hoc manual runtime commands.
+- When deploying to VPS, use repo's production Docker Compose setup under `deploy/`.

@@ -5,6 +5,9 @@ import (
 	"embed"
 	"io/fs"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -56,6 +59,29 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 	authed.POST("/cloudflare/zones/:zoneId/provision", services.Cloudflare.Provision)
 	authed.PATCH("/emails/:id/read", services.Emails.MarkRead)
 
+	if hasFrontendDist(cfg.FrontendDistDir) {
+		router.GET("/", func(c *gin.Context) {
+			c.File(filepath.Join(cfg.FrontendDistDir, "index.html"))
+		})
+		router.NoRoute(func(c *gin.Context) {
+			if strings.HasPrefix(c.Request.URL.Path, "/api/") {
+				c.JSON(http.StatusNotFound, gin.H{"error": "not found"})
+				return
+			}
+			if c.Request.Method != http.MethodGet && c.Request.Method != http.MethodHead {
+				c.Status(http.StatusNotFound)
+				return
+			}
+			candidate := filepath.Join(cfg.FrontendDistDir, filepath.FromSlash(strings.TrimPrefix(filepath.Clean(c.Request.URL.Path), string(filepath.Separator))))
+			if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
+				c.File(candidate)
+				return
+			}
+			c.File(filepath.Join(cfg.FrontendDistDir, "index.html"))
+		})
+		return router
+	}
+
 	staticFS, err := fs.Sub(embeddedStatic, "static")
 	if err == nil {
 		router.GET("/", func(c *gin.Context) {
@@ -63,4 +89,12 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 		})
 	}
 	return router
+}
+
+func hasFrontendDist(distDir string) bool {
+	if distDir == "" {
+		return false
+	}
+	info, err := os.Stat(filepath.Join(distDir, "index.html"))
+	return err == nil && !info.IsDir()
 }

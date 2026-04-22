@@ -27,9 +27,6 @@ func (s Service) Status(ctx context.Context) (domain.SetupStatus, error) {
 }
 
 func (s Service) Initialize(ctx context.Context, password string) error {
-	if len(password) < 12 {
-		return fmt.Errorf("password must be at least 12 characters")
-	}
 	hash, params, err := s.hasher.Hash(password)
 	if err != nil {
 		return fmt.Errorf("hash password: %w", err)

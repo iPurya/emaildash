@@ -31,15 +31,17 @@ func (h AuthHandler) Login(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 		return
 	}
+	secureCookie := c.Request.TLS != nil || c.GetHeader("X-Forwarded-Proto") == "https"
 	c.SetSameSite(http.SameSiteLaxMode)
-	c.SetCookie(h.cookieName, token, int(time.Until(session.ExpiresAt).Seconds()), "/", "", false, true)
+	c.SetCookie(h.cookieName, token, int(time.Until(session.ExpiresAt).Seconds()), "/", "", secureCookie, true)
 	c.JSON(http.StatusOK, gin.H{"csrfToken": session.CSRFToken, "expiresAt": session.ExpiresAt})
 }
 
 func (h AuthHandler) Logout(c *gin.Context) {
 	token, _ := c.Cookie(h.cookieName)
 	_ = h.service.Logout(c.Request.Context(), token)
-	c.SetCookie(h.cookieName, "", -1, "/", "", false, true)
+	secureCookie := c.Request.TLS != nil || c.GetHeader("X-Forwarded-Proto") == "https"
+	c.SetCookie(h.cookieName, "", -1, "/", "", secureCookie, true)
 	c.Status(http.StatusNoContent)
 }
 

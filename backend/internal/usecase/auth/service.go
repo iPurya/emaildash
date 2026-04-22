@@ -59,7 +59,10 @@ func (s Service) Authenticate(ctx context.Context, token string) (domain.Session
 	if err != nil {
 		return domain.Session{}, fmt.Errorf("invalid session")
 	}
-	if session.RevokedAt != nil || time.Now().UTC().After(session.ExpiresAt) {
+	if session.RevokedAt != nil {
+		return domain.Session{}, fmt.Errorf("session revoked")
+	}
+	if time.Now().UTC().After(session.ExpiresAt) {
 		return domain.Session{}, fmt.Errorf("session expired")
 	}
 	if err := s.store.TouchSession(ctx, session.ID); err != nil {
@@ -77,9 +80,6 @@ func (s Service) Logout(ctx context.Context, token string) error {
 }
 
 func (s Service) ChangePassword(ctx context.Context, oldPassword, newPassword string) error {
-	if len(newPassword) < 12 {
-		return fmt.Errorf("password must be at least 12 characters")
-	}
 	user, err := s.store.GetUser(ctx)
 	if err != nil {
 		return err

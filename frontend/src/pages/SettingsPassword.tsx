@@ -5,18 +5,39 @@ import { api } from '../lib/api'
 export function SettingsPassword() {
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
-  const mutation = useMutation({ mutationFn: () => api.changePassword(oldPassword, newPassword) })
+  const mutation = useMutation({
+    mutationFn: () => api.changePassword(oldPassword, newPassword),
+    onSuccess: () => {
+      setOldPassword('')
+      setNewPassword('')
+    },
+  })
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-6">
-      <h2 className="text-xl font-semibold text-white">Change password</h2>
-      <div className="mt-4 grid gap-3">
-        <input className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3" placeholder="Current password" type="password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
-        <input className="rounded-xl border border-slate-700 bg-slate-950 px-4 py-3" placeholder="New password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-        <button className="rounded-xl bg-blue-600 px-4 py-3 font-medium" onClick={() => mutation.mutate()} disabled={mutation.isPending}>Update password</button>
+    <section className="surface px-6 py-6 sm:px-8 sm:py-8">
+      <div className="section-label">Password</div>
+      <h2 className="mt-3 text-2xl font-semibold text-white">Update dashboard password</h2>
+      <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-400">
+        Rotate password used for dashboard access. Change succeeds only when current password matches active stored hash.
+      </p>
+
+      <div className="mt-8 grid gap-4 sm:max-w-xl">
+        <div className="grid gap-2">
+          <label className="field-label" htmlFor="current-password">Current password</label>
+          <input id="current-password" className="field" placeholder="Enter current password" type="password" value={oldPassword} onChange={(e) => setOldPassword(e.target.value)} />
+        </div>
+        <div className="grid gap-2">
+          <label className="field-label" htmlFor="new-password">New password</label>
+          <input id="new-password" className="field" placeholder="Choose new password" type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
+        </div>
+        <button className="btn-primary sm:w-fit sm:min-w-44" onClick={() => mutation.mutate()} disabled={mutation.isPending || !oldPassword || !newPassword}>
+          {mutation.isPending ? 'Updating…' : 'Update password'}
+        </button>
       </div>
-      {mutation.isSuccess && <div className="mt-3 text-sm text-emerald-300">Password updated.</div>}
-      {mutation.error && <div className="mt-3 text-sm text-red-300">{(mutation.error as Error).message}</div>}
-    </div>
+
+      {mutation.isSuccess && <div className="notice-success mt-6">Password updated successfully.</div>}
+      {mutation.isError && <div className="notice-error mt-6">{(mutation.error as Error).message}</div>}
+      {!mutation.isSuccess && !mutation.isError && <div className="notice-info mt-6">No minimum length enforced. Use whatever password you prefer.</div>}
+    </section>
   )
 }

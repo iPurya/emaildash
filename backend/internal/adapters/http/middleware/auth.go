@@ -3,6 +3,7 @@ package middleware
 import (
 	"context"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/purya/emaildash/backend/internal/domain"
@@ -17,6 +18,11 @@ func RequireAuth(cookieName string, authService interface{ Authenticate(ctx cont
 		}
 		session, err := authService.Authenticate(c.Request.Context(), token)
 		if err != nil {
+			message := err.Error()
+			if strings.Contains(message, "expired") || strings.Contains(message, "revoked") {
+				c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": message})
+				return
+			}
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "invalid session"})
 			return
 		}

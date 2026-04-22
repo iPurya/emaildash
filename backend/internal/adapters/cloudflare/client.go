@@ -6,7 +6,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"mime/multipart"
 	"net/http"
+	"net/textproto"
 	"net/url"
 	"strings"
 	"time"
@@ -89,24 +91,48 @@ func (c Client) EnableEmailRouting(ctx context.Context, creds domain.CloudflareC
 }
 
 func (c Client) EnsureWorkerSubdomain(ctx context.Context, creds domain.CloudflareCredentials, accountID, subdomain string) error {
-	return c.post(ctx, creds, "/accounts/"+accountID+"/workers/subdomain", map[string]string{"subdomain": subdomain}, nil)
+	err := c.put(ctx, creds, "/accounts/"+accountID+"/workers/subdomain", map[string]any{"subdomain": subdomain}, nil)
+	if err != nil && strings.Contains(err.Error(), "already has an associated subdomain") {
+		return nil
+	}
+	return err
 }
 
 func (c Client) UploadWorker(ctx context.Context, creds domain.CloudflareCredentials, accountID, scriptName, scriptContents string) error {
-	body := map[string]any{
-		"main_module": "index.js",
-		"bindings":    []any{},
-		"modules": []map[string]string{{
-			"name":    "index.js",
-			"content": scriptContents,
-			"type":    "esm",
-		}},
+	metadata, err := json.Marshal(map[string]any{"main_module": "index.js"})
+	if err != nil {
+		return fmt.Errorf("marshal worker metadata: %w", err)
 	}
-	return c.put(ctx, creds, "/accounts/"+accountID+"/workers/scripts/"+scriptName, body, nil)
+	var body bytes.Buffer
+	writer := multipart.NewWriter(&body)
+	metadataHeader := textproto.MIMEHeader{}
+	metadataHeader.Set("Content-Disposition", `form-data; name="metadata"`)
+	metadataHeader.Set("Content-Type", "application/json")
+	metadataPart, err := writer.CreatePart(metadataHeader)
+	if err != nil {
+		return fmt.Errorf("create metadata part: %w", err)
+	}
+	if _, err := metadataPart.Write(metadata); err != nil {
+		return fmt.Errorf("write metadata part: %w", err)
+	}
+	scriptHeader := textproto.MIMEHeader{}
+	scriptHeader.Set("Content-Disposition", `form-data; name="index.js"; filename="index.js"`)
+	scriptHeader.Set("Content-Type", "application/javascript+module")
+	scriptPart, err := writer.CreatePart(scriptHeader)
+	if err != nil {
+		return fmt.Errorf("create script part: %w", err)
+	}
+	if _, err := scriptPart.Write([]byte(scriptContents)); err != nil {
+		return fmt.Errorf("write script part: %w", err)
+	}
+	if err := writer.Close(); err != nil {
+		return fmt.Errorf("close multipart writer: %w", err)
+	}
+	return c.doRequest(ctx, http.MethodPut, creds, "/accounts/"+accountID+"/workers/scripts/"+scriptName, &body, writer.FormDataContentType(), nil)
 }
 
 func (c Client) PutWorkerSecret(ctx context.Context, creds domain.CloudflareCredentials, accountID, scriptName, name, value string) error {
-	return c.put(ctx, creds, "/accounts/"+accountID+"/workers/scripts/"+scriptName+"/secrets", map[string]string{"name": name, "text": value}, nil)
+	return c.put(ctx, creds, "/accounts/"+accountID+"/workers/scripts/"+scriptName+"/secrets", map[string]string{"type": "secret_text", "name": name, "text": value}, nil)
 }
 
 func (c Client) EnableWorkersDev(ctx context.Context, creds domain.CloudflareCredentials, accountID, scriptName string) error {
@@ -116,19 +142,19 @@ func (c Client) EnableWorkersDev(ctx context.Context, creds domain.CloudflareCre
 func (c Client) UpdateCatchAllToWorker(ctx context.Context, creds domain.CloudflareCredentials, zoneID, scriptName string) error {
 	body := map[string]any{
 		"matchers": []map[string]string{{"type": "all"}},
-		"actions": []map[string]string{{"type": "worker", "value": scriptName}},
+		"actions": []map[string]any{{"type": "worker", "value": []string{scriptName}}},
 		"enabled": true,
 		"name":    "catch-all",
 	}
-	return c.post(ctx, creds, "/zones/"+zoneID+"/email/routing/rules", body, nil)
+	return c.put(ctx, creds, "/zones/"+zoneID+"/email/routing/rules/catch_all", body, nil)
 }
 
 func (c Client) GetCatchAllStatus(ctx context.Context, creds domain.CloudflareCredentials, zoneID string) (domain.CloudflareStatus, error) {
 	var response struct {
 		Result []struct {
 			Actions []struct {
-				Type  string `json:"type"`
-				Value string `json:"value"`
+				Type  string   `json:"type"`
+				Value []string `json:"value"`
 			} `json:"actions"`
 			Enabled bool   `json:"enabled"`
 			Name    string `json:"name"`
@@ -139,11 +165,11 @@ func (c Client) GetCatchAllStatus(ctx context.Context, creds domain.CloudflareCr
 	}
 	status := domain.CloudflareStatus{EmailRoutingEnabled: len(response.Result) > 0, EmailRoutingStatus: "configured"}
 	for _, rule := range response.Result {
-		if strings.EqualFold(rule.Name, "catch-all") {
+		if strings.EqualFold(rule.Name, "catch-all") || (rule.Name == "" && len(rule.Actions) > 0) {
 			status.CatchAllEnabled = rule.Enabled
 			for _, action := range rule.Actions {
-				if action.Type == "worker" {
-					status.CatchAllDestination = action.Value
+				if action.Type == "worker" && len(action.Value) > 0 {
+					status.CatchAllDestination = action.Value[0]
 				}
 			}
 		}
@@ -175,17 +201,23 @@ func (c Client) doJSON(ctx context.Context, method string, creds domain.Cloudfla
 		}
 		reader = bytes.NewReader(payload)
 	}
+	return c.doRequest(ctx, method, creds, path, reader, "application/json", out)
+}
+
+func (c Client) doRequest(ctx context.Context, method string, creds domain.CloudflareCredentials, path string, body io.Reader, contentType string, out any) error {
 	endpoint, err := url.Parse(c.baseURL + path)
 	if err != nil {
 		return fmt.Errorf("parse url: %w", err)
 	}
-	req, err := http.NewRequestWithContext(ctx, method, endpoint.String(), reader)
+	req, err := http.NewRequestWithContext(ctx, method, endpoint.String(), body)
 	if err != nil {
 		return fmt.Errorf("new request: %w", err)
 	}
 	req.Header.Set("X-Auth-Email", creds.Email)
 	req.Header.Set("X-Auth-Key", creds.APIKey)
-	req.Header.Set("Content-Type", "application/json")
+	if contentType != "" {
+		req.Header.Set("Content-Type", contentType)
+	}
 	resp, err := c.httpClient.Do(req)
 	if err != nil {
 		return fmt.Errorf("cloudflare request: %w", err)
