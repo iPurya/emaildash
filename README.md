@@ -85,6 +85,32 @@ data/      SQLite DB, secrets, attachments at runtime
 - `GET /api/recipients`
 - `POST /api/ingest/cloudflare/email`
 
+### Example API usage
+
+List all emails:
+
+```bash
+curl -b cookies.txt http://localhost:8080/api/emails
+```
+
+Filter by sender:
+
+```bash
+curl -b cookies.txt "http://localhost:8080/api/emails?from_mail=alice@example.com"
+```
+
+Filter by recipient:
+
+```bash
+curl -b cookies.txt "http://localhost:8080/api/emails?to_mail=team@example.com"
+```
+
+Filter by sender and recipient:
+
+```bash
+curl -b cookies.txt "http://localhost:8080/api/emails?from_mail=alice@example.com&to_mail=team@example.com"
+```
+
 ## Local setup
 
 ### Prerequisites
@@ -136,6 +162,19 @@ Mounted runtime data:
 - `./data/emaildash.db`
 - `./data/attachments/`
 - `./data/.masterkey`
+
+## Production deployment
+
+Production compose file:
+
+```bash
+docker compose -f deploy/docker-compose.prod.yml up -d --build
+```
+
+Production shape:
+- `app` container runs Go dashboard + REST API + webhook
+- `caddy` container provides HTTPS edge proxy
+- Worker bundle is built into app image and uploaded to Cloudflare during provisioning
 
 ## Environment variables
 
