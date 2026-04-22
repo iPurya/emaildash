@@ -34,6 +34,7 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 	}))
 
 	router.GET("/", services.Pages.Root)
+	router.GET("/api/docs", services.Pages.APIDocsPage)
 	router.GET("/setup", services.Pages.SetupPage)
 	router.POST("/setup", services.Pages.SetupSubmit)
 	router.GET("/login", services.Pages.LoginPage)

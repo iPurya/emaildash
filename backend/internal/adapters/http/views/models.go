@@ -10,6 +10,21 @@ type LoginPageData struct {
 	Error string
 }
 
+type DocsEndpoint struct {
+	Method      string
+	Path        string
+	Description string
+	Auth        string
+	Example     string
+	Response    string
+}
+
+type APIDocsData struct {
+	BaseURL    string
+	Endpoints  []DocsEndpoint
+	SampleAuth string
+}
+
 type DashboardData struct {
 	Title           string
 	ActiveTab       string

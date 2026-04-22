@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -47,6 +48,37 @@ func (h PagesHandler) Root(c *gin.Context) {
 		return
 	}
 	c.Redirect(http.StatusFound, "/dashboard?tab=inbox")
+}
+
+func (h PagesHandler) APIDocsPage(c *gin.Context) {
+	baseURL := c.Request.URL.Scheme + "://" + c.Request.Host
+	if c.Request.TLS == nil {
+		if c.GetHeader("X-Forwarded-Proto") == "https" {
+			baseURL = "https://" + c.Request.Host
+		} else {
+			baseURL = "http://" + c.Request.Host
+		}
+	}
+	data := ui.APIDocsData{
+		BaseURL:    baseURL,
+		SampleAuth: "api_key=YOUR_API_KEY",
+		Endpoints: []ui.DocsEndpoint{
+			{Method: "GET", Path: "/api/setup/status", Description: "Check whether initial setup has already completed.", Auth: "public", Example: fmt.Sprintf("curl %s/api/setup/status", baseURL), Response: `{"initialized":true}`},
+			{Method: "POST", Path: "/api/auth/login", Description: "Create browser session cookie using dashboard password.", Auth: "public", Example: fmt.Sprintf(`curl -c cookies.txt -H "Content-Type: application/json" -d "{\"password\":\"YOUR_PASSWORD\"}" %s/api/auth/login`, baseURL), Response: `{"csrfToken":"...","expiresAt":"..."}`},
+			{Method: "GET", Path: "/api/auth/me", Description: "Inspect current cookie-authenticated session.", Auth: "cookie", Example: fmt.Sprintf("curl -b cookies.txt %s/api/auth/me", baseURL), Response: `{"authenticated":true,"expiresAt":"...","csrfToken":"..."}`},
+			{Method: "GET", Path: "/api/emails", Description: "List emails. Optional filters: recipient, to_mail, from_mail, unread, limit, api_key.", Auth: "cookie or api_key", Example: fmt.Sprintf(`curl "%s/api/emails?api_key=YOUR_API_KEY&to_mail=test1@purya.me&from_mail=alice@example.com"`, baseURL), Response: `{"emails":[{"id":1,"mailFrom":"alice@example.com","recipients":["test1@purya.me"],"subject":"hello"}]}`},
+			{Method: "GET", Path: "/api/emails/:id", Description: "Fetch one full email by ID.", Auth: "cookie or api_key", Example: fmt.Sprintf(`curl "%s/api/emails/1?api_key=YOUR_API_KEY"`, baseURL), Response: `{"id":1,"mailFrom":"alice@example.com","recipients":["test1@purya.me"],"subject":"hello","textBody":"...","attachments":[]}`},
+			{Method: "GET", Path: "/api/recipients", Description: "List grouped recipient summaries used by dashboard sidebar.", Auth: "cookie or api_key", Example: fmt.Sprintf(`curl "%s/api/recipients?api_key=YOUR_API_KEY"`, baseURL), Response: `{"recipients":[{"address":"test1@purya.me","count":2,"unreadCount":1}]}`},
+			{Method: "PATCH", Path: "/api/emails/:id/read", Description: "Mark one email as read.", Auth: "cookie or api_key", Example: fmt.Sprintf(`curl -X PATCH "%s/api/emails/1/read?api_key=YOUR_API_KEY"`, baseURL), Response: `HTTP 204 No Content`},
+			{Method: "GET", Path: "/api/cloudflare/zones", Description: "Return cached Cloudflare zones after credentials are saved.", Auth: "cookie or api_key", Example: fmt.Sprintf(`curl "%s/api/cloudflare/zones?api_key=YOUR_API_KEY"`, baseURL), Response: `{"zones":[{"id":"...","name":"purya.dev","selected":true}]}`},
+			{Method: "GET", Path: "/api/cloudflare/status", Description: "Return status for the selected Cloudflare zone.", Auth: "cookie or api_key", Example: fmt.Sprintf(`curl "%s/api/cloudflare/status?api_key=YOUR_API_KEY"`, baseURL), Response: `{"zoneName":"purya.dev","emailRoutingEnabled":true,"catchAllEnabled":true}`},
+			{Method: "POST", Path: "/api/cloudflare/credentials", Description: "Save Cloudflare account email and Global API key.", Auth: "cookie or api_key", Example: fmt.Sprintf(`curl -H "Content-Type: application/json" -d "{\"email\":\"name@example.com\",\"apiKey\":\"YOUR_CF_KEY\"}" "%s/api/cloudflare/credentials?api_key=YOUR_API_KEY"`, baseURL), Response: `{"zones":[{"id":"...","name":"purya.dev"}]}`},
+			{Method: "POST", Path: "/api/cloudflare/zones/:zoneId/provision", Description: "Provision Cloudflare routing and worker for one zone.", Auth: "cookie or api_key", Example: fmt.Sprintf(`curl -X POST "%s/api/cloudflare/zones/ZONE_ID/provision?api_key=YOUR_API_KEY"`, baseURL), Response: `{"zoneName":"purya.dev","workerScriptName":"emaildash-ingest"}`},
+			{Method: "POST", Path: "/api/settings/password", Description: "Change password and rotate API key. Response returns the new API key.", Auth: "cookie or api_key", Example: fmt.Sprintf(`curl -H "Content-Type: application/json" -d "{\"oldPassword\":\"old\",\"newPassword\":\"new\"}" "%s/api/settings/password?api_key=YOUR_API_KEY"`, baseURL), Response: `{"apiKey":"NEW_API_KEY"}`},
+			{Method: "POST", Path: "/api/ingest/cloudflare/email", Description: "Webhook endpoint used by the Cloudflare Worker. Not for manual dashboard/API use.", Auth: "signed webhook", Example: `Handled by worker only.`, Response: `HTTP 201 Created`},
+		},
+	}
+	ui.Render(c.Request.Context(), c.Writer, ui.APIDocsPage(data)).ServeHTTP(c.Writer, c.Request)
 }
 
 func (h PagesHandler) SetupPage(c *gin.Context) {

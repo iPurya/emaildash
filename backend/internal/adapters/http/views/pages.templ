@@ -16,6 +16,7 @@ templ Document(title string) {
 				.sidebar-sticky { position:sticky; top:1rem; }
 				.email-html img { max-width:100%; height:auto; }
 				.api-key-box { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; word-break: break-all; }
+				.docs-code { white-space: pre-wrap; word-break: break-word; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
 			</style>
 		</head>
 		<body>
@@ -76,6 +77,47 @@ templ LoginPage(data LoginPageData) {
 	}
 }
 
+templ APIDocsPage(data APIDocsData) {
+	@Document("API Docs") {
+		<div class="row justify-content-center">
+			<div class="col-xl-10">
+				<div class="card border-secondary mb-4">
+					<div class="card-body">
+						<h1 class="h3 mb-3">Emaildash API docs</h1>
+						<p class="text-secondary">Base URL: <code>{ data.BaseURL }</code></p>
+						<div class="alert alert-info mb-0">
+							Protected API endpoints accept either a valid browser session cookie or an <code>api_key</code> query parameter.
+							<br/>
+							Example auth query: <code>{ data.SampleAuth }</code>
+						</div>
+					</div>
+				</div>
+				for _, endpoint := range data.Endpoints {
+					<div class="card border-secondary mb-3">
+						<div class="card-body">
+							<div class="d-flex justify-content-between align-items-start gap-3 flex-wrap">
+								<div>
+									<h2 class="h5 mb-1"><span class="badge text-bg-primary me-2">{ endpoint.Method }</span><code>{ endpoint.Path }</code></h2>
+									<p class="text-secondary mb-0">{ endpoint.Description }</p>
+								</div>
+								<div><span class="badge text-bg-dark">{ endpoint.Auth }</span></div>
+							</div>
+							<div class="mt-3">
+								<div class="small text-secondary mb-1">Example request</div>
+								<div class="border rounded p-3 bg-dark docs-code">{ endpoint.Example }</div>
+							</div>
+							<div class="mt-3">
+								<div class="small text-secondary mb-1">Example response</div>
+								<div class="border rounded p-3 bg-dark docs-code">{ endpoint.Response }</div>
+							</div>
+						</div>
+					</div>
+				}
+			</div>
+		</div>
+	}
+}
+
 templ DashboardPage(data DashboardData) {
 	@Document("Dashboard") {
 		<div class="row g-4">
@@ -87,6 +129,7 @@ templ DashboardPage(data DashboardData) {
 							<a href={ templ.URL(DashboardURL("inbox", data.ActiveRecipient, data.SelectedEmailID)) } class={ NavClass(data.ActiveTab == "inbox") }>Inbox</a>
 							<a href={ templ.URL(DashboardURL("cloudflare", "", 0)) } class={ NavClass(data.ActiveTab == "cloudflare") }>Cloudflare</a>
 							<a href={ templ.URL(DashboardURL("password", "", 0)) } class={ NavClass(data.ActiveTab == "password") }>Password & API</a>
+							<a href={ templ.URL("/api/docs") } class="list-group-item list-group-item-action bg-dark text-light border-secondary">API Docs</a>
 						</div>
 						<form method="post" action={ templ.URL("/logout") } class="mt-3">
 							<button class="btn btn-outline-light w-100" type="submit">Logout</button>
@@ -291,6 +334,7 @@ templ PasswordTab(data DashboardData) {
 					if data.APIKey != "" {
 						<div class="border rounded p-3 bg-dark api-key-box">{ data.APIKey }</div>
 						<div class="mt-3 small text-secondary">Example: <code>?api_key={ data.APIKey }</code></div>
+						<div class="mt-3"><a class="btn btn-outline-light btn-sm" href={ templ.URL("/api/docs") }>Open API docs</a></div>
 					} else {
 						<div class="text-secondary">API key not available yet.</div>
 					}
