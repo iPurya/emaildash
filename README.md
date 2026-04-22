@@ -79,7 +79,7 @@ data/      SQLite DB, secrets, attachments at runtime
 - `GET /api/cloudflare/zones`
 - `POST /api/cloudflare/zones/:zoneId/provision`
 - `GET /api/cloudflare/status`
-- `GET /api/emails`
+- `GET /api/emails` (`recipient`, `to_mail`, `from_mail`, `unread`, `limit` optional filters)
 - `GET /api/emails/:id`
 - `PATCH /api/emails/:id/read`
 - `GET /api/recipients`

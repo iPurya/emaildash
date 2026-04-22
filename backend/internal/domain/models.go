@@ -54,14 +54,22 @@ type CloudflareZone struct {
 }
 
 type CloudflareStatus struct {
-	ZoneID               string `json:"zoneId"`
-	ZoneName             string `json:"zoneName"`
-	AccountID            string `json:"accountId"`
-	EmailRoutingEnabled  bool   `json:"emailRoutingEnabled"`
-	EmailRoutingStatus   string `json:"emailRoutingStatus"`
-	WorkerScriptName     string `json:"workerScriptName"`
-	CatchAllEnabled      bool   `json:"catchAllEnabled"`
-	CatchAllDestination  string `json:"catchAllDestination"`
+	ZoneID              string `json:"zoneId"`
+	ZoneName            string `json:"zoneName"`
+	AccountID           string `json:"accountId"`
+	EmailRoutingEnabled bool   `json:"emailRoutingEnabled"`
+	EmailRoutingStatus  string `json:"emailRoutingStatus"`
+	WorkerScriptName    string `json:"workerScriptName"`
+	CatchAllEnabled     bool   `json:"catchAllEnabled"`
+	CatchAllDestination string `json:"catchAllDestination"`
+}
+
+type EmailListFilter struct {
+	Recipient  string `json:"recipient,omitempty"`
+	FromMail   string `json:"fromMail,omitempty"`
+	ToMail     string `json:"toMail,omitempty"`
+	UnreadOnly bool   `json:"unreadOnly,omitempty"`
+	Limit      int    `json:"limit,omitempty"`
 }
 
 type Attachment struct {
@@ -101,15 +109,15 @@ type RecipientSummary struct {
 }
 
 type IngestPayload struct {
-	Provider      string              `json:"provider"`
-	ReceivedAt    time.Time           `json:"receivedAt"`
-	MessageID     string              `json:"messageId"`
-	MailFrom      string              `json:"mailFrom"`
-	RcptTo        []string            `json:"rcptTo"`
-	Subject       string              `json:"subject"`
-	Text          string              `json:"text"`
-	HTML          string              `json:"html"`
-	Headers       map[string][]string `json:"headers"`
-	Attachments   []Attachment        `json:"attachments"`
-	RawSize       int64               `json:"rawSize"`
+	Provider    string              `json:"provider"`
+	ReceivedAt  time.Time           `json:"receivedAt"`
+	MessageID   string              `json:"messageId"`
+	MailFrom    string              `json:"mailFrom"`
+	RcptTo      []string            `json:"rcptTo"`
+	Subject     string              `json:"subject"`
+	Text        string              `json:"text"`
+	HTML        string              `json:"html"`
+	Headers     map[string][]string `json:"headers"`
+	Attachments []Attachment        `json:"attachments"`
+	RawSize     int64               `json:"rawSize"`
 }

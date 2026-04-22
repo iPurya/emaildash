@@ -7,7 +7,7 @@ import (
 )
 
 type Store interface {
-	ListEmails(ctx context.Context, recipient string, unreadOnly bool, limit int) ([]domain.Email, error)
+	ListEmails(ctx context.Context, filter domain.EmailListFilter) ([]domain.Email, error)
 	GetEmail(ctx context.Context, id int64) (domain.Email, error)
 	MarkEmailRead(ctx context.Context, id int64) error
 	ListRecipients(ctx context.Context) ([]domain.RecipientSummary, error)
@@ -21,8 +21,8 @@ func NewService(store Store) Service {
 	return Service{store: store}
 }
 
-func (s Service) ListEmails(ctx context.Context, recipient string, unreadOnly bool, limit int) ([]domain.Email, error) {
-	return s.store.ListEmails(ctx, recipient, unreadOnly, limit)
+func (s Service) ListEmails(ctx context.Context, filter domain.EmailListFilter) ([]domain.Email, error) {
+	return s.store.ListEmails(ctx, filter)
 }
 
 func (s Service) GetEmail(ctx context.Context, id int64) (domain.Email, error) {

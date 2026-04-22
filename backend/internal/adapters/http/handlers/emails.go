@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
+	"github.com/purya/emaildash/backend/internal/domain"
 	"github.com/purya/emaildash/backend/internal/usecase/inbox"
 )
 
@@ -18,7 +19,18 @@ func NewEmailsHandler(service inbox.Service) EmailsHandler {
 
 func (h EmailsHandler) List(c *gin.Context) {
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
-	emails, err := h.service.ListEmails(c.Request.Context(), c.Query("recipient"), c.Query("unread") == "true", limit)
+	toMail := c.Query("to_mail")
+	if toMail == "" {
+		toMail = c.Query("recipient")
+	}
+	filter := domain.EmailListFilter{
+		Recipient:  c.Query("recipient"),
+		FromMail:   c.Query("from_mail"),
+		ToMail:     toMail,
+		UnreadOnly: c.Query("unread") == "true",
+		Limit:      limit,
+	}
+	emails, err := h.service.ListEmails(c.Request.Context(), filter)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -216,7 +216,7 @@ func (h PagesHandler) dashboardData(c *gin.Context) (ui.DashboardData, error) {
 			return data, err
 		}
 		data.Recipients = recipients
-		emails, err := h.inbox.ListEmails(c.Request.Context(), data.ActiveRecipient, false, 50)
+		emails, err := h.inbox.ListEmails(c.Request.Context(), domain.EmailListFilter{Recipient: data.ActiveRecipient, ToMail: data.ActiveRecipient, Limit: 50})
 		if err != nil {
 			return data, err
 		}

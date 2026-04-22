@@ -293,26 +293,34 @@ func (s *Store) InsertEmail(ctx context.Context, email domain.Email) (domain.Ema
 	return email, tx.Commit()
 }
 
-func (s *Store) ListEmails(ctx context.Context, recipient string, unreadOnly bool, limit int) ([]domain.Email, error) {
-	if limit <= 0 || limit > 200 {
-		limit = 50
+func (s *Store) ListEmails(ctx context.Context, filter domain.EmailListFilter) ([]domain.Email, error) {
+	if filter.Limit <= 0 || filter.Limit > 200 {
+		filter.Limit = 50
+	}
+	toMail := filter.ToMail
+	if toMail == "" {
+		toMail = filter.Recipient
 	}
 	args := []any{}
 	builder := strings.Builder{}
 	builder.WriteString(`SELECT DISTINCT e.id, e.provider, e.provider_message_id, e.mail_from, e.subject, e.text_body, e.html_body, e.headers_json, e.raw_size, e.read_at, e.received_at, e.created_at FROM emails e`)
-	if recipient != "" {
+	if toMail != "" {
 		builder.WriteString(` JOIN email_recipients r ON r.email_id = e.id`)
 	}
 	builder.WriteString(` WHERE 1 = 1`)
-	if recipient != "" {
+	if toMail != "" {
 		builder.WriteString(` AND r.recipient = ?`)
-		args = append(args, recipient)
+		args = append(args, toMail)
 	}
-	if unreadOnly {
+	if filter.FromMail != "" {
+		builder.WriteString(` AND e.mail_from = ?`)
+		args = append(args, filter.FromMail)
+	}
+	if filter.UnreadOnly {
 		builder.WriteString(` AND e.read_at IS NULL`)
 	}
 	builder.WriteString(` ORDER BY e.received_at DESC LIMIT ?`)
-	args = append(args, limit)
+	args = append(args, filter.Limit)
 	rows, err := s.db.QueryContext(ctx, builder.String(), args...)
 	if err != nil {
 		return nil, fmt.Errorf("query emails: %w", err)
