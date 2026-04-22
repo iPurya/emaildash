@@ -118,7 +118,7 @@ templ InboxTab(data DashboardData) {
 			<div class="card border-secondary">
 				<div class="card-body">
 					<h2 class="h5 mb-3">Recipients</h2>
-					<div id="recipients-pane" hx-get={ RecipientsFragmentURL(data.ActiveRecipient, data.SelectedEmailID) } hx-trigger="every 2s" hx-swap="innerHTML">
+					<div id="recipients-pane" hx-get={ RecipientsFragmentURL(data.ActiveRecipient, data.SelectedEmailID) } hx-trigger="every 5s" hx-swap="innerHTML">
 						@RecipientsPartial(data)
 					</div>
 				</div>
@@ -128,7 +128,7 @@ templ InboxTab(data DashboardData) {
 			<div class="card border-secondary">
 				<div class="card-body">
 					<h2 class="h5 mb-3">Messages</h2>
-					<div id="emails-pane" hx-get={ EmailsFragmentURL(data.ActiveRecipient, data.SelectedEmailID) } hx-trigger="every 2s" hx-swap="innerHTML">
+					<div id="emails-pane" hx-get={ EmailsFragmentURL(data.ActiveRecipient, data.SelectedEmailID) } hx-trigger="every 5s" hx-swap="innerHTML">
 						@EmailsPartial(data)
 					</div>
 				</div>
@@ -136,7 +136,7 @@ templ InboxTab(data DashboardData) {
 		</div>
 		<div class="col-xl-5">
 			<div class="card border-secondary">
-				<div class="card-body" id="viewer-pane" hx-get={ ViewerFragmentURL(data.ActiveRecipient, data.SelectedEmailID) } hx-trigger="every 2s" hx-swap="innerHTML">
+				<div class="card-body" id="viewer-pane">
 					@ViewerPartial(data)
 				</div>
 			</div>

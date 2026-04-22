@@ -65,9 +65,6 @@ func (s Service) Authenticate(ctx context.Context, token string) (domain.Session
 	if time.Now().UTC().After(session.ExpiresAt) {
 		return domain.Session{}, fmt.Errorf("session expired")
 	}
-	if err := s.store.TouchSession(ctx, session.ID); err != nil {
-		return domain.Session{}, err
-	}
 	return session, nil
 }
 
