@@ -178,10 +178,15 @@ npm run build
 
 ```bash
 docker compose -f deploy/docker-compose.yml config
+docker compose -f deploy/docker-compose.yml build
 ```
 
-## Notes
+## Known limitations
 
-- App runtime is intended to be one Go application container serving dashboard, API, and webhook.
-- Cloudflare Worker still exists because Cloudflare Email Routing requires it, but it is only a build artifact stored in the app image and uploaded by backend during provisioning.
-- Attachment binary persistence still needs a follow-up pass if corruption appears in real mail tests.
+- attachment binary persistence still needs a follow-up pass if corruption appears in real mail tests
+- Cloudflare adapter still needs broader live validation against more real accounts/zones
+- generated templ files are committed to keep clone/build flow simple
+
+## License
+
+MIT

@@ -22,7 +22,7 @@ This file provides guidance to Claude Code when working in this repository.
 
 ## High-level architecture
 
-Repo is now small monorepo with three parts:
+Repo is small monorepo with three parts:
 - `backend/` Go app serving templ dashboard, REST API, auth, SQLite persistence, Cloudflare automation, and webhook ingest
 - `worker/` Cloudflare Email Worker that parses inbound mail and POSTs to backend webhook
 - `deploy/` Dockerfiles and compose for local/prod runs
@@ -40,17 +40,6 @@ Backend follows light clean-architecture split:
 - `internal/usecase/` business flows
 - `internal/adapters/` HTTP, SQLite, Cloudflare API, templ views
 - `internal/platform/` config, crypto, signing helpers
-
-`backend/cmd/emaildash/main.go` is composition root. It wires:
-- config loader
-- SQLite store
-- Argon2 password hasher
-- AES-GCM secret sealer
-- HMAC signer
-- Cloudflare HTTP client
-- setup/auth/cloudflare/ingest/inbox services
-- Gin router
-- templ-rendered dashboard handlers
 
 ### Important backend pieces
 
@@ -71,21 +60,14 @@ Backend follows light clean-architecture split:
   - owns setup state, user/session storage, encrypted secret storage, cached Cloudflare zones, emails, recipients, attachments, audit log
 
 - `internal/usecase/cloudflare/service.go`
-  - orchestration layer for Cloudflare setup
   - stores encrypted Cloudflare credentials
   - lists zones
   - provisions selected zone by enabling email routing, ensuring Worker subdomain, uploading Worker bundle from disk, pushing Worker secrets, binding catch-all rule
-  - depends on `EMAILDASH_WORKER_BUNDLE` and `EMAILDASH_PUBLIC_BASE_URL` being correct
-
-- `internal/usecase/ingest/service.go`
-  - verifies signed webhook requests
-  - fills fallback message ID if needed
-  - writes attachments under attachment dir
-  - converts payload into `domain.Email` before insert
+  - depends on `EMAILDASH_WORKER_BUNDLE` and `EMAILDASH_PUBLIC_BASE_URL`
 
 ## Worker shape
 
-`worker/src/index.ts` is single important file.
+`worker/src/index.ts` is the single important file.
 - Cloudflare `email()` handler only
 - parses `message.raw`
 - extracts subject/text/html/headers/attachments
@@ -98,17 +80,10 @@ Worker build output goes to `worker/dist/index.js`. Backend Cloudflare provision
 
 - SQLite DB, attachments, and master key live under `data/` by default.
 - Backend default public URL is `http://localhost:8080`; real Cloudflare end-to-end testing needs public HTTPS URL.
-- App runtime is intended to be one application container serving UI + API + webhook. Cloudflare Worker remains external because Cloudflare runs it.
+- App runtime is one Go application container serving UI + API + webhook. Cloudflare Worker remains external because Cloudflare runs it.
 
 ## Current project-specific cautions
 
-- Cloudflare adapter is scaffolded but still needs real staging validation against live Cloudflare account/domain. If Cloudflare API requests fail, check request shape first before changing usecase flow.
+- Cloudflare adapter still needs real staging validation against live Cloudflare account/domain. If Cloudflare API requests fail, check request shape first before changing usecase flow.
 - Attachment persistence currently writes `Attachment.Content` string directly to disk. If attachment corruption appears, inspect Worker encoding and ingest decode path first.
 - No dedicated lint script exists yet. Do not document or rely on nonexistent lint command.
-
-## Deployment workflow defaults
-
-- After code changes in this repo, default workflow is: finish code changes, run relevant builds/tests, create a git commit, push to remote, then deploy to VPS — unless user explicitly says not to for that change.
-- Deployment target is VPS `178.104.215.90` for `emaildash.purya.dev`.
-- Deployment goal is Docker Compose. Prefer compose-based rollout for this project instead of ad hoc manual runtime commands.
-- When deploying to VPS, use repo's production Docker Compose setup under `deploy/`.

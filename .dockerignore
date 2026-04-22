@@ -1,0 +1,13 @@
+.git
+.gitignore
+.claude
+CLAUDE.md
+logs/
+data/
+data-filter-test/
+backend/.cache/
+backend/bin/
+worker/node_modules/
+worker/dist/
+*.tgz
+*.tmp
