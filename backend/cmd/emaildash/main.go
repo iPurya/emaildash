@@ -50,6 +50,7 @@ func main() {
 		Cloudflare: handlers.NewCloudflareHandler(cloudflareService),
 		Ingest:     handlers.NewIngestHandler(ingestService),
 		Emails:     handlers.NewEmailsHandler(inboxService),
+		Pages:      handlers.NewPagesHandler(setupService, authService, cloudflareService, inboxService, cfg.CookieName),
 		AuthSvc:    authService,
 	})
 

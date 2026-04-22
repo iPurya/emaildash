@@ -1,10 +1,3 @@
-FROM node:22 AS frontend-builder
-WORKDIR /app/frontend
-COPY frontend/package.json frontend/package-lock.json ./
-RUN npm ci
-COPY frontend .
-RUN npm run build
-
 FROM node:22 AS worker-builder
 WORKDIR /app/worker
 COPY worker/package.json worker/package-lock.json ./
@@ -16,8 +9,9 @@ FROM golang:1.24 AS backend-builder
 WORKDIR /app/backend
 COPY backend/go.mod backend/go.sum ./
 RUN go mod download
+RUN go install github.com/a-h/templ/cmd/templ@v0.3.1001
 COPY backend .
-RUN go build -o /emaildash ./cmd/emaildash
+RUN templ generate && go build -o /emaildash ./cmd/emaildash
 
 FROM debian:bookworm-slim
 RUN apt-get update \
@@ -25,10 +19,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY --from=backend-builder /emaildash /usr/local/bin/emaildash
-COPY --from=frontend-builder /app/frontend/dist /app/frontend/dist
 COPY --from=worker-builder /app/worker/dist /app/worker/dist
 ENV PORT=8080 \
-    EMAILDASH_FRONTEND_DIST=/app/frontend/dist \
     EMAILDASH_WORKER_BUNDLE=/app/worker/dist/index.js \
     EMAILDASH_DATA_DIR=/data
 EXPOSE 8080

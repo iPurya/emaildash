@@ -2,12 +2,6 @@ package httpadapter
 
 import (
 	"context"
-	"embed"
-	"io/fs"
-	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -17,15 +11,13 @@ import (
 	"github.com/purya/emaildash/backend/internal/platform/config"
 )
 
-//go:embed static/*
-var embeddedStatic embed.FS
-
 type Services struct {
 	Setup      handlers.SetupHandler
 	Auth       handlers.AuthHandler
 	Cloudflare handlers.CloudflareHandler
 	Ingest     handlers.IngestHandler
 	Emails     handlers.EmailsHandler
+	Pages      handlers.PagesHandler
 	AuthSvc    interface{ Authenticate(ctx context.Context, token string) (domain.Session, error) }
 }
 
@@ -37,6 +29,23 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 		AllowHeaders:     []string{"Content-Type"},
 		AllowCredentials: true,
 	}))
+
+	router.GET("/", services.Pages.Root)
+	router.GET("/setup", services.Pages.SetupPage)
+	router.POST("/setup", services.Pages.SetupSubmit)
+	router.GET("/login", services.Pages.LoginPage)
+	router.POST("/login", services.Pages.LoginSubmit)
+
+	pages := router.Group("")
+	pages.Use(middleware.RequirePageAuth(cfg.CookieName, services.AuthSvc))
+	pages.POST("/logout", services.Pages.LogoutSubmit)
+	pages.GET("/dashboard", services.Pages.DashboardPage)
+	pages.GET("/ui/inbox/recipients", services.Pages.RecipientsFragment)
+	pages.GET("/ui/inbox/emails", services.Pages.EmailsFragment)
+	pages.GET("/ui/inbox/viewer", services.Pages.ViewerFragment)
+	pages.POST("/dashboard/password", services.Pages.PasswordSubmit)
+	pages.POST("/dashboard/cloudflare/credentials", services.Pages.CloudflareCredentialsSubmit)
+	pages.POST("/dashboard/cloudflare/provision", services.Pages.CloudflareProvisionSubmit)
 
 	api := router.Group("/api")
 	api.GET("/setup/status", services.Setup.Status)
@@ -58,42 +67,5 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 	authed.POST("/cloudflare/zones/:zoneId/provision", services.Cloudflare.Provision)
 	authed.PATCH("/emails/:id/read", services.Emails.MarkRead)
 
-	if hasFrontendDist(cfg.FrontendDistDir) {
-		router.GET("/", func(c *gin.Context) {
-			c.File(filepath.Join(cfg.FrontendDistDir, "index.html"))
-		})
-		router.NoRoute(func(c *gin.Context) {
-			if strings.HasPrefix(c.Request.URL.Path, "/api/") {
-				c.JSON(http.StatusNotFound, gin.H{"error": "not found"})
-				return
-			}
-			if c.Request.Method != http.MethodGet && c.Request.Method != http.MethodHead {
-				c.Status(http.StatusNotFound)
-				return
-			}
-			candidate := filepath.Join(cfg.FrontendDistDir, filepath.FromSlash(strings.TrimPrefix(filepath.Clean(c.Request.URL.Path), string(filepath.Separator))))
-			if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
-				c.File(candidate)
-				return
-			}
-			c.File(filepath.Join(cfg.FrontendDistDir, "index.html"))
-		})
-		return router
-	}
-
-	staticFS, err := fs.Sub(embeddedStatic, "static")
-	if err == nil {
-		router.GET("/", func(c *gin.Context) {
-			c.FileFromFS("index.html", http.FS(staticFS))
-		})
-	}
 	return router
-}
-
-func hasFrontendDist(distDir string) bool {
-	if distDir == "" {
-		return false
-	}
-	info, err := os.Stat(filepath.Join(distDir, "index.html"))
-	return err == nil && !info.IsDir()
 }

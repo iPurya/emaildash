@@ -1,21 +1,15 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to Claude Code when working in this repository.
 
 ## Common commands
 
 ### Backend
 - Install deps: `cd backend && go mod tidy`
+- Generate templ code: `cd backend && go run github.com/a-h/templ/cmd/templ@v0.3.1001 generate`
 - Run app: `cd backend && go run ./cmd/emaildash`
 - Build all packages: `cd backend && go build ./...`
 - Run all tests: `cd backend && go test ./...`
-- Run single package tests: `cd backend && go test ./internal/usecase/auth`
-- Run single test: `cd backend && go test ./internal/usecase/auth -run TestName`
-
-### Frontend
-- Install deps: `cd frontend && npm install`
-- Run dev server: `cd frontend && npm run dev`
-- Build: `cd frontend && npm run build`
 
 ### Worker
 - Install deps: `cd worker && npm install`
@@ -26,29 +20,25 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Start local stack: `docker compose -f deploy/docker-compose.yml up --build`
 - Validate compose config: `docker compose -f deploy/docker-compose.yml config`
 
-### Linting
-- No dedicated lint command configured currently in repo.
-
 ## High-level architecture
 
-Repo is small monorepo with four parts:
-- `backend/` Go API, auth, SQLite persistence, Cloudflare automation, webhook ingest
-- `frontend/` React dashboard and setup/login flows
-- `worker/` Cloudflare Email Worker that parses inbound mail and POSTs to backend
-- `deploy/` Dockerfiles and compose for local/full-stack runs
+Repo is now small monorepo with three parts:
+- `backend/` Go app serving templ dashboard, REST API, auth, SQLite persistence, Cloudflare automation, and webhook ingest
+- `worker/` Cloudflare Email Worker that parses inbound mail and POSTs to backend webhook
+- `deploy/` Dockerfiles and compose for local/prod runs
 
 ### Request/data flow
 1. Cloudflare Email Routing catch-all sends message to Worker.
-2. Worker parses raw MIME with `postal-mime`, builds JSON payload, signs payload with HMAC, sends to backend webhook.
-3. Backend webhook verifies signature, normalizes payload, stores email/recipients/attachments metadata in SQLite, writes attachment content to disk.
-4. React app reads grouped recipients and email detail via backend REST API.
+2. Worker parses raw MIME with `postal-mime`, signs payload, and sends JSON to backend webhook.
+3. Backend webhook verifies signature, stores email/recipients/attachments metadata in SQLite, and writes attachment content to disk.
+4. Same Go app serves dashboard UI and REST API for browsing stored mail.
 
 ## Backend shape
 
 Backend follows light clean-architecture split:
 - `internal/domain/` shared data models
 - `internal/usecase/` business flows
-- `internal/adapters/` HTTP, SQLite, Cloudflare API
+- `internal/adapters/` HTTP, SQLite, Cloudflare API, templ views
 - `internal/platform/` config, crypto, signing helpers
 
 `backend/cmd/emaildash/main.go` is composition root. It wires:
@@ -60,20 +50,25 @@ Backend follows light clean-architecture split:
 - Cloudflare HTTP client
 - setup/auth/cloudflare/ingest/inbox services
 - Gin router
+- templ-rendered dashboard handlers
 
 ### Important backend pieces
 
 - `internal/adapters/http/router.go`
-  - splits public routes from authenticated routes
-  - public: setup status/init, login/logout, ingest webhook
-  - authenticated: auth/me, Cloudflare, inbox, settings
-  - also serves embedded static fallback from `internal/adapters/http/static/`
+  - serves browser pages (`/`, `/setup`, `/login`, `/dashboard`)
+  - serves inbox HTMX fragments under `/ui/...`
+  - keeps REST API under `/api/...`
+  - keeps webhook at `/api/ingest/cloudflare/email`
+
+- `internal/adapters/http/handlers/pages.go`
+  - page/HTMX handler layer for setup, login, dashboard, Cloudflare, and password flows
+
+- `internal/adapters/http/views/`
+  - `templ` templates and helpers for server-rendered UI
 
 - `internal/adapters/sqlite/db.go`
-  - acts as repository layer for nearly all app state
-  - applies embedded SQL migrations on startup
+  - repository layer for nearly all app state
   - owns setup state, user/session storage, encrypted secret storage, cached Cloudflare zones, emails, recipients, attachments, audit log
-  - email queries return normalized records and join recipient/attachment tables
 
 - `internal/usecase/cloudflare/service.go`
   - orchestration layer for Cloudflare setup
@@ -87,30 +82,6 @@ Backend follows light clean-architecture split:
   - fills fallback message ID if needed
   - writes attachments under attachment dir
   - converts payload into `domain.Email` before insert
-
-- `internal/platform/crypto/`
-  - `password.go`: Argon2id password hashing and verification
-  - `secrets.go`: AES-GCM encryption using local master key file
-
-- `internal/platform/signing/hmac.go`
-  - worker/backend shared HMAC verification format: `timestamp.body`
-
-## Frontend shape
-
-Frontend is Vite + React Router + TanStack Query.
-
-`frontend/src/app/router.tsx` is entry point for app state machine:
-- calls setup-status query
-- calls auth/me query
-- decides between `SetupWizard`, `Login`, or authenticated shell
-- session auth is cookie-based; frontend only needs authenticated session cookie for protected requests
-
-Inbox UI is three-pane layout:
-- recipient groups
-- email list
-- email viewer
-
-Settings routes are nested under `/settings`.
 
 ## Worker shape
 
@@ -127,7 +98,7 @@ Worker build output goes to `worker/dist/index.js`. Backend Cloudflare provision
 
 - SQLite DB, attachments, and master key live under `data/` by default.
 - Backend default public URL is `http://localhost:8080`; real Cloudflare end-to-end testing needs public HTTPS URL.
-- Backend serves placeholder embedded static page unless frontend build artifacts are mounted/copied into runtime path.
+- App runtime is intended to be one application container serving UI + API + webhook. Cloudflare Worker remains external because Cloudflare runs it.
 
 ## Current project-specific cautions
 

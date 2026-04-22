@@ -1,5 +1,0 @@
-FROM node:22 AS builder
-WORKDIR /app
-COPY frontend/package.json frontend/tsconfig.json frontend/vite.config.ts frontend/tailwind.config.js frontend/postcss.config.js frontend/index.html ./
-COPY frontend/src ./src
-RUN npm install && npm run build

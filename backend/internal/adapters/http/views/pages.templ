@@ -1,0 +1,282 @@
+package views
+
+templ Document(title string) {
+	<!doctype html>
+	<html lang="en">
+		<head>
+			<meta charset="utf-8"/>
+			<meta name="viewport" content="width=device-width, initial-scale=1"/>
+			<title>{ title }</title>
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+			<style>
+				body { background:#0f172a; color:#e2e8f0; }
+				.card, .list-group-item, .table { background-color:#111827; color:#e2e8f0; }
+				.pre-wrap { white-space:pre-wrap; word-break:break-word; }
+				.sidebar-sticky { position:sticky; top:1rem; }
+				.email-html img { max-width:100%; height:auto; }
+			</style>
+		</head>
+		<body>
+			<div class="container-fluid py-4">
+				{ children... }
+			</div>
+		</body>
+	</html>
+}
+
+templ SetupPage(data SetupPageData) {
+	@Document("Setup") {
+		<div class="row justify-content-center">
+			<div class="col-lg-6">
+				<div class="card border-secondary shadow-sm">
+					<div class="card-body p-4">
+						<h1 class="h3 mb-3">Emaildash setup</h1>
+						<p class="text-secondary">Create dashboard password to initialize app. After that, continue Cloudflare and inbox from dashboard.</p>
+						if data.Error != "" {
+							<div class="alert alert-danger">{ data.Error }</div>
+						}
+						<form method="post" action={ templ.URL("/setup") } class="d-grid gap-3">
+							<div>
+								<label class="form-label">Password</label>
+								<input class="form-control bg-dark text-light border-secondary" type="password" name="password" required/>
+							</div>
+							<button class="btn btn-primary" type="submit">Initialize app</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+templ LoginPage(data LoginPageData) {
+	@Document("Login") {
+		<div class="row justify-content-center">
+			<div class="col-lg-6">
+				<div class="card border-secondary shadow-sm">
+					<div class="card-body p-4">
+						<h1 class="h3 mb-3">Login</h1>
+						<p class="text-secondary">Simple cookie-auth dashboard.</p>
+						if data.Error != "" {
+							<div class="alert alert-danger">{ data.Error }</div>
+						}
+						<form method="post" action={ templ.URL("/login") } class="d-grid gap-3">
+							<div>
+								<label class="form-label">Password</label>
+								<input class="form-control bg-dark text-light border-secondary" type="password" name="password" required/>
+							</div>
+							<button class="btn btn-primary" type="submit">Log in</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+templ DashboardPage(data DashboardData) {
+	@Document("Dashboard") {
+		<div class="row g-4">
+			<div class="col-xl-2">
+				<div class="card border-secondary sidebar-sticky">
+					<div class="card-body">
+						<h1 class="h4 mb-3">Emaildash</h1>
+						<div class="list-group">
+							<a href={ templ.URL(DashboardURL("inbox", data.ActiveRecipient, data.SelectedEmailID)) } class={ NavClass(data.ActiveTab == "inbox") }>Inbox</a>
+							<a href={ templ.URL(DashboardURL("cloudflare", "", 0)) } class={ NavClass(data.ActiveTab == "cloudflare") }>Cloudflare</a>
+							<a href={ templ.URL(DashboardURL("password", "", 0)) } class={ NavClass(data.ActiveTab == "password") }>Password</a>
+						</div>
+						<form method="post" action={ templ.URL("/logout") } class="mt-3">
+							<button class="btn btn-outline-light w-100" type="submit">Logout</button>
+						</form>
+					</div>
+				</div>
+			</div>
+			<div class="col-xl-10">
+				if data.Error != "" {
+					<div class="alert alert-danger">{ data.Error }</div>
+				}
+				if data.Notice != "" {
+					<div class="alert alert-success">{ data.Notice }</div>
+				}
+				if data.ActiveTab == "cloudflare" {
+					@CloudflareTab(data)
+				} else if data.ActiveTab == "password" {
+					@PasswordTab(data)
+				} else {
+					@InboxTab(data)
+				}
+			</div>
+		</div>
+	}
+}
+
+templ InboxTab(data DashboardData) {
+	<div class="row g-3">
+		<div class="col-xl-3">
+			<div class="card border-secondary">
+				<div class="card-body">
+					<h2 class="h5 mb-3">Recipients</h2>
+					<div id="recipients-pane" hx-get={ RecipientsFragmentURL(data.ActiveRecipient, data.SelectedEmailID) } hx-trigger="every 2s" hx-swap="innerHTML">
+						@RecipientsPartial(data)
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-4">
+			<div class="card border-secondary">
+				<div class="card-body">
+					<h2 class="h5 mb-3">Messages</h2>
+					<div id="emails-pane" hx-get={ EmailsFragmentURL(data.ActiveRecipient, data.SelectedEmailID) } hx-trigger="every 2s" hx-swap="innerHTML">
+						@EmailsPartial(data)
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-5">
+			<div class="card border-secondary">
+				<div class="card-body" id="viewer-pane" hx-get={ ViewerFragmentURL(data.ActiveRecipient, data.SelectedEmailID) } hx-trigger="every 2s" hx-swap="innerHTML">
+					@ViewerPartial(data)
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+templ RecipientsPartial(data DashboardData) {
+	<div class="list-group">
+		<a href={ templ.URL(DashboardURL("inbox", "", data.SelectedEmailID)) } class={ NavClass(data.ActiveRecipient == "") }>All recipients</a>
+		for _, recipient := range data.Recipients {
+			<a href={ templ.URL(DashboardURL("inbox", recipient.Address, 0)) } class={ NavClass(data.ActiveRecipient == recipient.Address) }>
+				<div class="d-flex justify-content-between align-items-center">
+					<span>{ recipient.Address }</span>
+					<span class="badge text-bg-primary">{ recipient.UnreadCount }</span>
+				</div>
+				if recipient.LatestSubject != nil {
+					<div class="small text-secondary mt-1">{ *recipient.LatestSubject }</div>
+				}
+			</a>
+		}
+	</div>
+}
+
+templ EmailsPartial(data DashboardData) {
+	if len(data.Emails) == 0 {
+		<div class="text-secondary">No emails yet.</div>
+	} else {
+		<div class="list-group">
+			for _, email := range data.Emails {
+				<a href={ templ.URL(DashboardURL("inbox", data.ActiveRecipient, email.ID)) } class={ NavClass(data.SelectedEmailID == email.ID) }>
+					<div class="fw-semibold">{ email.Subject }</div>
+					<div class="small text-secondary">{ email.MailFrom }</div>
+					<div class="small mt-1">{ PreviewText(email.TextBody, email.HTMLBody) }</div>
+				</a>
+			}
+		</div>
+	}
+}
+
+templ ViewerPartial(data DashboardData) {
+	if data.ActiveEmail == nil {
+		<div class="text-secondary">Select email.</div>
+	} else {
+		<h2 class="h5">{ data.ActiveEmail.Subject }</h2>
+		<div class="small text-secondary mb-2">From { data.ActiveEmail.MailFrom }</div>
+		<div class="small text-secondary mb-3">To { RecipientsText(data.ActiveEmail.Recipients) }</div>
+		if data.ActiveEmail.HTMLBody != "" {
+			<div class="email-html border rounded p-3 bg-white text-dark">
+				@SanitizedHTML(data.ActiveEmail.HTMLBody)
+			</div>
+		} else {
+			<pre class="pre-wrap border rounded p-3 bg-dark text-light">{ data.ActiveEmail.TextBody }</pre>
+		}
+		if len(data.ActiveEmail.Attachments) > 0 {
+			<div class="mt-3">
+				<h3 class="h6">Attachments</h3>
+				<ul class="list-group">
+					for _, attachment := range data.ActiveEmail.Attachments {
+						<li class="list-group-item bg-dark text-light border-secondary">
+							<div class="fw-semibold">{ attachment.Filename }</div>
+							<div class="small text-secondary">{ attachment.ContentType } • { FormatBytes(attachment.Size) }</div>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+	}
+}
+
+templ CloudflareTab(data DashboardData) {
+	<div class="row g-3">
+		<div class="col-xl-6">
+			<div class="card border-secondary">
+				<div class="card-body">
+					<h2 class="h5">Cloudflare credentials</h2>
+					<p class="text-secondary">Secrets stay server-side. Enter only when saving or replacing.</p>
+					<form method="post" action={ templ.URL("/dashboard/cloudflare/credentials") } class="d-grid gap-3">
+						<input class="form-control bg-dark text-light border-secondary" name="email" type="email" placeholder="Cloudflare account email" required/>
+						<input class="form-control bg-dark text-light border-secondary" name="apiKey" type="text" placeholder="Cloudflare Global API key" required/>
+						<button class="btn btn-primary" type="submit">Save and load domains</button>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div class="col-xl-6">
+			<div class="card border-secondary">
+				<div class="card-body">
+					<h2 class="h5">Current status</h2>
+					if data.Status == nil {
+						<div class="text-secondary">No selected zone status yet.</div>
+					} else {
+						<div><strong>Zone:</strong> { data.Status.ZoneName }</div>
+						<div><strong>Routing:</strong> { data.Status.EmailRoutingStatus }</div>
+						<div><strong>Catch-all:</strong> { data.Status.CatchAllDestination }</div>
+						<div><strong>Worker:</strong> { data.Status.WorkerScriptName }</div>
+					}
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="card border-secondary mt-3">
+		<div class="card-body">
+			<h2 class="h5">Zones</h2>
+			if len(data.Zones) == 0 {
+				<div class="text-secondary">No cached zones. Save credentials first.</div>
+			} else {
+				<div class="table-responsive">
+					<table class="table table-dark table-bordered align-middle">
+						<thead><tr><th>Domain</th><th>Status</th><th></th></tr></thead>
+						<tbody>
+							for _, zone := range data.Zones {
+								<tr>
+									<td>{ zone.Name }</td>
+									<td>{ zone.Status }</td>
+									<td>
+										<form method="post" action={ templ.URL("/dashboard/cloudflare/provision") }>
+											<input type="hidden" name="zoneId" value={ zone.ID }/>
+											<button class="btn btn-outline-light btn-sm" type="submit">Provision</button>
+										</form>
+									</td>
+								</tr>
+							}
+						</tbody>
+					</table>
+				</div>
+			}
+		</div>
+	</div>
+}
+
+templ PasswordTab(data DashboardData) {
+	<div class="card border-secondary">
+		<div class="card-body">
+			<h2 class="h5">Change password</h2>
+			<form method="post" action={ templ.URL("/dashboard/password") } class="d-grid gap-3">
+				<input class="form-control bg-dark text-light border-secondary" name="oldPassword" type="password" placeholder="Current password" required/>
+				<input class="form-control bg-dark text-light border-secondary" name="newPassword" type="password" placeholder="New password" required/>
+				<button class="btn btn-primary" type="submit">Update password</button>
+			</form>
+		</div>
+	</div>
+}

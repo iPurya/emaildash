@@ -15,10 +15,8 @@ type Config struct {
 	MasterKeyPath     string
 	PublicBaseURL     string
 	CookieName        string
-	CSRFHeader        string
 	WorkerScriptName  string
 	WorkerSubdomain   string
-	FrontendDistDir   string
 	WorkerBundlePath  string
 	SessionTTLHours   int
 	AllowedOrigin     string
@@ -26,7 +24,6 @@ type Config struct {
 
 func Load() Config {
 	dataDir := envOrDefault("EMAILDASH_DATA_DIR", filepath.Clean(filepath.Join(".", "..", "data")))
-	frontendDist := envOrDefault("EMAILDASH_FRONTEND_DIST", filepath.Clean(filepath.Join("..", "frontend", "dist")))
 	workerBundle := envOrDefault("EMAILDASH_WORKER_BUNDLE", filepath.Clean(filepath.Join("..", "worker", "dist", "index.js")))
 	cfg := Config{
 		Port:             envOrDefault("PORT", "8080"),
@@ -36,13 +33,11 @@ func Load() Config {
 		MasterKeyPath:    envOrDefault("EMAILDASH_MASTER_KEY_PATH", filepath.Join(dataDir, ".masterkey")),
 		PublicBaseURL:    envOrDefault("EMAILDASH_PUBLIC_BASE_URL", "http://localhost:8080"),
 		CookieName:       envOrDefault("EMAILDASH_COOKIE_NAME", "emaildash_session"),
-		CSRFHeader:       envOrDefault("EMAILDASH_CSRF_HEADER", "X-CSRF-Token"),
 		WorkerScriptName: envOrDefault("EMAILDASH_WORKER_SCRIPT_NAME", "emaildash-ingest"),
 		WorkerSubdomain:  envOrDefault("EMAILDASH_WORKER_SUBDOMAIN", "emaildash-receiver"),
-		FrontendDistDir:  frontendDist,
 		WorkerBundlePath: workerBundle,
 		SessionTTLHours:  envOrDefaultInt("EMAILDASH_SESSION_TTL_HOURS", 24*14),
-		AllowedOrigin:    envOrDefault("EMAILDASH_ALLOWED_ORIGIN", "http://localhost:5173"),
+		AllowedOrigin:    envOrDefault("EMAILDASH_ALLOWED_ORIGIN", "http://localhost:8080"),
 	}
 	return cfg
 }
