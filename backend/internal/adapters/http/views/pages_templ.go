@@ -42,7 +42,7 @@ func Document(title string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\"><link rel=\"shortcut icon\" href=\"/favicon.svg\" type=\"image/svg+xml\"><link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\"><script src=\"https://unpkg.com/htmx.org@1.9.12\"></script><script>\n\t\t\t\t(function() {\n\t\t\t\t\tconst key = \"emaildash-theme\";\n\t\t\t\t\tconst root = document.documentElement;\n\t\t\t\t\tlet saved = \"\";\n\t\t\t\t\ttry {\n\t\t\t\t\t\tsaved = localStorage.getItem(key) || \"\";\n\t\t\t\t\t} catch (error) {}\n\t\t\t\t\tconst initial = saved === \"light\" || saved === \"dark\" ? saved : \"dark\";\n\t\t\t\t\tfunction apply(theme) {\n\t\t\t\t\t\troot.dataset.theme = theme;\n\t\t\t\t\t\troot.style.colorScheme = theme;\n\t\t\t\t\t\tdocument.querySelectorAll(\"[data-theme-label]\").forEach(function(label) {\n\t\t\t\t\t\t\tlabel.textContent = theme === \"dark\" ? \"Dark\" : \"Light\";\n\t\t\t\t\t\t});\n\t\t\t\t\t\tdocument.querySelectorAll(\"[data-theme-toggle]\").forEach(function(button) {\n\t\t\t\t\t\t\tbutton.setAttribute(\"aria-pressed\", theme === \"dark\" ? \"true\" : \"false\");\n\t\t\t\t\t\t});\n\t\t\t\t\t}\n\t\t\t\t\tapply(initial);\n\t\t\t\t\twindow.emaildashToggleTheme = function() {\n\t\t\t\t\t\tconst next = root.dataset.theme === \"dark\" ? \"light\" : \"dark\";\n\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\tlocalStorage.setItem(key, next);\n\t\t\t\t\t\t} catch (error) {}\n\t\t\t\t\t\tapply(next);\n\t\t\t\t\t};\n\t\t\t\t\tdocument.addEventListener(\"DOMContentLoaded\", function() {\n\t\t\t\t\t\tapply(root.dataset.theme || initial);\n\t\t\t\t\t});\n\t\t\t\t})();\n\t\t\t</script><style>\n\t\t\t\t:root {\n\t\t\t\t\tcolor-scheme: dark;\n\t\t\t\t\t--bg: #070b14;\n\t\t\t\t\t--surface: #0f1726;\n\t\t\t\t\t--surface-soft: #121c2d;\n\t\t\t\t\t--surface-raised: #172236;\n\t\t\t\t\t--ink: #e8eef8;\n\t\t\t\t\t--muted: #98a8bd;\n\t\t\t\t\t--label: #c9d5e6;\n\t\t\t\t\t--line: #26354c;\n\t\t\t\t\t--line-soft: #1b293e;\n\t\t\t\t\t--brand: #69a7ff;\n\t\t\t\t\t--brand-strong: #3b82f6;\n\t\t\t\t\t--brand-soft: #10284d;\n\t\t\t\t\t--brand-soft-strong: #173a70;\n\t\t\t\t\t--accent: #2dd4bf;\n\t\t\t\t\t--warning: #f6c453;\n\t\t\t\t\t--danger: #ff8a80;\n\t\t\t\t\t--success-bg: #063a30;\n\t\t\t\t\t--success-ink: #5eead4;\n\t\t\t\t\t--warning-bg: #3a2a08;\n\t\t\t\t\t--neutral-bg: #1c2738;\n\t\t\t\t\t--topbar-bg: rgba(10, 15, 26, 0.9);\n\t\t\t\t\t--brand-mark-bg: #e8eef8;\n\t\t\t\t\t--brand-mark-ink: #0b1020;\n\t\t\t\t\t--auth-brand-bg: #0b1220;\n\t\t\t\t\t--auth-brand-ink: #f8fafc;\n\t\t\t\t\t--auth-brand-muted: #a7b7cd;\n\t\t\t\t\t--nav-hover: #172236;\n\t\t\t\t\t--active-bg: #132a4d;\n\t\t\t\t\t--item-hover: #121e31;\n\t\t\t\t\t--code-bg: #050916;\n\t\t\t\t\t--code-ink: #dbeafe;\n\t\t\t\t\t--message-bg: #ffffff;\n\t\t\t\t\t--message-ink: #101828;\n\t\t\t\t\t--toggle-track: #2563eb;\n\t\t\t\t\t--shadow: 0 18px 44px rgba(0, 0, 0, 0.34);\n\t\t\t\t}\n\t\t\t\t:root[data-theme=\"light\"] {\n\t\t\t\t\tcolor-scheme: light;\n\t\t\t\t\t--bg: #f4f6f9;\n\t\t\t\t\t--surface: #ffffff;\n\t\t\t\t\t--surface-soft: #f8fafc;\n\t\t\t\t\t--surface-raised: #ffffff;\n\t\t\t\t\t--ink: #101828;\n\t\t\t\t\t--muted: #667085;\n\t\t\t\t\t--label: #344054;\n\t\t\t\t\t--line: #d8dee8;\n\t\t\t\t\t--line-soft: #eaedf3;\n\t\t\t\t\t--brand: #2563eb;\n\t\t\t\t\t--brand-strong: #1746a2;\n\t\t\t\t\t--brand-soft: #eef4ff;\n\t\t\t\t\t--brand-soft-strong: #dbeafe;\n\t\t\t\t\t--accent: #0f766e;\n\t\t\t\t\t--warning: #b7791f;\n\t\t\t\t\t--danger: #b42318;\n\t\t\t\t\t--success-bg: #ecfdf3;\n\t\t\t\t\t--success-ink: #027a48;\n\t\t\t\t\t--warning-bg: #fffaeb;\n\t\t\t\t\t--neutral-bg: #f2f4f7;\n\t\t\t\t\t--topbar-bg: rgba(255, 255, 255, 0.92);\n\t\t\t\t\t--brand-mark-bg: #111827;\n\t\t\t\t\t--brand-mark-ink: #ffffff;\n\t\t\t\t\t--auth-brand-bg: #111827;\n\t\t\t\t\t--auth-brand-ink: #ffffff;\n\t\t\t\t\t--auth-brand-muted: #cbd5e1;\n\t\t\t\t\t--nav-hover: #eef2f7;\n\t\t\t\t\t--active-bg: #ffffff;\n\t\t\t\t\t--item-hover: #f8fbff;\n\t\t\t\t\t--code-bg: #0f172a;\n\t\t\t\t\t--code-ink: #e2e8f0;\n\t\t\t\t\t--message-bg: #ffffff;\n\t\t\t\t\t--message-ink: #101828;\n\t\t\t\t\t--toggle-track: #d8dee8;\n\t\t\t\t\t--shadow: 0 18px 40px rgba(15, 23, 42, 0.08);\n\t\t\t\t}\n\t\t\t\t* { box-sizing: border-box; }\n\t\t\t\tbody {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tbackground: var(--bg);\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t\tfont-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;\n\t\t\t\t\tfont-size: 14px;\n\t\t\t\t\tletter-spacing: 0;\n\t\t\t\t}\n\t\t\t\ta { color: inherit; }\n\t\t\t\tcode, .docs-code, .api-key-box {\n\t\t\t\t\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace;\n\t\t\t\t}\n\t\t\t\tcode { color: var(--brand); overflow-wrap: anywhere; word-break: break-word; }\n\t\t\t\t.app-shell { min-height: 100vh; }\n\t\t\t\t.topbar {\n\t\t\t\t\tposition: sticky;\n\t\t\t\t\ttop: 0;\n\t\t\t\t\tz-index: 20;\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 20px;\n\t\t\t\t\tmin-height: 68px;\n\t\t\t\t\tpadding: 12px 28px;\n\t\t\t\t\tbackground: var(--topbar-bg);\n\t\t\t\t\tborder-bottom: 1px solid var(--line);\n\t\t\t\t\tbackdrop-filter: blur(18px);\n\t\t\t\t}\n\t\t\t\t.brand {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tgap: 10px;\n\t\t\t\t\ttext-decoration: none;\n\t\t\t\t\tfont-weight: 750;\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t}\n\t\t\t\t.brand-mark {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tplace-items: center;\n\t\t\t\t\twidth: 34px;\n\t\t\t\t\theight: 34px;\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--brand-mark-bg);\n\t\t\t\t\tcolor: var(--brand-mark-ink);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tletter-spacing: 0;\n\t\t\t\t}\n\t\t\t\t.top-nav {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tgap: 6px;\n\t\t\t\t\tpadding: 4px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.top-nav-link {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tmin-height: 34px;\n\t\t\t\t\tpadding: 7px 12px;\n\t\t\t\t\tborder-radius: 6px;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-weight: 650;\n\t\t\t\t\ttext-decoration: none;\n\t\t\t\t\twhite-space: nowrap;\n\t\t\t\t}\n\t\t\t\t.top-nav-link:hover { color: var(--ink); background: var(--nav-hover); }\n\t\t\t\t.top-nav-link.is-active {\n\t\t\t\t\tbackground: var(--active-bg);\n\t\t\t\t\tcolor: var(--brand);\n\t\t\t\t\tbox-shadow: 0 1px 3px rgba(16, 24, 40, 0.12);\n\t\t\t\t}\n\t\t\t\t.top-actions { display: flex; align-items: center; gap: 10px; }\n\t\t\t\t.theme-toggle {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: center;\n\t\t\t\t\tgap: 8px;\n\t\t\t\t\tmin-height: 38px;\n\t\t\t\t\tpadding: 6px 10px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t\tfont-weight: 750;\n\t\t\t\t\twhite-space: nowrap;\n\t\t\t\t}\n\t\t\t\t.theme-toggle:hover { background: var(--surface-soft); }\n\t\t\t\t.theme-toggle-track {\n\t\t\t\t\tposition: relative;\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\twidth: 40px;\n\t\t\t\t\theight: 22px;\n\t\t\t\t\tborder-radius: 999px;\n\t\t\t\t\tbackground: var(--toggle-track);\n\t\t\t\t\tbox-shadow: inset 0 0 0 1px rgba(255,255,255,.12);\n\t\t\t\t}\n\t\t\t\t.theme-toggle-knob {\n\t\t\t\t\tposition: absolute;\n\t\t\t\t\ttop: 3px;\n\t\t\t\t\tleft: 3px;\n\t\t\t\t\twidth: 16px;\n\t\t\t\t\theight: 16px;\n\t\t\t\t\tborder-radius: 999px;\n\t\t\t\t\tbackground: #fff;\n\t\t\t\t\tbox-shadow: 0 2px 6px rgba(0,0,0,.22);\n\t\t\t\t\ttransform: translateX(18px);\n\t\t\t\t\ttransition: transform .18s ease;\n\t\t\t\t}\n\t\t\t\t:root[data-theme=\"light\"] .theme-toggle-knob { transform: translateX(0); }\n\t\t\t\t.app-main {\n\t\t\t\t\twidth: min(1680px, 100%);\n\t\t\t\t\tmargin: 0 auto;\n\t\t\t\t\tpadding: 24px 28px 32px;\n\t\t\t\t}\n\t\t\t\t.page-heading {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: end;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 18px;\n\t\t\t\t\tmargin-bottom: 18px;\n\t\t\t\t}\n\t\t\t\t.eyebrow {\n\t\t\t\t\tmargin: 0 0 4px;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tfont-weight: 750;\n\t\t\t\t\tletter-spacing: .08em;\n\t\t\t\t\ttext-transform: uppercase;\n\t\t\t\t}\n\t\t\t\t.page-title {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tfont-size: clamp(26px, 3vw, 38px);\n\t\t\t\t\tline-height: 1;\n\t\t\t\t\tfont-weight: 780;\n\t\t\t\t}\n\t\t\t\t.metric-strip { display: flex; flex-wrap: wrap; gap: 8px; justify-content: end; }\n\t\t\t\t.metric {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tgap: 8px;\n\t\t\t\t\tmin-height: 34px;\n\t\t\t\t\tpadding: 6px 10px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-weight: 650;\n\t\t\t\t}\n\t\t\t\t.metric strong { color: var(--ink); }\n\t\t\t\t.alert {\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tborder-width: 1px;\n\t\t\t\t\tbox-shadow: none;\n\t\t\t\t}\n\t\t\t\t.alert-danger {\n\t\t\t\t\tbackground: color-mix(in srgb, var(--danger) 16%, var(--surface));\n\t\t\t\t\tborder-color: color-mix(in srgb, var(--danger) 34%, var(--line));\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t}\n\t\t\t\t.alert-success {\n\t\t\t\t\tbackground: color-mix(in srgb, var(--accent) 14%, var(--surface));\n\t\t\t\t\tborder-color: color-mix(in srgb, var(--accent) 30%, var(--line));\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t}\n\t\t\t\t.btn {\n\t\t\t\t\tborder-radius: 6px;\n\t\t\t\t\tfont-weight: 700;\n\t\t\t\t\tletter-spacing: 0;\n\t\t\t\t}\n\t\t\t\t.btn-primary {\n\t\t\t\t\tbackground: var(--brand);\n\t\t\t\t\tborder-color: var(--brand);\n\t\t\t\t}\n\t\t\t\t.btn-primary:hover {\n\t\t\t\t\tbackground: var(--brand-strong);\n\t\t\t\t\tborder-color: var(--brand-strong);\n\t\t\t\t}\n\t\t\t\t.btn-outline-secondary {\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t\tborder-color: var(--line);\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t}\n\t\t\t\t.btn-outline-secondary:hover {\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t\tborder-color: var(--line);\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.form-control, .form-select {\n\t\t\t\t\tmin-height: 42px;\n\t\t\t\t\tborder-radius: 6px;\n\t\t\t\t\tborder-color: var(--line);\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t}\n\t\t\t\t.form-control:focus, .form-select:focus {\n\t\t\t\t\tborder-color: var(--brand);\n\t\t\t\t\tbox-shadow: 0 0 0 .2rem rgba(37, 99, 235, .14);\n\t\t\t\t}\n\t\t\t\t.form-control::placeholder { color: var(--muted); }\n\t\t\t\t.text-secondary { color: var(--muted) !important; }\n\t\t\t\t.form-label {\n\t\t\t\t\tcolor: var(--label);\n\t\t\t\t\tfont-size: 13px;\n\t\t\t\t\tfont-weight: 700;\n\t\t\t\t}\n\t\t\t\t.auth-shell {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tmin-height: 100vh;\n\t\t\t\t\tplace-items: center;\n\t\t\t\t\tpadding: 28px;\n\t\t\t\t}\n\t\t\t\t.auth-panel {\n\t\t\t\t\twidth: min(960px, 100%);\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: .95fr 1.05fr;\n\t\t\t\t\toverflow: hidden;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tbox-shadow: var(--shadow);\n\t\t\t\t}\n\t\t\t\t.auth-brand {\n\t\t\t\t\tpadding: 34px;\n\t\t\t\t\tbackground: var(--auth-brand-bg);\n\t\t\t\t\tcolor: var(--auth-brand-ink);\n\t\t\t\t}\n\t\t\t\t.auth-brand h1 {\n\t\t\t\t\tmargin: 18px 0 12px;\n\t\t\t\t\tfont-size: 34px;\n\t\t\t\t\tfont-weight: 800;\n\t\t\t\t}\n\t\t\t\t.auth-brand p { color: var(--auth-brand-muted); margin: 0; max-width: 28rem; }\n\t\t\t\t.auth-form { padding: 34px; align-self: center; }\n\t\t\t\t.auth-form-head {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 16px;\n\t\t\t\t\tmargin-bottom: 20px;\n\t\t\t\t}\n\t\t\t\t.auth-form h2 { margin: 0 0 20px; font-size: 24px; font-weight: 760; }\n\t\t\t\t.auth-form-head h2 { margin: 0; }\n\t\t\t\t.inbox-layout {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: minmax(230px, .78fr) minmax(310px, 1fr) minmax(420px, 1.42fr);\n\t\t\t\t\tmin-height: calc(100vh - 174px);\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\toverflow: hidden;\n\t\t\t\t\tbackground: var(--line);\n\t\t\t\t\tbox-shadow: var(--shadow);\n\t\t\t\t}\n\t\t\t\t.pane {\n\t\t\t\t\tmin-width: 0;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t}\n\t\t\t\t.pane + .pane { border-left: 1px solid var(--line); }\n\t\t\t\t.pane-header {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 12px;\n\t\t\t\t\tmin-height: 58px;\n\t\t\t\t\tpadding: 15px 16px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line);\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.pane-title {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tfont-size: 13px;\n\t\t\t\t\tfont-weight: 800;\n\t\t\t\t\tletter-spacing: .08em;\n\t\t\t\t\ttext-transform: uppercase;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t}\n\t\t\t\t.count-pill, .status-pill {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: center;\n\t\t\t\t\tmin-width: 28px;\n\t\t\t\t\tmin-height: 24px;\n\t\t\t\t\tpadding: 3px 8px;\n\t\t\t\t\tborder-radius: 999px;\n\t\t\t\t\tbackground: var(--brand-soft);\n\t\t\t\t\tcolor: var(--brand);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tfont-weight: 800;\n\t\t\t\t}\n\t\t\t\t.status-pill.ok { background: var(--success-bg); color: var(--success-ink); }\n\t\t\t\t.status-pill.warn { background: var(--warning-bg); color: var(--warning); }\n\t\t\t\t.status-pill.neutral { background: var(--neutral-bg); color: var(--muted); }\n\t\t\t\t.stack-list { display: grid; }\n\t\t\t\t.stack-item {\n\t\t\t\t\tdisplay: block;\n\t\t\t\t\tpadding: 12px 14px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line-soft);\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t\ttext-decoration: none;\n\t\t\t\t}\n\t\t\t\t.stack-item:hover { background: var(--item-hover); }\n\t\t\t\t.stack-item.is-active {\n\t\t\t\t\tbackground: var(--active-bg);\n\t\t\t\t\tbox-shadow: inset 3px 0 0 var(--brand);\n\t\t\t\t}\n\t\t\t\t.item-main {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: start;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 12px;\n\t\t\t\t}\n\t\t\t\t.item-title {\n\t\t\t\t\tmin-width: 0;\n\t\t\t\t\tfont-weight: 760;\n\t\t\t\t\toverflow-wrap: anywhere;\n\t\t\t\t}\n\t\t\t\t.item-meta {\n\t\t\t\t\tmargin-top: 4px;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tline-height: 1.35;\n\t\t\t\t\toverflow-wrap: anywhere;\n\t\t\t\t}\n\t\t\t\t.unread-dot {\n\t\t\t\t\twidth: 8px;\n\t\t\t\t\theight: 8px;\n\t\t\t\t\tmargin-top: 6px;\n\t\t\t\t\tborder-radius: 999px;\n\t\t\t\t\tbackground: var(--brand);\n\t\t\t\t\tflex: 0 0 auto;\n\t\t\t\t}\n\t\t\t\t.empty-state {\n\t\t\t\t\tpadding: 24px 16px;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\ttext-align: center;\n\t\t\t\t}\n\t\t\t\t.viewer {\n\t\t\t\t\tmin-height: 100%;\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\tflex-direction: column;\n\t\t\t\t}\n\t\t\t\t.viewer-head {\n\t\t\t\t\tpadding: 20px 22px 16px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line);\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t}\n\t\t\t\t.viewer-title {\n\t\t\t\t\tmargin: 0 0 12px;\n\t\t\t\t\tfont-size: 22px;\n\t\t\t\t\tline-height: 1.2;\n\t\t\t\t\tfont-weight: 780;\n\t\t\t\t\toverflow-wrap: anywhere;\n\t\t\t\t}\n\t\t\t\t.meta-grid {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgap: 8px;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-size: 13px;\n\t\t\t\t}\n\t\t\t\t.meta-grid strong { color: var(--label); font-weight: 760; }\n\t\t\t\t.viewer-body {\n\t\t\t\t\tpadding: 18px 22px 22px;\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t\tflex: 1;\n\t\t\t\t}\n\t\t\t\t.message-body {\n\t\t\t\t\tmax-width: 980px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--message-bg);\n\t\t\t\t\tcolor: var(--message-ink);\n\t\t\t\t\toverflow: auto;\n\t\t\t\t}\n\t\t\t\t.message-body.email-html { padding: 18px; }\n\t\t\t\t.message-body.email-html img { max-width: 100%; height: auto; }\n\t\t\t\t.pre-wrap {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tpadding: 18px;\n\t\t\t\t\twhite-space: pre-wrap;\n\t\t\t\t\tword-break: break-word;\n\t\t\t\t\tfont-size: 13px;\n\t\t\t\t\tline-height: 1.55;\n\t\t\t\t}\n\t\t\t\t.attachment-list {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgap: 8px;\n\t\t\t\t\tmargin: 14px 0 0;\n\t\t\t\t\tpadding: 0;\n\t\t\t\t\tlist-style: none;\n\t\t\t\t}\n\t\t\t\t.attachment-item {\n\t\t\t\t\tpadding: 10px 12px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t}\n\t\t\t\t.settings-grid {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: repeat(2, minmax(0, 1fr));\n\t\t\t\t\tgap: 16px;\n\t\t\t\t}\n\t\t\t\t.panel {\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tbox-shadow: var(--shadow);\n\t\t\t\t}\n\t\t\t\t.panel-header {\n\t\t\t\t\tpadding: 16px 18px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line);\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.panel-title {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tfont-size: 16px;\n\t\t\t\t\tfont-weight: 780;\n\t\t\t\t}\n\t\t\t\t.panel-body { padding: 18px; }\n\t\t\t\t.status-list {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgap: 10px;\n\t\t\t\t\tmargin: 0;\n\t\t\t\t}\n\t\t\t\t.status-row {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 14px;\n\t\t\t\t\tpadding-bottom: 10px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line-soft);\n\t\t\t\t}\n\t\t\t\t.status-row:last-child { border-bottom: 0; padding-bottom: 0; }\n\t\t\t\t.status-row dt {\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-weight: 700;\n\t\t\t\t}\n\t\t\t\t.status-row dd {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tfont-weight: 750;\n\t\t\t\t\ttext-align: right;\n\t\t\t\t\toverflow-wrap: anywhere;\n\t\t\t\t}\n\t\t\t\t.table {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\t--bs-table-bg: transparent;\n\t\t\t\t\t--bs-table-color: var(--ink);\n\t\t\t\t\t--bs-table-border-color: var(--line);\n\t\t\t\t}\n\t\t\t\t.table thead th {\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tletter-spacing: .06em;\n\t\t\t\t\ttext-transform: uppercase;\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.api-key-box, .docs-code {\n\t\t\t\t\twhite-space: pre-wrap;\n\t\t\t\t\tword-break: break-word;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--code-bg);\n\t\t\t\t\tcolor: var(--code-ink);\n\t\t\t\t\tpadding: 14px;\n\t\t\t\t}\n\t\t\t\t.docs-shell { width: min(1180px, 100%); margin: 0 auto; padding: 28px; }\n\t\t\t\t.docs-header {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: end;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 16px;\n\t\t\t\t\tmargin-bottom: 18px;\n\t\t\t\t}\n\t\t\t\t.docs-actions {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tgap: 10px;\n\t\t\t\t}\n\t\t\t\t.docs-endpoint {\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tmargin-bottom: 12px;\n\t\t\t\t\toverflow: hidden;\n\t\t\t\t}\n\t\t\t\t.docs-endpoint-head {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: start;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 16px;\n\t\t\t\t\tpadding: 16px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line);\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.docs-endpoint-body {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: repeat(2, minmax(0, 1fr));\n\t\t\t\t\tgap: 12px;\n\t\t\t\t\tpadding: 16px;\n\t\t\t\t}\n\t\t\t\t.method-badge {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tmin-height: 24px;\n\t\t\t\t\tpadding: 2px 8px;\n\t\t\t\t\tborder-radius: 6px;\n\t\t\t\t\tbackground: var(--brand-soft-strong);\n\t\t\t\t\tcolor: var(--brand-strong);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tfont-weight: 850;\n\t\t\t\t}\n\t\t\t\t@media (max-width: 1180px) {\n\t\t\t\t\t.inbox-layout { grid-template-columns: 1fr; }\n\t\t\t\t\t.pane + .pane { border-left: 0; border-top: 1px solid var(--line); }\n\t\t\t\t\t.pane { min-height: auto; }\n\t\t\t\t\t.settings-grid { grid-template-columns: 1fr; }\n\t\t\t\t}\n\t\t\t\t@media (max-width: 760px) {\n\t\t\t\t\t.topbar { position: static; align-items: stretch; flex-direction: column; padding: 14px; }\n\t\t\t\t\t.top-nav { width: 100%; overflow-x: auto; }\n\t\t\t\t\t.top-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }\n\t\t\t\t\t.top-actions .btn, .top-actions form, .top-actions .theme-toggle { width: 100%; }\n\t\t\t\t\t.app-main { padding: 18px 14px 24px; }\n\t\t\t\t\t.page-heading { align-items: start; flex-direction: column; }\n\t\t\t\t\t.metric-strip { justify-content: start; }\n\t\t\t\t\t.auth-panel { grid-template-columns: 1fr; }\n\t\t\t\t\t.auth-brand, .auth-form { padding: 24px; }\n\t\t\t\t\t.docs-shell { padding: 18px 14px; }\n\t\t\t\t\t.docs-header, .docs-endpoint-head { flex-direction: column; align-items: start; }\n\t\t\t\t\t.docs-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }\n\t\t\t\t\t.docs-actions .btn, .docs-actions .theme-toggle { width: 100%; }\n\t\t\t\t\t.docs-endpoint-body { grid-template-columns: 1fr; }\n\t\t\t\t}\n\t\t\t</style></head><body>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "</title><link rel=\"icon\" href=\"/favicon.svg\" type=\"image/svg+xml\"><link rel=\"shortcut icon\" href=\"/favicon.svg\" type=\"image/svg+xml\"><link href=\"https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css\" rel=\"stylesheet\"><script src=\"https://unpkg.com/htmx.org@1.9.12\"></script><script>\n\t\t\t\t(function() {\n\t\t\t\t\tconst key = \"emaildash-theme\";\n\t\t\t\t\tconst root = document.documentElement;\n\t\t\t\t\tlet saved = \"\";\n\t\t\t\t\ttry {\n\t\t\t\t\t\tsaved = localStorage.getItem(key) || \"\";\n\t\t\t\t\t} catch (error) {}\n\t\t\t\t\tconst initial = saved === \"light\" || saved === \"dark\" ? saved : \"dark\";\n\t\t\t\t\tfunction apply(theme) {\n\t\t\t\t\t\troot.dataset.theme = theme;\n\t\t\t\t\t\troot.style.colorScheme = theme;\n\t\t\t\t\t\tdocument.querySelectorAll(\"[data-theme-label]\").forEach(function(label) {\n\t\t\t\t\t\t\tlabel.textContent = theme === \"dark\" ? \"Dark\" : \"Light\";\n\t\t\t\t\t\t});\n\t\t\t\t\t\tdocument.querySelectorAll(\"[data-theme-toggle]\").forEach(function(button) {\n\t\t\t\t\t\t\tbutton.setAttribute(\"aria-pressed\", theme === \"dark\" ? \"true\" : \"false\");\n\t\t\t\t\t\t});\n\t\t\t\t\t}\n\t\t\t\t\tapply(initial);\n\t\t\t\t\twindow.emaildashToggleTheme = function() {\n\t\t\t\t\t\tconst next = root.dataset.theme === \"dark\" ? \"light\" : \"dark\";\n\t\t\t\t\t\ttry {\n\t\t\t\t\t\t\tlocalStorage.setItem(key, next);\n\t\t\t\t\t\t} catch (error) {}\n\t\t\t\t\t\tapply(next);\n\t\t\t\t\t};\n\t\t\t\t\tdocument.addEventListener(\"DOMContentLoaded\", function() {\n\t\t\t\t\t\tapply(root.dataset.theme || initial);\n\t\t\t\t\t});\n\t\t\t\t})();\n\t\t\t</script><style>\n\t\t\t\t:root {\n\t\t\t\t\tcolor-scheme: dark;\n\t\t\t\t\t--bg: #070b14;\n\t\t\t\t\t--surface: #0f1726;\n\t\t\t\t\t--surface-soft: #121c2d;\n\t\t\t\t\t--surface-raised: #172236;\n\t\t\t\t\t--ink: #e8eef8;\n\t\t\t\t\t--muted: #98a8bd;\n\t\t\t\t\t--label: #c9d5e6;\n\t\t\t\t\t--line: #26354c;\n\t\t\t\t\t--line-soft: #1b293e;\n\t\t\t\t\t--brand: #69a7ff;\n\t\t\t\t\t--brand-strong: #3b82f6;\n\t\t\t\t\t--brand-soft: #10284d;\n\t\t\t\t\t--brand-soft-strong: #173a70;\n\t\t\t\t\t--accent: #2dd4bf;\n\t\t\t\t\t--warning: #f6c453;\n\t\t\t\t\t--danger: #ff8a80;\n\t\t\t\t\t--success-bg: #063a30;\n\t\t\t\t\t--success-ink: #5eead4;\n\t\t\t\t\t--warning-bg: #3a2a08;\n\t\t\t\t\t--neutral-bg: #1c2738;\n\t\t\t\t\t--topbar-bg: rgba(10, 15, 26, 0.9);\n\t\t\t\t\t--brand-mark-bg: #e8eef8;\n\t\t\t\t\t--brand-mark-ink: #0b1020;\n\t\t\t\t\t--auth-brand-bg: #0b1220;\n\t\t\t\t\t--auth-brand-ink: #f8fafc;\n\t\t\t\t\t--auth-brand-muted: #a7b7cd;\n\t\t\t\t\t--nav-hover: #172236;\n\t\t\t\t\t--active-bg: #132a4d;\n\t\t\t\t\t--item-hover: #121e31;\n\t\t\t\t\t--code-bg: #050916;\n\t\t\t\t\t--code-ink: #dbeafe;\n\t\t\t\t\t--message-bg: #ffffff;\n\t\t\t\t\t--message-ink: #101828;\n\t\t\t\t\t--toggle-track: #2563eb;\n\t\t\t\t\t--shadow: 0 18px 44px rgba(0, 0, 0, 0.34);\n\t\t\t\t}\n\t\t\t\t:root[data-theme=\"light\"] {\n\t\t\t\t\tcolor-scheme: light;\n\t\t\t\t\t--bg: #f4f6f9;\n\t\t\t\t\t--surface: #ffffff;\n\t\t\t\t\t--surface-soft: #f8fafc;\n\t\t\t\t\t--surface-raised: #ffffff;\n\t\t\t\t\t--ink: #101828;\n\t\t\t\t\t--muted: #667085;\n\t\t\t\t\t--label: #344054;\n\t\t\t\t\t--line: #d8dee8;\n\t\t\t\t\t--line-soft: #eaedf3;\n\t\t\t\t\t--brand: #2563eb;\n\t\t\t\t\t--brand-strong: #1746a2;\n\t\t\t\t\t--brand-soft: #eef4ff;\n\t\t\t\t\t--brand-soft-strong: #dbeafe;\n\t\t\t\t\t--accent: #0f766e;\n\t\t\t\t\t--warning: #b7791f;\n\t\t\t\t\t--danger: #b42318;\n\t\t\t\t\t--success-bg: #ecfdf3;\n\t\t\t\t\t--success-ink: #027a48;\n\t\t\t\t\t--warning-bg: #fffaeb;\n\t\t\t\t\t--neutral-bg: #f2f4f7;\n\t\t\t\t\t--topbar-bg: rgba(255, 255, 255, 0.92);\n\t\t\t\t\t--brand-mark-bg: #111827;\n\t\t\t\t\t--brand-mark-ink: #ffffff;\n\t\t\t\t\t--auth-brand-bg: #111827;\n\t\t\t\t\t--auth-brand-ink: #ffffff;\n\t\t\t\t\t--auth-brand-muted: #cbd5e1;\n\t\t\t\t\t--nav-hover: #eef2f7;\n\t\t\t\t\t--active-bg: #ffffff;\n\t\t\t\t\t--item-hover: #f8fbff;\n\t\t\t\t\t--code-bg: #0f172a;\n\t\t\t\t\t--code-ink: #e2e8f0;\n\t\t\t\t\t--message-bg: #ffffff;\n\t\t\t\t\t--message-ink: #101828;\n\t\t\t\t\t--toggle-track: #d8dee8;\n\t\t\t\t\t--shadow: 0 18px 40px rgba(15, 23, 42, 0.08);\n\t\t\t\t}\n\t\t\t\t* { box-sizing: border-box; }\n\t\t\t\tbody {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tbackground: var(--bg);\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t\tfont-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;\n\t\t\t\t\tfont-size: 14px;\n\t\t\t\t\tletter-spacing: 0;\n\t\t\t\t}\n\t\t\t\ta { color: inherit; }\n\t\t\t\tcode, .docs-code, .api-key-box {\n\t\t\t\t\tfont-family: ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace;\n\t\t\t\t}\n\t\t\t\tcode { color: var(--brand); overflow-wrap: anywhere; word-break: break-word; }\n\t\t\t\t.app-shell { min-height: 100vh; }\n\t\t\t\t.topbar {\n\t\t\t\t\tposition: sticky;\n\t\t\t\t\ttop: 0;\n\t\t\t\t\tz-index: 20;\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 20px;\n\t\t\t\t\tmin-height: 68px;\n\t\t\t\t\tpadding: 12px 28px;\n\t\t\t\t\tbackground: var(--topbar-bg);\n\t\t\t\t\tborder-bottom: 1px solid var(--line);\n\t\t\t\t\tbackdrop-filter: blur(18px);\n\t\t\t\t}\n\t\t\t\t.brand {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tgap: 10px;\n\t\t\t\t\ttext-decoration: none;\n\t\t\t\t\tfont-weight: 750;\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t}\n\t\t\t\t.brand-mark {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tplace-items: center;\n\t\t\t\t\twidth: 34px;\n\t\t\t\t\theight: 34px;\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--brand-mark-bg);\n\t\t\t\t\tcolor: var(--brand-mark-ink);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tletter-spacing: 0;\n\t\t\t\t}\n\t\t\t\t.top-nav {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tgap: 6px;\n\t\t\t\t\tpadding: 4px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.top-nav-link {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tmin-height: 34px;\n\t\t\t\t\tpadding: 7px 12px;\n\t\t\t\t\tborder-radius: 6px;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-weight: 650;\n\t\t\t\t\ttext-decoration: none;\n\t\t\t\t\twhite-space: nowrap;\n\t\t\t\t}\n\t\t\t\t.top-nav-link:hover { color: var(--ink); background: var(--nav-hover); }\n\t\t\t\t.top-nav-link.is-active {\n\t\t\t\t\tbackground: var(--active-bg);\n\t\t\t\t\tcolor: var(--brand);\n\t\t\t\t\tbox-shadow: 0 1px 3px rgba(16, 24, 40, 0.12);\n\t\t\t\t}\n\t\t\t\t.top-actions { display: flex; align-items: center; gap: 10px; }\n\t\t\t\t.theme-toggle {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: center;\n\t\t\t\t\tgap: 8px;\n\t\t\t\t\tmin-height: 38px;\n\t\t\t\t\tpadding: 6px 10px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t\tfont-weight: 750;\n\t\t\t\t\twhite-space: nowrap;\n\t\t\t\t}\n\t\t\t\t.theme-toggle:hover { background: var(--surface-soft); }\n\t\t\t\t.theme-toggle-track {\n\t\t\t\t\tposition: relative;\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\twidth: 40px;\n\t\t\t\t\theight: 22px;\n\t\t\t\t\tborder-radius: 999px;\n\t\t\t\t\tbackground: var(--toggle-track);\n\t\t\t\t\tbox-shadow: inset 0 0 0 1px rgba(255,255,255,.12);\n\t\t\t\t}\n\t\t\t\t.theme-toggle-knob {\n\t\t\t\t\tposition: absolute;\n\t\t\t\t\ttop: 3px;\n\t\t\t\t\tleft: 3px;\n\t\t\t\t\twidth: 16px;\n\t\t\t\t\theight: 16px;\n\t\t\t\t\tborder-radius: 999px;\n\t\t\t\t\tbackground: #fff;\n\t\t\t\t\tbox-shadow: 0 2px 6px rgba(0,0,0,.22);\n\t\t\t\t\ttransform: translateX(18px);\n\t\t\t\t\ttransition: transform .18s ease;\n\t\t\t\t}\n\t\t\t\t:root[data-theme=\"light\"] .theme-toggle-knob { transform: translateX(0); }\n\t\t\t\t.app-main {\n\t\t\t\t\twidth: min(1680px, 100%);\n\t\t\t\t\tmargin: 0 auto;\n\t\t\t\t\tpadding: 24px 28px 32px;\n\t\t\t\t}\n\t\t\t\t.page-heading {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: end;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 18px;\n\t\t\t\t\tmargin-bottom: 18px;\n\t\t\t\t}\n\t\t\t\t.eyebrow {\n\t\t\t\t\tmargin: 0 0 4px;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tfont-weight: 750;\n\t\t\t\t\tletter-spacing: .08em;\n\t\t\t\t\ttext-transform: uppercase;\n\t\t\t\t}\n\t\t\t\t.page-title {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tfont-size: clamp(26px, 3vw, 38px);\n\t\t\t\t\tline-height: 1;\n\t\t\t\t\tfont-weight: 780;\n\t\t\t\t}\n\t\t\t\t.metric-strip { display: flex; flex-wrap: wrap; gap: 8px; justify-content: end; }\n\t\t\t\t.metric {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tgap: 8px;\n\t\t\t\t\tmin-height: 34px;\n\t\t\t\t\tpadding: 6px 10px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-weight: 650;\n\t\t\t\t}\n\t\t\t\t.metric strong { color: var(--ink); }\n\t\t\t\t.alert {\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tborder-width: 1px;\n\t\t\t\t\tbox-shadow: none;\n\t\t\t\t}\n\t\t\t\t.alert-danger {\n\t\t\t\t\tbackground: color-mix(in srgb, var(--danger) 16%, var(--surface));\n\t\t\t\t\tborder-color: color-mix(in srgb, var(--danger) 34%, var(--line));\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t}\n\t\t\t\t.alert-success {\n\t\t\t\t\tbackground: color-mix(in srgb, var(--accent) 14%, var(--surface));\n\t\t\t\t\tborder-color: color-mix(in srgb, var(--accent) 30%, var(--line));\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t}\n\t\t\t\t.btn {\n\t\t\t\t\tborder-radius: 6px;\n\t\t\t\t\tfont-weight: 700;\n\t\t\t\t\tletter-spacing: 0;\n\t\t\t\t}\n\t\t\t\t.btn-primary {\n\t\t\t\t\tbackground: var(--brand);\n\t\t\t\t\tborder-color: var(--brand);\n\t\t\t\t}\n\t\t\t\t.btn-primary:hover {\n\t\t\t\t\tbackground: var(--brand-strong);\n\t\t\t\t\tborder-color: var(--brand-strong);\n\t\t\t\t}\n\t\t\t\t.btn-outline-secondary {\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t\tborder-color: var(--line);\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t}\n\t\t\t\t.btn-outline-secondary:hover {\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t\tborder-color: var(--line);\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.form-control, .form-select {\n\t\t\t\t\tmin-height: 42px;\n\t\t\t\t\tborder-radius: 6px;\n\t\t\t\t\tborder-color: var(--line);\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t}\n\t\t\t\t.form-control:focus, .form-select:focus {\n\t\t\t\t\tborder-color: var(--brand);\n\t\t\t\t\tbox-shadow: 0 0 0 .2rem rgba(37, 99, 235, .14);\n\t\t\t\t}\n\t\t\t\t.form-control::placeholder { color: var(--muted); }\n\t\t\t\t.text-secondary { color: var(--muted) !important; }\n\t\t\t\t.form-label {\n\t\t\t\t\tcolor: var(--label);\n\t\t\t\t\tfont-size: 13px;\n\t\t\t\t\tfont-weight: 700;\n\t\t\t\t}\n\t\t\t\t.auth-shell {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tmin-height: 100vh;\n\t\t\t\t\tplace-items: center;\n\t\t\t\t\tpadding: 28px;\n\t\t\t\t}\n\t\t\t\t.auth-panel {\n\t\t\t\t\twidth: min(960px, 100%);\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: .95fr 1.05fr;\n\t\t\t\t\toverflow: hidden;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tbox-shadow: var(--shadow);\n\t\t\t\t}\n\t\t\t\t.auth-brand {\n\t\t\t\t\tpadding: 34px;\n\t\t\t\t\tbackground: var(--auth-brand-bg);\n\t\t\t\t\tcolor: var(--auth-brand-ink);\n\t\t\t\t}\n\t\t\t\t.auth-brand h1 {\n\t\t\t\t\tmargin: 18px 0 12px;\n\t\t\t\t\tfont-size: 34px;\n\t\t\t\t\tfont-weight: 800;\n\t\t\t\t}\n\t\t\t\t.auth-brand p { color: var(--auth-brand-muted); margin: 0; max-width: 28rem; }\n\t\t\t\t.auth-form { padding: 34px; align-self: center; }\n\t\t\t\t.auth-form-head {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 16px;\n\t\t\t\t\tmargin-bottom: 20px;\n\t\t\t\t}\n\t\t\t\t.auth-form h2 { margin: 0 0 20px; font-size: 24px; font-weight: 760; }\n\t\t\t\t.auth-form-head h2 { margin: 0; }\n\t\t\t\t.inbox-layout {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: minmax(230px, .78fr) minmax(310px, 1fr) minmax(420px, 1.42fr);\n\t\t\t\t\tmin-height: calc(100vh - 174px);\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\toverflow: hidden;\n\t\t\t\t\tbackground: var(--line);\n\t\t\t\t\tbox-shadow: var(--shadow);\n\t\t\t\t}\n\t\t\t\t.pane {\n\t\t\t\t\tmin-width: 0;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t}\n\t\t\t\t.pane + .pane { border-left: 1px solid var(--line); }\n\t\t\t\t.pane-header {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 12px;\n\t\t\t\t\tmin-height: 58px;\n\t\t\t\t\tpadding: 15px 16px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line);\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.pane-title {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tfont-size: 13px;\n\t\t\t\t\tfont-weight: 800;\n\t\t\t\t\tletter-spacing: .08em;\n\t\t\t\t\ttext-transform: uppercase;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t}\n\t\t\t\t.count-pill, .status-pill {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: center;\n\t\t\t\t\tmin-width: 28px;\n\t\t\t\t\tmin-height: 24px;\n\t\t\t\t\tpadding: 3px 8px;\n\t\t\t\t\tborder-radius: 999px;\n\t\t\t\t\tbackground: var(--brand-soft);\n\t\t\t\t\tcolor: var(--brand);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tfont-weight: 800;\n\t\t\t\t}\n\t\t\t\t.status-pill.ok { background: var(--success-bg); color: var(--success-ink); }\n\t\t\t\t.status-pill.warn { background: var(--warning-bg); color: var(--warning); }\n\t\t\t\t.status-pill.neutral { background: var(--neutral-bg); color: var(--muted); }\n\t\t\t\t.stack-list { display: grid; }\n\t\t\t\t.stack-item {\n\t\t\t\t\tdisplay: block;\n\t\t\t\t\tpadding: 12px 14px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line-soft);\n\t\t\t\t\tcolor: var(--ink);\n\t\t\t\t\ttext-decoration: none;\n\t\t\t\t}\n\t\t\t\t.stack-item:hover { background: var(--item-hover); }\n\t\t\t\t.stack-item.is-active {\n\t\t\t\t\tbackground: var(--active-bg);\n\t\t\t\t\tbox-shadow: inset 3px 0 0 var(--brand);\n\t\t\t\t}\n\t\t\t\t.item-main {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: start;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 12px;\n\t\t\t\t}\n\t\t\t\t.item-title {\n\t\t\t\t\tmin-width: 0;\n\t\t\t\t\tfont-weight: 760;\n\t\t\t\t\toverflow-wrap: anywhere;\n\t\t\t\t}\n\t\t\t\t.item-meta {\n\t\t\t\t\tmargin-top: 4px;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tline-height: 1.35;\n\t\t\t\t\toverflow-wrap: anywhere;\n\t\t\t\t}\n\t\t\t\t.unread-dot {\n\t\t\t\t\twidth: 8px;\n\t\t\t\t\theight: 8px;\n\t\t\t\t\tmargin-top: 6px;\n\t\t\t\t\tborder-radius: 999px;\n\t\t\t\t\tbackground: var(--brand);\n\t\t\t\t\tflex: 0 0 auto;\n\t\t\t\t}\n\t\t\t\t.empty-state {\n\t\t\t\t\tpadding: 24px 16px;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\ttext-align: center;\n\t\t\t\t}\n\t\t\t\t.viewer {\n\t\t\t\t\tmin-height: 100%;\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\tflex-direction: column;\n\t\t\t\t}\n\t\t\t\t.viewer-head {\n\t\t\t\t\tpadding: 20px 22px 16px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line);\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t}\n\t\t\t\t.viewer-title {\n\t\t\t\t\tmargin: 0 0 12px;\n\t\t\t\t\tfont-size: 22px;\n\t\t\t\t\tline-height: 1.2;\n\t\t\t\t\tfont-weight: 780;\n\t\t\t\t\toverflow-wrap: anywhere;\n\t\t\t\t}\n\t\t\t\t.meta-grid {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgap: 8px;\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-size: 13px;\n\t\t\t\t}\n\t\t\t\t.meta-grid strong { color: var(--label); font-weight: 760; }\n\t\t\t\t.viewer-body {\n\t\t\t\t\tpadding: 18px 22px 22px;\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t\tflex: 1;\n\t\t\t\t}\n\t\t\t\t.message-body {\n\t\t\t\t\tmax-width: 980px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--message-bg);\n\t\t\t\t\tcolor: var(--message-ink);\n\t\t\t\t\toverflow: auto;\n\t\t\t\t}\n\t\t\t\t.message-body.email-html { padding: 18px; }\n\t\t\t\t.message-body.email-html img { max-width: 100%; height: auto; }\n\t\t\t\t.pre-wrap {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tpadding: 18px;\n\t\t\t\t\twhite-space: pre-wrap;\n\t\t\t\t\tword-break: break-word;\n\t\t\t\t\tfont-size: 13px;\n\t\t\t\t\tline-height: 1.55;\n\t\t\t\t}\n\t\t\t\t.attachment-list {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgap: 8px;\n\t\t\t\t\tmargin: 14px 0 0;\n\t\t\t\t\tpadding: 0;\n\t\t\t\t\tlist-style: none;\n\t\t\t\t}\n\t\t\t\t.attachment-item {\n\t\t\t\t\tpadding: 10px 12px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t}\n\t\t\t\t.settings-grid {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: repeat(2, minmax(0, 1fr));\n\t\t\t\t\tgap: 16px;\n\t\t\t\t}\n\t\t\t\t.panel {\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tbox-shadow: var(--shadow);\n\t\t\t\t}\n\t\t\t\t.panel-header {\n\t\t\t\t\tpadding: 16px 18px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line);\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.panel-title {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tfont-size: 16px;\n\t\t\t\t\tfont-weight: 780;\n\t\t\t\t}\n\t\t\t\t.panel-body { padding: 18px; }\n\t\t\t\t.status-list {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgap: 10px;\n\t\t\t\t\tmargin: 0;\n\t\t\t\t}\n\t\t\t\t.status-row {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 14px;\n\t\t\t\t\tpadding-bottom: 10px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line-soft);\n\t\t\t\t}\n\t\t\t\t.status-row:last-child { border-bottom: 0; padding-bottom: 0; }\n\t\t\t\t.status-row dt {\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-weight: 700;\n\t\t\t\t}\n\t\t\t\t.status-row dd {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tfont-weight: 750;\n\t\t\t\t\ttext-align: right;\n\t\t\t\t\toverflow-wrap: anywhere;\n\t\t\t\t}\n\t\t\t\t.table {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\t--bs-table-bg: transparent;\n\t\t\t\t\t--bs-table-color: var(--ink);\n\t\t\t\t\t--bs-table-border-color: var(--line);\n\t\t\t\t}\n\t\t\t\t.table thead th {\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tletter-spacing: .06em;\n\t\t\t\t\ttext-transform: uppercase;\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.api-key-box, .docs-code {\n\t\t\t\t\twhite-space: pre-wrap;\n\t\t\t\t\tword-break: break-word;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--code-bg);\n\t\t\t\t\tcolor: var(--code-ink);\n\t\t\t\t\tpadding: 14px;\n\t\t\t\t\tmargin: 0;\n\t\t\t\t}\n\t\t\t\t.docs-shell { width: min(1180px, 100%); margin: 0 auto; padding: 28px; }\n\t\t\t\t.docs-header {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: end;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 16px;\n\t\t\t\t\tmargin-bottom: 18px;\n\t\t\t\t}\n\t\t\t\t.docs-actions {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tgap: 10px;\n\t\t\t\t}\n\t\t\t\t.docs-hero {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);\n\t\t\t\t\tgap: 14px;\n\t\t\t\t\tmargin-bottom: 14px;\n\t\t\t\t}\n\t\t\t\t.docs-card {\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tbox-shadow: var(--shadow);\n\t\t\t\t}\n\t\t\t\t.docs-card-header {\n\t\t\t\t\tpadding: 15px 16px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line);\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.docs-card-title {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tfont-size: 15px;\n\t\t\t\t\tfont-weight: 800;\n\t\t\t\t}\n\t\t\t\t.docs-card-body { padding: 16px; }\n\t\t\t\t.docs-facts {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgap: 10px;\n\t\t\t\t\tmargin: 0;\n\t\t\t\t}\n\t\t\t\t.docs-fact {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: 120px minmax(0, 1fr);\n\t\t\t\t\tgap: 12px;\n\t\t\t\t\tpadding-bottom: 10px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line-soft);\n\t\t\t\t}\n\t\t\t\t.docs-fact:last-child { border-bottom: 0; padding-bottom: 0; }\n\t\t\t\t.docs-fact dt {\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-weight: 750;\n\t\t\t\t}\n\t\t\t\t.docs-fact dd {\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tmin-width: 0;\n\t\t\t\t\toverflow-wrap: anywhere;\n\t\t\t\t}\n\t\t\t\t.docs-list {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgap: 9px;\n\t\t\t\t\tmargin: 0;\n\t\t\t\t\tpadding: 0;\n\t\t\t\t\tlist-style: none;\n\t\t\t\t}\n\t\t\t\t.docs-list li {\n\t\t\t\t\tposition: relative;\n\t\t\t\t\tpadding-left: 18px;\n\t\t\t\t\tcolor: var(--label);\n\t\t\t\t}\n\t\t\t\t.docs-list li::before {\n\t\t\t\t\tcontent: \"\";\n\t\t\t\t\tposition: absolute;\n\t\t\t\t\tleft: 0;\n\t\t\t\t\ttop: .62em;\n\t\t\t\t\twidth: 7px;\n\t\t\t\t\theight: 7px;\n\t\t\t\t\tborder-radius: 999px;\n\t\t\t\t\tbackground: var(--accent);\n\t\t\t\t}\n\t\t\t\t.docs-flow {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: repeat(3, minmax(0, 1fr));\n\t\t\t\t\tgap: 10px;\n\t\t\t\t}\n\t\t\t\t.docs-step {\n\t\t\t\t\tpadding: 13px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t}\n\t\t\t\t.docs-step-number {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tjustify-content: center;\n\t\t\t\t\twidth: 26px;\n\t\t\t\t\theight: 26px;\n\t\t\t\t\tmargin-bottom: 9px;\n\t\t\t\t\tborder-radius: 999px;\n\t\t\t\t\tbackground: var(--brand-soft);\n\t\t\t\t\tcolor: var(--brand);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tfont-weight: 850;\n\t\t\t\t}\n\t\t\t\t.docs-step h3 {\n\t\t\t\t\tmargin: 0 0 5px;\n\t\t\t\t\tfont-size: 14px;\n\t\t\t\t\tfont-weight: 800;\n\t\t\t\t}\n\t\t\t\t.docs-step p { margin: 0; color: var(--muted); }\n\t\t\t\t.docs-endpoint {\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface);\n\t\t\t\t\tmargin-bottom: 12px;\n\t\t\t\t\toverflow: hidden;\n\t\t\t\t}\n\t\t\t\t.docs-endpoint-head {\n\t\t\t\t\tdisplay: flex;\n\t\t\t\t\talign-items: start;\n\t\t\t\t\tjustify-content: space-between;\n\t\t\t\t\tgap: 16px;\n\t\t\t\t\tpadding: 16px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line);\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.docs-endpoint-body {\n\t\t\t\t\tdisplay: grid;\n\t\t\t\t\tgrid-template-columns: repeat(2, minmax(0, 1fr));\n\t\t\t\t\tgap: 12px;\n\t\t\t\t\tpadding: 16px;\n\t\t\t\t}\n\t\t\t\t.docs-agent-use {\n\t\t\t\t\tgrid-column: 1 / -1;\n\t\t\t\t\tpadding: 12px 14px;\n\t\t\t\t\tborder: 1px solid var(--line);\n\t\t\t\t\tborder-radius: 8px;\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t\tcolor: var(--label);\n\t\t\t\t}\n\t\t\t\t.docs-agent-use strong { color: var(--ink); }\n\t\t\t\t.docs-schema {\n\t\t\t\t\tmargin-bottom: 12px;\n\t\t\t\t\toverflow: hidden;\n\t\t\t\t}\n\t\t\t\t.docs-table-wrap { overflow-x: auto; }\n\t\t\t\t.docs-table {\n\t\t\t\t\twidth: 100%;\n\t\t\t\t\tmin-width: 680px;\n\t\t\t\t\tborder-collapse: collapse;\n\t\t\t\t}\n\t\t\t\t.docs-table th, .docs-table td {\n\t\t\t\t\tpadding: 10px 12px;\n\t\t\t\t\tborder-bottom: 1px solid var(--line-soft);\n\t\t\t\t\tvertical-align: top;\n\t\t\t\t}\n\t\t\t\t.docs-table th {\n\t\t\t\t\tcolor: var(--muted);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tletter-spacing: .06em;\n\t\t\t\t\ttext-transform: uppercase;\n\t\t\t\t\tbackground: var(--surface-soft);\n\t\t\t\t}\n\t\t\t\t.docs-table tr:last-child td { border-bottom: 0; }\n\t\t\t\t.method-badge {\n\t\t\t\t\tdisplay: inline-flex;\n\t\t\t\t\talign-items: center;\n\t\t\t\t\tmin-height: 24px;\n\t\t\t\t\tpadding: 2px 8px;\n\t\t\t\t\tborder-radius: 6px;\n\t\t\t\t\tbackground: var(--brand-soft-strong);\n\t\t\t\t\tcolor: var(--brand-strong);\n\t\t\t\t\tfont-size: 12px;\n\t\t\t\t\tfont-weight: 850;\n\t\t\t\t}\n\t\t\t\t@media (max-width: 1180px) {\n\t\t\t\t\t.inbox-layout { grid-template-columns: 1fr; }\n\t\t\t\t\t.pane + .pane { border-left: 0; border-top: 1px solid var(--line); }\n\t\t\t\t\t.pane { min-height: auto; }\n\t\t\t\t\t.settings-grid { grid-template-columns: 1fr; }\n\t\t\t\t\t.docs-hero, .docs-flow { grid-template-columns: 1fr; }\n\t\t\t\t}\n\t\t\t\t@media (max-width: 760px) {\n\t\t\t\t\t.topbar { position: static; align-items: stretch; flex-direction: column; padding: 14px; }\n\t\t\t\t\t.top-nav { width: 100%; overflow-x: auto; }\n\t\t\t\t\t.top-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }\n\t\t\t\t\t.top-actions .btn, .top-actions form, .top-actions .theme-toggle { width: 100%; }\n\t\t\t\t\t.app-main { padding: 18px 14px 24px; }\n\t\t\t\t\t.page-heading { align-items: start; flex-direction: column; }\n\t\t\t\t\t.metric-strip { justify-content: start; }\n\t\t\t\t\t.auth-panel { grid-template-columns: 1fr; }\n\t\t\t\t\t.auth-brand, .auth-form { padding: 24px; }\n\t\t\t\t\t.docs-shell { padding: 18px 14px; }\n\t\t\t\t\t.docs-header, .docs-endpoint-head { flex-direction: column; align-items: start; }\n\t\t\t\t\t.docs-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }\n\t\t\t\t\t.docs-actions .btn, .docs-actions .theme-toggle { width: 100%; }\n\t\t\t\t\t.docs-endpoint-body { grid-template-columns: 1fr; }\n\t\t\t\t\t.docs-fact { grid-template-columns: 1fr; gap: 3px; }\n\t\t\t\t}\n\t\t\t</style></head><body>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -140,7 +140,7 @@ func SetupPage(data SetupPageData) templ.Component {
 				var templ_7745c5c3_Var6 string
 				templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(data.Error)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 688, Col: 50}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 820, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 				if templ_7745c5c3_Err != nil {
@@ -158,7 +158,7 @@ func SetupPage(data SetupPageData) templ.Component {
 			var templ_7745c5c3_Var7 templ.SafeURL
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/setup"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 690, Col: 53}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 822, Col: 53}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -231,7 +231,7 @@ func LoginPage(data LoginPageData) templ.Component {
 				var templ_7745c5c3_Var10 string
 				templ_7745c5c3_Var10, templ_7745c5c3_Err = templ.JoinStringErrs(data.Error)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 718, Col: 50}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 850, Col: 50}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var10))
 				if templ_7745c5c3_Err != nil {
@@ -249,7 +249,7 @@ func LoginPage(data LoginPageData) templ.Component {
 			var templ_7745c5c3_Var11 templ.SafeURL
 			templ_7745c5c3_Var11, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/login"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 720, Col: 53}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 852, Col: 53}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 			if templ_7745c5c3_Err != nil {
@@ -302,7 +302,7 @@ func APIDocsPage(data APIDocsData) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<div class=\"docs-shell\"><div class=\"docs-header\"><div><p class=\"eyebrow\">Reference</p><h1 class=\"page-title\">API Docs</h1></div><div class=\"docs-actions\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 17, "<div class=\"docs-shell\"><div class=\"docs-header\"><div><p class=\"eyebrow\">Agent reference</p><h1 class=\"page-title\">EmailDash API</h1></div><div class=\"docs-actions\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -315,129 +315,390 @@ func APIDocsPage(data APIDocsData) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var14 templ.SafeURL
-			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/"))
+			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/api/docs/openapi.json"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 743, Col: 63}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 875, Col: 84}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\">Open app</a></div></div><div class=\"panel mb-3\"><div class=\"panel-body\"><div class=\"d-flex justify-content-between gap-3 flex-wrap\"><div><strong>Base URL</strong><div class=\"text-secondary\"><code>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 19, "\">OpenAPI JSON</a> <a class=\"btn btn-outline-secondary\" href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var15 string
-			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(data.BaseURL)
+			var templ_7745c5c3_Var15 templ.SafeURL
+			templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/api/docs/agent.md"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 749, Col: 84}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 876, Col: 80}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "</code></div></div><div><strong>Auth query</strong><div class=\"text-secondary\"><code>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 20, "\">Agent MD</a> <a class=\"btn btn-outline-secondary\" href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var16 string
-			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(data.SampleAuth)
+			var templ_7745c5c3_Var16 templ.SafeURL
+			templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 750, Col: 89}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 877, Col: 63}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "</code></div></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 21, "\">Open app</a></div></div><div class=\"docs-hero\"><div class=\"docs-card\"><div class=\"docs-card-header\"><h2 class=\"docs-card-title\">AI Agent Contract</h2></div><div class=\"docs-card-body\"><pre class=\"docs-code\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var17 string
+			templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(data.AgentPrompt)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 886, Col: 47}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "</pre></div></div><div class=\"docs-card\"><div class=\"docs-card-header\"><h2 class=\"docs-card-title\">Connection Facts</h2></div><div class=\"docs-card-body\"><dl class=\"docs-facts\"><div class=\"docs-fact\"><dt>Base URL</dt><dd><code>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var18 string
+			templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(data.BaseURL)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 897, Col: 32}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</code></dd></div><div class=\"docs-fact\"><dt>Auth</dt><dd><code>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var19 string
+			templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(data.SampleAuth)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 901, Col: 35}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</code></dd></div><div class=\"docs-fact\"><dt>OpenAPI</dt><dd><a href=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var20 templ.SafeURL
+			templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/api/docs/openapi.json"))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 905, Col: 57}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "\"><code>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var21 string
+			templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(data.OpenAPIURL)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 905, Col: 83}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</code></a></dd></div><div class=\"docs-fact\"><dt>Agent guide</dt><dd><a href=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var22 templ.SafeURL
+			templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/api/docs/agent.md"))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 909, Col: 53}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "\"><code>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var23 string
+			templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(data.AgentMarkdownURL)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 909, Col: 85}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</code></a></dd></div></dl></div></div></div><div class=\"docs-card mb-3\"><div class=\"docs-card-header\"><h2 class=\"docs-card-title\">Rules Agents Should Follow</h2></div><div class=\"docs-card-body\"><ul class=\"docs-list\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			for _, rule := range data.AgentRules {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "<li>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var24 string
+				templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(rule)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 922, Col: 17}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "</li>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "</ul></div></div><div class=\"docs-card mb-3\"><div class=\"docs-card-header\"><h2 class=\"docs-card-title\">Recommended Workflow</h2></div><div class=\"docs-card-body\"><div class=\"docs-flow\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			for index, step := range data.Workflow {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<div class=\"docs-step\"><span class=\"docs-step-number\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var25 string
+				templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(StepNumber(index))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 935, Col: 58}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "</span><h3>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var26 string
+				templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(step.Title)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 936, Col: 24}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "</h3><p>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var27 string
+				templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(step.Body)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 937, Col: 22}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "</p></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "</div></div></div><div class=\"docs-header mt-4\"><div><p class=\"eyebrow\">Reference</p><h2 class=\"h4 mb-0\">Endpoints</h2></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, endpoint := range data.Endpoints {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 22, "<div class=\"docs-endpoint\"><div class=\"docs-endpoint-head\"><div><h2 class=\"h6 mb-2\"><span class=\"method-badge me-2\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "<div class=\"docs-endpoint\"><div class=\"docs-endpoint-head\"><div><h2 class=\"h6 mb-2\"><span class=\"method-badge me-2\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var17 string
-				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Method)
+				var templ_7745c5c3_Var28 string
+				templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Method)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 758, Col: 76}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 953, Col: 76}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 23, "</span><code>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var18 string
-				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Path)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 758, Col: 106}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "</span><code>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 24, "</code></h2><p class=\"text-secondary mb-0\">")
+				var templ_7745c5c3_Var29 string
+				templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Path)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 953, Col: 106}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var19 string
-				templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Description)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 759, Col: 60}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "</code></h2><p class=\"text-secondary mb-0\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 25, "</p></div><span class=\"status-pill neutral\">")
+				var templ_7745c5c3_Var30 string
+				templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Description)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 954, Col: 60}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var20 string
-				templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Auth)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 761, Col: 55}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "</p></div><span class=\"status-pill neutral\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 26, "</span></div><div class=\"docs-endpoint-body\"><div><div class=\"small text-secondary fw-bold mb-1\">Request</div><div class=\"docs-code\">")
+				var templ_7745c5c3_Var31 string
+				templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Auth)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 956, Col: 55}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var21 string
-				templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Example)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 766, Col: 48}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "</span></div><div class=\"docs-endpoint-body\"><div><div class=\"small text-secondary fw-bold mb-1\">Request</div><pre class=\"docs-code\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 27, "</div></div><div><div class=\"small text-secondary fw-bold mb-1\">Response</div><div class=\"docs-code\">")
+				var templ_7745c5c3_Var32 string
+				templ_7745c5c3_Var32, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Request)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 961, Col: 48}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var32))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var22 string
-				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Response)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 770, Col: 49}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "</pre></div><div><div class=\"small text-secondary fw-bold mb-1\">Response</div><pre class=\"docs-code\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 28, "</div></div></div></div>")
+				var templ_7745c5c3_Var33 string
+				templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.Response)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 965, Col: 49}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "</pre></div><div class=\"docs-agent-use\"><strong>Agent use:</strong> ")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var34 string
+				templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(endpoint.AgentUse)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 968, Col: 54}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "</div></div></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 29, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "<div class=\"docs-header mt-4\"><div><p class=\"eyebrow\">Schemas</p><h2 class=\"h4 mb-0\">Response Objects</h2></div></div>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			for _, schema := range data.Schemas {
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "<div class=\"docs-card docs-schema\"><div class=\"docs-card-header\"><h3 class=\"docs-card-title\"><code>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var35 string
+				templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(schema.Name)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 982, Col: 53}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "</code></h3><p class=\"text-secondary mb-0 mt-1\">")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var36 string
+				templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(schema.Description)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 983, Col: 62}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "</p></div><div class=\"docs-table-wrap\"><table class=\"docs-table\"><thead><tr><th>Field</th><th>Type</th><th>Meaning</th></tr></thead> <tbody>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				for _, field := range schema.Fields {
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "<tr><td><code>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var37 string
+					templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(field.Name)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 997, Col: 32}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</code></td><td><code>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var38 string
+					templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(field.Type)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 998, Col: 32}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</code></td><td>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					var templ_7745c5c3_Var39 string
+					templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(field.Description)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 999, Col: 33}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</td></tr>")
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "</tbody></table></div></div>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -467,12 +728,12 @@ func DashboardPage(data DashboardData) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var23 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var23 == nil {
-			templ_7745c5c3_Var23 = templ.NopComponent
+		templ_7745c5c3_Var40 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var40 == nil {
+			templ_7745c5c3_Var40 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Var24 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Var41 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 			if !templ_7745c5c3_IsBuffer {
@@ -484,160 +745,160 @@ func DashboardPage(data DashboardData) templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 30, "<div class=\"app-shell\"><header class=\"topbar\"><a class=\"brand\" href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<div class=\"app-shell\"><header class=\"topbar\"><a class=\"brand\" href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var25 templ.SafeURL
-			templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("inbox", "", 0)))
+			var templ_7745c5c3_Var42 templ.SafeURL
+			templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("inbox", "", 0)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 783, Col: 67}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1015, Col: 67}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 31, "\"><span class=\"brand-mark\">ED</span> <span>Emaildash</span></a><nav class=\"top-nav\" aria-label=\"Primary\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var26 = []any{TabClass(data.ActiveTab == "inbox")}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var26...)
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "\"><span class=\"brand-mark\">ED</span> <span>Emaildash</span></a><nav class=\"top-nav\" aria-label=\"Primary\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 32, "<a href=\"")
+			var templ_7745c5c3_Var43 = []any{TabClass(data.ActiveTab == "inbox")}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var43...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var27 templ.SafeURL
-			templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("inbox", data.ActiveRecipient, data.SelectedEmailID)))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 788, Col: 91}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "<a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 33, "\" class=\"")
+			var templ_7745c5c3_Var44 templ.SafeURL
+			templ_7745c5c3_Var44, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("inbox", data.ActiveRecipient, data.SelectedEmailID)))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1020, Col: 91}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var44))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var28 string
-			templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var26).String())
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "\" class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var45 string
+			templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var43).String())
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1, Col: 0}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 34, "\">Inbox</a> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "\">Inbox</a> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var29 = []any{TabClass(data.ActiveTab == "cloudflare")}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var29...)
+			var templ_7745c5c3_Var46 = []any{TabClass(data.ActiveTab == "cloudflare")}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var46...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 35, "<a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "<a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var30 templ.SafeURL
-			templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("cloudflare", "", 0)))
+			var templ_7745c5c3_Var47 templ.SafeURL
+			templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("cloudflare", "", 0)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 789, Col: 59}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1021, Col: 59}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 36, "\" class=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var47))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var31 string
-			templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var29).String())
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "\" class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var48 string
+			templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var46).String())
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1, Col: 0}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 37, "\">Cloudflare</a> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "\">Cloudflare</a> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var32 = []any{TabClass(data.ActiveTab == "password")}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var32...)
+			var templ_7745c5c3_Var49 = []any{TabClass(data.ActiveTab == "password")}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var49...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 38, "<a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "<a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var33 templ.SafeURL
-			templ_7745c5c3_Var33, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("password", "", 0)))
+			var templ_7745c5c3_Var50 templ.SafeURL
+			templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("password", "", 0)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 790, Col: 57}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1022, Col: 57}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var33))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 39, "\" class=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var50))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var34 string
-			templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var32).String())
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "\" class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var51 string
+			templ_7745c5c3_Var51, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var49).String())
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1, Col: 0}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var51))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 40, "\">Password & API</a> ")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "\">Password & API</a> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var35 = []any{TabClass(false)}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var35...)
+			var templ_7745c5c3_Var52 = []any{TabClass(false)}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var52...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 41, "<a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "<a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var36 templ.SafeURL
-			templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/api/docs"))
+			var templ_7745c5c3_Var53 templ.SafeURL
+			templ_7745c5c3_Var53, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/api/docs"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 791, Col: 37}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1023, Col: 37}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 42, "\" class=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var53))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var37 string
-			templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var35).String())
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "\" class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var54 string
+			templ_7745c5c3_Var54, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var52).String())
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1, Col: 0}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var54))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 43, "\">API Docs</a></nav><div class=\"top-actions\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "\">API Docs</a></nav><div class=\"top-actions\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -645,132 +906,132 @@ func DashboardPage(data DashboardData) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 44, "<form method=\"post\" action=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "<form method=\"post\" action=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var38 templ.SafeURL
-			templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/logout"))
+			var templ_7745c5c3_Var55 templ.SafeURL
+			templ_7745c5c3_Var55, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/logout"))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 795, Col: 54}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1027, Col: 54}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 45, "\"><button class=\"btn btn-outline-secondary\" type=\"submit\">Logout</button></form></div></header><main class=\"app-main\"><div class=\"page-heading\"><div><p class=\"eyebrow\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var55))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var39 string
-			templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(PageEyebrow(data.ActiveTab))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 803, Col: 54}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "\"><button class=\"btn btn-outline-secondary\" type=\"submit\">Logout</button></form></div></header><main class=\"app-main\"><div class=\"page-heading\"><div><p class=\"eyebrow\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 46, "</p><h1 class=\"page-title\">")
+			var templ_7745c5c3_Var56 string
+			templ_7745c5c3_Var56, templ_7745c5c3_Err = templ.JoinStringErrs(PageEyebrow(data.ActiveTab))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1035, Col: 54}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var56))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var40 string
-			templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(PageTitle(data.ActiveTab))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 804, Col: 56}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, "</p><h1 class=\"page-title\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 47, "</h1></div>")
+			var templ_7745c5c3_Var57 string
+			templ_7745c5c3_Var57, templ_7745c5c3_Err = templ.JoinStringErrs(PageTitle(data.ActiveTab))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1036, Col: 56}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var57))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "</h1></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if data.ActiveTab == "inbox" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 48, "<div class=\"metric-strip\"><div class=\"metric\"><strong>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "<div class=\"metric-strip\"><div class=\"metric\"><strong>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var41 string
-				templ_7745c5c3_Var41, templ_7745c5c3_Err = templ.JoinStringErrs(TotalMessages(data.Recipients))
+				var templ_7745c5c3_Var58 string
+				templ_7745c5c3_Var58, templ_7745c5c3_Err = templ.JoinStringErrs(TotalMessages(data.Recipients))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 808, Col: 67}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1040, Col: 67}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var41))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 49, "</strong> stored</div><div class=\"metric\"><strong>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var58))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var42 string
-				templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(TotalUnread(data.Recipients))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 809, Col: 65}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "</strong> stored</div><div class=\"metric\"><strong>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 50, "</strong> unread</div><div class=\"metric\"><strong>")
+				var templ_7745c5c3_Var59 string
+				templ_7745c5c3_Var59, templ_7745c5c3_Err = templ.JoinStringErrs(TotalUnread(data.Recipients))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1041, Col: 65}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var59))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var43 string
-				templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.JoinStringErrs(len(data.Recipients))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 810, Col: 57}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var43))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "</strong> unread</div><div class=\"metric\"><strong>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 51, "</strong> recipients</div></div>")
+				var templ_7745c5c3_Var60 string
+				templ_7745c5c3_Var60, templ_7745c5c3_Err = templ.JoinStringErrs(len(data.Recipients))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1042, Col: 57}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var60))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "</strong> recipients</div></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 52, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if data.Error != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 53, "<div class=\"alert alert-danger\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "<div class=\"alert alert-danger\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var44 string
-				templ_7745c5c3_Var44, templ_7745c5c3_Err = templ.JoinStringErrs(data.Error)
+				var templ_7745c5c3_Var61 string
+				templ_7745c5c3_Var61, templ_7745c5c3_Err = templ.JoinStringErrs(data.Error)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 815, Col: 49}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1047, Col: 49}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var44))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var61))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 54, "</div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 			if data.Notice != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 55, "<div class=\"alert alert-success\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "<div class=\"alert alert-success\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var45 string
-				templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.JoinStringErrs(data.Notice)
+				var templ_7745c5c3_Var62 string
+				templ_7745c5c3_Var62, templ_7745c5c3_Err = templ.JoinStringErrs(data.Notice)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 818, Col: 51}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1050, Col: 51}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var62))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 56, "</div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -791,13 +1052,13 @@ func DashboardPage(data DashboardData) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 57, "</main></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "</main></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return nil
 		})
-		templ_7745c5c3_Err = Document("Dashboard").Render(templ.WithChildren(ctx, templ_7745c5c3_Var24), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = Document("Dashboard").Render(templ.WithChildren(ctx, templ_7745c5c3_Var41), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -821,38 +1082,38 @@ func InboxTab(data DashboardData) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var46 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var46 == nil {
-			templ_7745c5c3_Var46 = templ.NopComponent
+		templ_7745c5c3_Var63 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var63 == nil {
+			templ_7745c5c3_Var63 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 58, "<section class=\"inbox-layout\"><aside class=\"pane\"><div class=\"pane-header\"><h2 class=\"pane-title\">Recipients</h2><span class=\"count-pill\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "<section class=\"inbox-layout\"><aside class=\"pane\"><div class=\"pane-header\"><h2 class=\"pane-title\">Recipients</h2><span class=\"count-pill\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var47 string
-		templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.JoinStringErrs(len(data.Recipients))
+		var templ_7745c5c3_Var64 string
+		templ_7745c5c3_Var64, templ_7745c5c3_Err = templ.JoinStringErrs(len(data.Recipients))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 837, Col: 51}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1069, Col: 51}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var47))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 59, "</span></div><div id=\"recipients-pane\" hx-get=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var64))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var48 string
-		templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs(RecipientsFragmentURL(data.ActiveRecipient, data.SelectedEmailID))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 839, Col: 103}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "</span></div><div id=\"recipients-pane\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 60, "\" hx-trigger=\"every 5s\" hx-swap=\"innerHTML\">")
+		var templ_7745c5c3_Var65 string
+		templ_7745c5c3_Var65, templ_7745c5c3_Err = templ.JoinStringErrs(RecipientsFragmentURL(data.ActiveRecipient, data.SelectedEmailID))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1071, Col: 103}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var65))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "\" hx-trigger=\"every 5s\" hx-swap=\"innerHTML\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -860,33 +1121,33 @@ func InboxTab(data DashboardData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 61, "</div></aside><section class=\"pane\"><div class=\"pane-header\"><h2 class=\"pane-title\">Messages</h2><span class=\"count-pill\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "</div></aside><section class=\"pane\"><div class=\"pane-header\"><h2 class=\"pane-title\">Messages</h2><span class=\"count-pill\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var49 string
-		templ_7745c5c3_Var49, templ_7745c5c3_Err = templ.JoinStringErrs(len(data.Emails))
+		var templ_7745c5c3_Var66 string
+		templ_7745c5c3_Var66, templ_7745c5c3_Err = templ.JoinStringErrs(len(data.Emails))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 846, Col: 47}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1078, Col: 47}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var49))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 62, "</span></div><div id=\"emails-pane\" hx-get=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var66))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var50 string
-		templ_7745c5c3_Var50, templ_7745c5c3_Err = templ.JoinStringErrs(EmailsFragmentURL(data.ActiveRecipient, data.SelectedEmailID))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 848, Col: 95}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var50))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "</span></div><div id=\"emails-pane\" hx-get=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 63, "\" hx-trigger=\"every 5s\" hx-swap=\"innerHTML\">")
+		var templ_7745c5c3_Var67 string
+		templ_7745c5c3_Var67, templ_7745c5c3_Err = templ.JoinStringErrs(EmailsFragmentURL(data.ActiveRecipient, data.SelectedEmailID))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1080, Col: 95}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var67))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "\" hx-trigger=\"every 5s\" hx-swap=\"innerHTML\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -894,7 +1155,7 @@ func InboxTab(data DashboardData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 64, "</div></section><section class=\"pane\"><div id=\"viewer-pane\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "</div></section><section class=\"pane\"><div id=\"viewer-pane\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -902,7 +1163,7 @@ func InboxTab(data DashboardData) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 65, "</div></section></section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "</div></section></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -926,163 +1187,163 @@ func RecipientsPartial(data DashboardData) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var51 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var51 == nil {
-			templ_7745c5c3_Var51 = templ.NopComponent
+		templ_7745c5c3_Var68 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var68 == nil {
+			templ_7745c5c3_Var68 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 66, "<div class=\"stack-list\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "<div class=\"stack-list\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var52 = []any{StackItemClass(data.ActiveRecipient == "")}
-		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var52...)
+		var templ_7745c5c3_Var69 = []any{StackItemClass(data.ActiveRecipient == "")}
+		templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var69...)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 67, "<a href=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "<a href=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var53 templ.SafeURL
-		templ_7745c5c3_Var53, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("inbox", "", data.SelectedEmailID)))
+		var templ_7745c5c3_Var70 templ.SafeURL
+		templ_7745c5c3_Var70, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("inbox", "", data.SelectedEmailID)))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 862, Col: 70}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1094, Col: 70}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var53))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 68, "\" class=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var70))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var54 string
-		templ_7745c5c3_Var54, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var52).String())
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "\" class=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var71 string
+		templ_7745c5c3_Var71, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var69).String())
 		if templ_7745c5c3_Err != nil {
 			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1, Col: 0}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var54))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var71))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 69, "\"><div class=\"item-main\"><div class=\"item-title\">All recipients</div><span class=\"count-pill\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "\"><div class=\"item-main\"><div class=\"item-title\">All recipients</div><span class=\"count-pill\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var55 string
-		templ_7745c5c3_Var55, templ_7745c5c3_Err = templ.JoinStringErrs(TotalUnread(data.Recipients))
+		var templ_7745c5c3_Var72 string
+		templ_7745c5c3_Var72, templ_7745c5c3_Err = templ.JoinStringErrs(TotalUnread(data.Recipients))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 865, Col: 59}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1097, Col: 59}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var55))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 70, "</span></div><div class=\"item-meta\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var72))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var56 string
-		templ_7745c5c3_Var56, templ_7745c5c3_Err = templ.JoinStringErrs(TotalMessages(data.Recipients))
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 867, Col: 58}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var56))
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "</span></div><div class=\"item-meta\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 71, " stored messages</div></a> ")
+		var templ_7745c5c3_Var73 string
+		templ_7745c5c3_Var73, templ_7745c5c3_Err = templ.JoinStringErrs(TotalMessages(data.Recipients))
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1099, Col: 58}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var73))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, " stored messages</div></a> ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		for _, recipient := range data.Recipients {
-			var templ_7745c5c3_Var57 = []any{StackItemClass(data.ActiveRecipient == recipient.Address)}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var57...)
+			var templ_7745c5c3_Var74 = []any{StackItemClass(data.ActiveRecipient == recipient.Address)}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var74...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 72, "<a href=\"")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "<a href=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var58 templ.SafeURL
-			templ_7745c5c3_Var58, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("inbox", recipient.Address, 0)))
+			var templ_7745c5c3_Var75 templ.SafeURL
+			templ_7745c5c3_Var75, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("inbox", recipient.Address, 0)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 870, Col: 67}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1102, Col: 67}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var58))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 73, "\" class=\"")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var75))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var59 string
-			templ_7745c5c3_Var59, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var57).String())
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "\" class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var76 string
+			templ_7745c5c3_Var76, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var74).String())
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1, Col: 0}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var59))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var76))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 74, "\"><div class=\"item-main\"><div class=\"item-title\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "\"><div class=\"item-main\"><div class=\"item-title\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var60 string
-			templ_7745c5c3_Var60, templ_7745c5c3_Err = templ.JoinStringErrs(recipient.Address)
+			var templ_7745c5c3_Var77 string
+			templ_7745c5c3_Var77, templ_7745c5c3_Err = templ.JoinStringErrs(recipient.Address)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 872, Col: 48}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1104, Col: 48}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var60))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 75, "</div><span class=\"count-pill\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var77))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var61 string
-			templ_7745c5c3_Var61, templ_7745c5c3_Err = templ.JoinStringErrs(recipient.UnreadCount)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 873, Col: 53}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var61))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "</div><span class=\"count-pill\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 76, "</span></div>")
+			var templ_7745c5c3_Var78 string
+			templ_7745c5c3_Var78, templ_7745c5c3_Err = templ.JoinStringErrs(recipient.UnreadCount)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1105, Col: 53}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var78))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "</span></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if recipient.LatestSubject != nil {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 77, "<div class=\"item-meta\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "<div class=\"item-meta\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var62 string
-				templ_7745c5c3_Var62, templ_7745c5c3_Err = templ.JoinStringErrs(*recipient.LatestSubject)
+				var templ_7745c5c3_Var79 string
+				templ_7745c5c3_Var79, templ_7745c5c3_Err = templ.JoinStringErrs(*recipient.LatestSubject)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 876, Col: 54}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1108, Col: 54}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var62))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var79))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 78, "</div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 79, "</a>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "</a>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 80, "</div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "</div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1106,121 +1367,121 @@ func EmailsPartial(data DashboardData) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var63 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var63 == nil {
-			templ_7745c5c3_Var63 = templ.NopComponent
+		templ_7745c5c3_Var80 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var80 == nil {
+			templ_7745c5c3_Var80 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		if len(data.Emails) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 81, "<div class=\"empty-state\">No emails yet.</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, "<div class=\"empty-state\">No emails yet.</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 82, "<div class=\"stack-list\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, "<div class=\"stack-list\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, email := range data.Emails {
-				var templ_7745c5c3_Var64 = []any{StackItemClass(data.SelectedEmailID == email.ID)}
-				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var64...)
+				var templ_7745c5c3_Var81 = []any{StackItemClass(data.SelectedEmailID == email.ID)}
+				templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var81...)
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 83, "<a href=\"")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "<a href=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var65 templ.SafeURL
-				templ_7745c5c3_Var65, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("inbox", data.ActiveRecipient, email.ID)))
+				var templ_7745c5c3_Var82 templ.SafeURL
+				templ_7745c5c3_Var82, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL(DashboardURL("inbox", data.ActiveRecipient, email.ID)))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 889, Col: 78}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1121, Col: 78}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var65))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 84, "\" class=\"")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var82))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var66 string
-				templ_7745c5c3_Var66, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var64).String())
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 109, "\" class=\"")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				var templ_7745c5c3_Var83 string
+				templ_7745c5c3_Var83, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var81).String())
 				if templ_7745c5c3_Err != nil {
 					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1, Col: 0}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var66))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var83))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 85, "\"><div class=\"item-main\"><div class=\"item-title\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 110, "\"><div class=\"item-main\"><div class=\"item-title\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var67 string
-				templ_7745c5c3_Var67, templ_7745c5c3_Err = templ.JoinStringErrs(SubjectLine(email.Subject))
+				var templ_7745c5c3_Var84 string
+				templ_7745c5c3_Var84, templ_7745c5c3_Err = templ.JoinStringErrs(SubjectLine(email.Subject))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 891, Col: 58}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1123, Col: 58}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var67))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var84))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 86, "</div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 111, "</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				if email.ReadAt == nil {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 87, "<span class=\"unread-dot\" aria-label=\"Unread\"></span>")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 112, "<span class=\"unread-dot\" aria-label=\"Unread\"></span>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 88, "</div><div class=\"item-meta\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 113, "</div><div class=\"item-meta\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var68 string
-				templ_7745c5c3_Var68, templ_7745c5c3_Err = templ.JoinStringErrs(email.MailFrom)
+				var templ_7745c5c3_Var85 string
+				templ_7745c5c3_Var85, templ_7745c5c3_Err = templ.JoinStringErrs(email.MailFrom)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 896, Col: 44}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1128, Col: 44}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var68))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 89, "</div><div class=\"item-meta\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var85))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var69 string
-				templ_7745c5c3_Var69, templ_7745c5c3_Err = templ.JoinStringErrs(PreviewText(email.TextBody, email.HTMLBody))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 897, Col: 73}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var69))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 114, "</div><div class=\"item-meta\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 90, "</div><div class=\"item-meta\">")
+				var templ_7745c5c3_Var86 string
+				templ_7745c5c3_Var86, templ_7745c5c3_Err = templ.JoinStringErrs(PreviewText(email.TextBody, email.HTMLBody))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1129, Col: 73}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var86))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var70 string
-				templ_7745c5c3_Var70, templ_7745c5c3_Err = templ.JoinStringErrs(FormatTimeValue(email.ReceivedAt))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 898, Col: 63}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var70))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, "</div><div class=\"item-meta\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 91, "</div></a>")
+				var templ_7745c5c3_Var87 string
+				templ_7745c5c3_Var87, templ_7745c5c3_Err = templ.JoinStringErrs(FormatTimeValue(email.ReceivedAt))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1130, Col: 63}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var87))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 116, "</div></a>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 92, "</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -1245,75 +1506,75 @@ func ViewerPartial(data DashboardData) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var71 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var71 == nil {
-			templ_7745c5c3_Var71 = templ.NopComponent
+		templ_7745c5c3_Var88 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var88 == nil {
+			templ_7745c5c3_Var88 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		if data.ActiveEmail == nil {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 93, "<div class=\"viewer\"><div class=\"pane-header\"><h2 class=\"pane-title\">Message</h2></div><div class=\"empty-state\">Select an email.</div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, "<div class=\"viewer\"><div class=\"pane-header\"><h2 class=\"pane-title\">Message</h2></div><div class=\"empty-state\">Select an email.</div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 94, "<article class=\"viewer\"><header class=\"viewer-head\"><h2 class=\"viewer-title\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 119, "<article class=\"viewer\"><header class=\"viewer-head\"><h2 class=\"viewer-title\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var72 string
-			templ_7745c5c3_Var72, templ_7745c5c3_Err = templ.JoinStringErrs(SubjectLine(data.ActiveEmail.Subject))
+			var templ_7745c5c3_Var89 string
+			templ_7745c5c3_Var89, templ_7745c5c3_Err = templ.JoinStringErrs(SubjectLine(data.ActiveEmail.Subject))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 916, Col: 68}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1148, Col: 68}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var72))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 95, "</h2><div class=\"meta-grid\"><div><strong>From</strong> ")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var89))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var73 string
-			templ_7745c5c3_Var73, templ_7745c5c3_Err = templ.JoinStringErrs(data.ActiveEmail.MailFrom)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 918, Col: 59}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var73))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 120, "</h2><div class=\"meta-grid\"><div><strong>From</strong> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 96, "</div><div><strong>To</strong> ")
+			var templ_7745c5c3_Var90 string
+			templ_7745c5c3_Var90, templ_7745c5c3_Err = templ.JoinStringErrs(data.ActiveEmail.MailFrom)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1150, Col: 59}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var90))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var74 string
-			templ_7745c5c3_Var74, templ_7745c5c3_Err = templ.JoinStringErrs(RecipientsText(data.ActiveEmail.Recipients))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 919, Col: 75}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var74))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 121, "</div><div><strong>To</strong> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 97, "</div><div><strong>Received</strong> ")
+			var templ_7745c5c3_Var91 string
+			templ_7745c5c3_Var91, templ_7745c5c3_Err = templ.JoinStringErrs(RecipientsText(data.ActiveEmail.Recipients))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1151, Col: 75}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var91))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var75 string
-			templ_7745c5c3_Var75, templ_7745c5c3_Err = templ.JoinStringErrs(FormatTimeValue(data.ActiveEmail.ReceivedAt))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 920, Col: 82}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var75))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 122, "</div><div><strong>Received</strong> ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 98, "</div></div></header><div class=\"viewer-body\">")
+			var templ_7745c5c3_Var92 string
+			templ_7745c5c3_Var92, templ_7745c5c3_Err = templ.JoinStringErrs(FormatTimeValue(data.ActiveEmail.ReceivedAt))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1152, Col: 82}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var92))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 123, "</div></div></header><div class=\"viewer-body\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			if data.ActiveEmail.HTMLBody != "" {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 99, "<div class=\"message-body email-html\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "<div class=\"message-body email-html\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -1321,85 +1582,85 @@ func ViewerPartial(data DashboardData) templ.Component {
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 100, "</div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 125, "</div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 101, "<div class=\"message-body\"><pre class=\"pre-wrap\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 126, "<div class=\"message-body\"><pre class=\"pre-wrap\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var76 string
-				templ_7745c5c3_Var76, templ_7745c5c3_Err = templ.JoinStringErrs(data.ActiveEmail.TextBody)
+				var templ_7745c5c3_Var93 string
+				templ_7745c5c3_Var93, templ_7745c5c3_Err = templ.JoinStringErrs(data.ActiveEmail.TextBody)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 930, Col: 55}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1162, Col: 55}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var76))
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var93))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 102, "</pre></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 127, "</pre></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
 			if len(data.ActiveEmail.Attachments) > 0 {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 103, "<ul class=\"attachment-list\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 128, "<ul class=\"attachment-list\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				for _, attachment := range data.ActiveEmail.Attachments {
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 104, "<li class=\"attachment-item\"><div class=\"fw-bold\">")
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 129, "<li class=\"attachment-item\"><div class=\"fw-bold\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					var templ_7745c5c3_Var77 string
-					templ_7745c5c3_Var77, templ_7745c5c3_Err = templ.JoinStringErrs(attachment.Filename)
+					var templ_7745c5c3_Var94 string
+					templ_7745c5c3_Var94, templ_7745c5c3_Err = templ.JoinStringErrs(attachment.Filename)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 937, Col: 50}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1169, Col: 50}
 					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var77))
-					if templ_7745c5c3_Err != nil {
-						return templ_7745c5c3_Err
-					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 105, "</div><div class=\"text-secondary small\">")
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var94))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					var templ_7745c5c3_Var78 string
-					templ_7745c5c3_Var78, templ_7745c5c3_Err = templ.JoinStringErrs(attachment.ContentType)
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 938, Col: 66}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var78))
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 130, "</div><div class=\"text-secondary small\">")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 106, " / ")
+					var templ_7745c5c3_Var95 string
+					templ_7745c5c3_Var95, templ_7745c5c3_Err = templ.JoinStringErrs(attachment.ContentType)
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1170, Col: 66}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var95))
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					var templ_7745c5c3_Var79 string
-					templ_7745c5c3_Var79, templ_7745c5c3_Err = templ.JoinStringErrs(FormatBytes(attachment.Size))
-					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 938, Col: 101}
-					}
-					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var79))
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 131, " / ")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
-					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 107, "</div></li>")
+					var templ_7745c5c3_Var96 string
+					templ_7745c5c3_Var96, templ_7745c5c3_Err = templ.JoinStringErrs(FormatBytes(attachment.Size))
+					if templ_7745c5c3_Err != nil {
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1170, Col: 101}
+					}
+					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var96))
+					if templ_7745c5c3_Err != nil {
+						return templ_7745c5c3_Err
+					}
+					templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 132, "</div></li>")
 					if templ_7745c5c3_Err != nil {
 						return templ_7745c5c3_Err
 					}
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 108, "</ul>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 133, "</ul>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 109, "</div></article>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 134, "</div></article>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -1424,191 +1685,191 @@ func CloudflareTab(data DashboardData) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var80 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var80 == nil {
-			templ_7745c5c3_Var80 = templ.NopComponent
+		templ_7745c5c3_Var97 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var97 == nil {
+			templ_7745c5c3_Var97 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 110, "<div class=\"settings-grid\"><section class=\"panel\"><div class=\"panel-header\"><h2 class=\"panel-title\">Cloudflare credentials</h2></div><div class=\"panel-body\"><form method=\"post\" action=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 135, "<div class=\"settings-grid\"><section class=\"panel\"><div class=\"panel-header\"><h2 class=\"panel-title\">Cloudflare credentials</h2></div><div class=\"panel-body\"><form method=\"post\" action=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var81 templ.SafeURL
-		templ_7745c5c3_Var81, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/dashboard/cloudflare/credentials"))
+		var templ_7745c5c3_Var98 templ.SafeURL
+		templ_7745c5c3_Var98, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/dashboard/cloudflare/credentials"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 955, Col: 79}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1187, Col: 79}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var81))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var98))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 111, "\" class=\"d-grid gap-3\"><div><label class=\"form-label\">Cloudflare account email</label> <input class=\"form-control\" name=\"email\" type=\"email\" autocomplete=\"email\" required></div><div><label class=\"form-label\">Global API key</label> <input class=\"form-control\" name=\"apiKey\" type=\"password\" autocomplete=\"off\" required></div><button class=\"btn btn-primary\" type=\"submit\">Save and load domains</button></form></div></section><section class=\"panel\"><div class=\"panel-header\"><h2 class=\"panel-title\">Current status</h2></div><div class=\"panel-body\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 136, "\" class=\"d-grid gap-3\"><div><label class=\"form-label\">Cloudflare account email</label> <input class=\"form-control\" name=\"email\" type=\"email\" autocomplete=\"email\" required></div><div><label class=\"form-label\">Global API key</label> <input class=\"form-control\" name=\"apiKey\" type=\"password\" autocomplete=\"off\" required></div><button class=\"btn btn-primary\" type=\"submit\">Save and load domains</button></form></div></section><section class=\"panel\"><div class=\"panel-header\"><h2 class=\"panel-title\">Current status</h2></div><div class=\"panel-body\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if data.Status == nil {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 112, "<div class=\"empty-state p-0 text-start\">No selected zone status yet.</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 137, "<div class=\"empty-state p-0 text-start\">No selected zone status yet.</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 113, "<dl class=\"status-list\"><div class=\"status-row\"><dt>Zone</dt><dd>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 138, "<dl class=\"status-list\"><div class=\"status-row\"><dt>Zone</dt><dd>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var82 string
-			templ_7745c5c3_Var82, templ_7745c5c3_Err = templ.JoinStringErrs(data.Status.ZoneName)
+			var templ_7745c5c3_Var99 string
+			templ_7745c5c3_Var99, templ_7745c5c3_Err = templ.JoinStringErrs(data.Status.ZoneName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 977, Col: 69}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1209, Col: 69}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var82))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 114, "</dd></div><div class=\"status-row\"><dt>Routing</dt><dd>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var99))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var83 = []any{StatusPillClass(data.Status.EmailRoutingEnabled)}
-			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var83...)
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 139, "</dd></div><div class=\"status-row\"><dt>Routing</dt><dd>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 115, "<span class=\"")
+			var templ_7745c5c3_Var100 = []any{StatusPillClass(data.Status.EmailRoutingEnabled)}
+			templ_7745c5c3_Err = templ.RenderCSSItems(ctx, templ_7745c5c3_Buffer, templ_7745c5c3_Var100...)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var84 string
-			templ_7745c5c3_Var84, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var83).String())
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 140, "<span class=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var101 string
+			templ_7745c5c3_Var101, templ_7745c5c3_Err = templ.JoinStringErrs(templ.CSSClasses(templ_7745c5c3_Var100).String())
 			if templ_7745c5c3_Err != nil {
 				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1, Col: 0}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var84))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var101))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 116, "\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 141, "\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var85 string
-			templ_7745c5c3_Var85, templ_7745c5c3_Err = templ.JoinStringErrs(data.Status.EmailRoutingStatus)
+			var templ_7745c5c3_Var102 string
+			templ_7745c5c3_Var102, templ_7745c5c3_Err = templ.JoinStringErrs(data.Status.EmailRoutingStatus)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 978, Col: 147}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1210, Col: 147}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var85))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 117, "</span></dd></div><div class=\"status-row\"><dt>Catch-all</dt><dd>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var102))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var86 string
-			templ_7745c5c3_Var86, templ_7745c5c3_Err = templ.JoinStringErrs(ValueOrDash(data.Status.CatchAllDestination))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 979, Col: 98}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var86))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 142, "</span></dd></div><div class=\"status-row\"><dt>Catch-all</dt><dd>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 118, "</dd></div><div class=\"status-row\"><dt>Worker</dt><dd>")
+			var templ_7745c5c3_Var103 string
+			templ_7745c5c3_Var103, templ_7745c5c3_Err = templ.JoinStringErrs(ValueOrDash(data.Status.CatchAllDestination))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1211, Col: 98}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var103))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var87 string
-			templ_7745c5c3_Var87, templ_7745c5c3_Err = templ.JoinStringErrs(data.Status.WorkerScriptName)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 980, Col: 79}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var87))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 143, "</dd></div><div class=\"status-row\"><dt>Worker</dt><dd>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 119, "</dd></div></dl>")
+			var templ_7745c5c3_Var104 string
+			templ_7745c5c3_Var104, templ_7745c5c3_Err = templ.JoinStringErrs(data.Status.WorkerScriptName)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1212, Col: 79}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var104))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 144, "</dd></div></dl>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 120, "</div></section></div><section class=\"panel mt-3\"><div class=\"panel-header\"><h2 class=\"panel-title\">Zones</h2></div><div class=\"panel-body p-0\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 145, "</div></section></div><section class=\"panel mt-3\"><div class=\"panel-header\"><h2 class=\"panel-title\">Zones</h2></div><div class=\"panel-body p-0\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if len(data.Zones) == 0 {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 121, "<div class=\"empty-state\">No cached zones. Save credentials first.</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 146, "<div class=\"empty-state\">No cached zones. Save credentials first.</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 122, "<div class=\"table-responsive\"><table class=\"table align-middle\"><thead><tr><th>Domain</th><th>Status</th><th class=\"text-end\">Action</th></tr></thead> <tbody>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 147, "<div class=\"table-responsive\"><table class=\"table align-middle\"><thead><tr><th>Domain</th><th>Status</th><th class=\"text-end\">Action</th></tr></thead> <tbody>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			for _, zone := range data.Zones {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 123, "<tr><td class=\"fw-bold\">")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 148, "<tr><td class=\"fw-bold\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var88 string
-				templ_7745c5c3_Var88, templ_7745c5c3_Err = templ.JoinStringErrs(zone.Name)
+				var templ_7745c5c3_Var105 string
+				templ_7745c5c3_Var105, templ_7745c5c3_Err = templ.JoinStringErrs(zone.Name)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1000, Col: 40}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1232, Col: 40}
 				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var88))
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 124, "</td><td><span class=\"status-pill neutral\">")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var105))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var89 string
-				templ_7745c5c3_Var89, templ_7745c5c3_Err = templ.JoinStringErrs(ValueOrDash(zone.Status))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1001, Col: 73}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var89))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 149, "</td><td><span class=\"status-pill neutral\">")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 125, "</span></td><td class=\"text-end\"><form method=\"post\" action=\"")
+				var templ_7745c5c3_Var106 string
+				templ_7745c5c3_Var106, templ_7745c5c3_Err = templ.JoinStringErrs(ValueOrDash(zone.Status))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1233, Col: 73}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var106))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var90 templ.SafeURL
-				templ_7745c5c3_Var90, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/dashboard/cloudflare/provision"))
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1003, Col: 83}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var90))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 150, "</span></td><td class=\"text-end\"><form method=\"post\" action=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 126, "\"><input type=\"hidden\" name=\"zoneId\" value=\"")
+				var templ_7745c5c3_Var107 templ.SafeURL
+				templ_7745c5c3_Var107, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/dashboard/cloudflare/provision"))
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1235, Col: 83}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var107))
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				var templ_7745c5c3_Var91 string
-				templ_7745c5c3_Var91, templ_7745c5c3_Err = templ.JoinStringErrs(zone.ID)
-				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1004, Col: 61}
-				}
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var91))
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 151, "\"><input type=\"hidden\" name=\"zoneId\" value=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 127, "\"> <button class=\"btn btn-outline-secondary btn-sm\" type=\"submit\">Provision</button></form></td></tr>")
+				var templ_7745c5c3_Var108 string
+				templ_7745c5c3_Var108, templ_7745c5c3_Err = templ.JoinStringErrs(zone.ID)
+				if templ_7745c5c3_Err != nil {
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1236, Col: 61}
+				}
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var108))
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 152, "\"> <button class=\"btn btn-outline-secondary btn-sm\" type=\"submit\">Provision</button></form></td></tr>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 128, "</tbody></table></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 153, "</tbody></table></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 129, "</div></section>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 154, "</div></section>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1632,79 +1893,92 @@ func PasswordTab(data DashboardData) templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var92 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var92 == nil {
-			templ_7745c5c3_Var92 = templ.NopComponent
+		templ_7745c5c3_Var109 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var109 == nil {
+			templ_7745c5c3_Var109 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 130, "<div class=\"settings-grid\"><section class=\"panel\"><div class=\"panel-header\"><h2 class=\"panel-title\">Change password</h2></div><div class=\"panel-body\"><form method=\"post\" action=\"")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 155, "<div class=\"settings-grid\"><section class=\"panel\"><div class=\"panel-header\"><h2 class=\"panel-title\">Change password</h2></div><div class=\"panel-body\"><form method=\"post\" action=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var93 templ.SafeURL
-		templ_7745c5c3_Var93, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/dashboard/password"))
+		var templ_7745c5c3_Var110 templ.SafeURL
+		templ_7745c5c3_Var110, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/dashboard/password"))
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1025, Col: 65}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1257, Col: 65}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var93))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var110))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 131, "\" class=\"d-grid gap-3\"><div><label class=\"form-label\">Current password</label> <input class=\"form-control\" name=\"oldPassword\" type=\"password\" autocomplete=\"current-password\" required></div><div><label class=\"form-label\">New password</label> <input class=\"form-control\" name=\"newPassword\" type=\"password\" autocomplete=\"new-password\" required></div><button class=\"btn btn-primary\" type=\"submit\">Update password</button></form></div></section><section class=\"panel\"><div class=\"panel-header\"><h2 class=\"panel-title\">REST API key</h2></div><div class=\"panel-body\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 156, "\" class=\"d-grid gap-3\"><div><label class=\"form-label\">Current password</label> <input class=\"form-control\" name=\"oldPassword\" type=\"password\" autocomplete=\"current-password\" required></div><div><label class=\"form-label\">New password</label> <input class=\"form-control\" name=\"newPassword\" type=\"password\" autocomplete=\"new-password\" required></div><button class=\"btn btn-primary\" type=\"submit\">Update password</button></form></div></section><section class=\"panel\"><div class=\"panel-header\"><h2 class=\"panel-title\">REST API key</h2></div><div class=\"panel-body\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if data.APIKey != "" {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 132, "<div class=\"api-key-box\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 157, "<div class=\"api-key-box\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var94 string
-			templ_7745c5c3_Var94, templ_7745c5c3_Err = templ.JoinStringErrs(data.APIKey)
+			var templ_7745c5c3_Var111 string
+			templ_7745c5c3_Var111, templ_7745c5c3_Err = templ.JoinStringErrs(data.APIKey)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1044, Col: 43}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1276, Col: 43}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var94))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 133, "</div><div class=\"mt-3 small text-secondary\">Example: <code>?api_key=")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var111))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var95 string
-			templ_7745c5c3_Var95, templ_7745c5c3_Err = templ.JoinStringErrs(data.APIKey)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1045, Col: 81}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var95))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 158, "</div><div class=\"mt-3 small text-secondary\">Preferred: <code>Authorization: Bearer ")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 134, "</code></div><div class=\"mt-3\"><a class=\"btn btn-outline-secondary btn-sm\" href=\"")
+			var templ_7745c5c3_Var112 string
+			templ_7745c5c3_Var112, templ_7745c5c3_Err = templ.JoinStringErrs(data.APIKey)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1277, Col: 96}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var112))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var96 templ.SafeURL
-			templ_7745c5c3_Var96, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/api/docs"))
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1046, Col: 96}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var96))
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 159, "</code></div><div class=\"mt-2 small text-secondary\">Fallback: <code>?api_key=")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 135, "\">Open API docs</a></div>")
+			var templ_7745c5c3_Var113 string
+			templ_7745c5c3_Var113, templ_7745c5c3_Err = templ.JoinStringErrs(data.APIKey)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1278, Col: 82}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var113))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 160, "</code></div><div class=\"mt-3\"><a class=\"btn btn-outline-secondary btn-sm\" href=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var114 templ.SafeURL
+			templ_7745c5c3_Var114, templ_7745c5c3_Err = templ.JoinURLErrs(templ.URL("/api/docs"))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `internal/adapters/http/views/pages.templ`, Line: 1279, Col: 96}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var114))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 161, "\">Open API docs</a></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 136, "<div class=\"empty-state p-0 text-start\">API key not available yet.</div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 162, "<div class=\"empty-state p-0 text-start\">API key not available yet.</div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 137, "</div></section></div>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 163, "</div></section></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

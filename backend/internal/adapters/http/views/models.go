@@ -15,14 +15,38 @@ type DocsEndpoint struct {
 	Path        string
 	Description string
 	Auth        string
-	Example     string
+	Request     string
 	Response    string
+	AgentUse    string
+}
+
+type DocsStep struct {
+	Title string
+	Body  string
+}
+
+type DocsField struct {
+	Name        string
+	Type        string
+	Description string
+}
+
+type DocsSchema struct {
+	Name        string
+	Description string
+	Fields      []DocsField
 }
 
 type APIDocsData struct {
-	BaseURL    string
-	Endpoints  []DocsEndpoint
-	SampleAuth string
+	BaseURL          string
+	OpenAPIURL       string
+	AgentMarkdownURL string
+	SampleAuth       string
+	AgentPrompt      string
+	AgentRules       []string
+	Workflow         []DocsStep
+	Endpoints        []DocsEndpoint
+	Schemas          []DocsSchema
 }
 
 type DashboardData struct {

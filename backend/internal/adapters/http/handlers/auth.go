@@ -47,12 +47,16 @@ func (h AuthHandler) Logout(c *gin.Context) {
 
 func (h AuthHandler) Me(c *gin.Context) {
 	sessionValue, exists := c.Get("session")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "session required"})
+	if exists {
+		session := sessionValue.(domain.Session)
+		c.JSON(http.StatusOK, gin.H{"authenticated": true, "auth": "session", "expiresAt": session.ExpiresAt, "csrfToken": session.CSRFToken})
 		return
 	}
-	session := sessionValue.(domain.Session)
-	c.JSON(http.StatusOK, gin.H{"authenticated": true, "expiresAt": session.ExpiresAt, "csrfToken": session.CSRFToken})
+	if c.GetBool("apiKeyAuthenticated") {
+		c.JSON(http.StatusOK, gin.H{"authenticated": true, "auth": "apiKey"})
+		return
+	}
+	c.JSON(http.StatusUnauthorized, gin.H{"error": "session required"})
 }
 
 func (h AuthHandler) ChangePassword(c *gin.Context) {

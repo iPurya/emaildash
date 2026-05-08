@@ -14,8 +14,9 @@ func RequireAuth(cookieName string, authService interface {
 	AuthenticateAPIKey(ctx context.Context, apiKey string) error
 }) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		if apiKey := c.Query("api_key"); apiKey != "" {
+		if apiKey := requestAPIKey(c); apiKey != "" {
 			if err := authService.AuthenticateAPIKey(c.Request.Context(), apiKey); err == nil {
+				c.Set("apiKeyAuthenticated", true)
 				c.Next()
 				return
 			}
@@ -40,7 +41,19 @@ func RequireAuth(cookieName string, authService interface {
 	}
 }
 
-func RequirePageAuth(cookieName string, authService interface{ Authenticate(ctx context.Context, token string) (domain.Session, error) }) gin.HandlerFunc {
+func requestAPIKey(c *gin.Context) string {
+	if value := strings.TrimSpace(c.GetHeader("Authorization")); strings.HasPrefix(strings.ToLower(value), "bearer ") {
+		return strings.TrimSpace(value[len("bearer "):])
+	}
+	if value := strings.TrimSpace(c.GetHeader("X-API-Key")); value != "" {
+		return value
+	}
+	return strings.TrimSpace(c.Query("api_key"))
+}
+
+func RequirePageAuth(cookieName string, authService interface {
+	Authenticate(ctx context.Context, token string) (domain.Session, error)
+}) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		token, err := c.Cookie(cookieName)
 		if err != nil || token == "" {

@@ -586,6 +586,7 @@ templ Document(title string) {
 					background: var(--code-bg);
 					color: var(--code-ink);
 					padding: 14px;
+					margin: 0;
 				}
 				.docs-shell { width: min(1180px, 100%); margin: 0 auto; padding: 28px; }
 				.docs-header {
@@ -600,6 +601,103 @@ templ Document(title string) {
 					align-items: center;
 					gap: 10px;
 				}
+				.docs-hero {
+					display: grid;
+					grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+					gap: 14px;
+					margin-bottom: 14px;
+				}
+				.docs-card {
+					border: 1px solid var(--line);
+					border-radius: 8px;
+					background: var(--surface);
+					box-shadow: var(--shadow);
+				}
+				.docs-card-header {
+					padding: 15px 16px;
+					border-bottom: 1px solid var(--line);
+					background: var(--surface-soft);
+				}
+				.docs-card-title {
+					margin: 0;
+					font-size: 15px;
+					font-weight: 800;
+				}
+				.docs-card-body { padding: 16px; }
+				.docs-facts {
+					display: grid;
+					gap: 10px;
+					margin: 0;
+				}
+				.docs-fact {
+					display: grid;
+					grid-template-columns: 120px minmax(0, 1fr);
+					gap: 12px;
+					padding-bottom: 10px;
+					border-bottom: 1px solid var(--line-soft);
+				}
+				.docs-fact:last-child { border-bottom: 0; padding-bottom: 0; }
+				.docs-fact dt {
+					color: var(--muted);
+					font-weight: 750;
+				}
+				.docs-fact dd {
+					margin: 0;
+					min-width: 0;
+					overflow-wrap: anywhere;
+				}
+				.docs-list {
+					display: grid;
+					gap: 9px;
+					margin: 0;
+					padding: 0;
+					list-style: none;
+				}
+				.docs-list li {
+					position: relative;
+					padding-left: 18px;
+					color: var(--label);
+				}
+				.docs-list li::before {
+					content: "";
+					position: absolute;
+					left: 0;
+					top: .62em;
+					width: 7px;
+					height: 7px;
+					border-radius: 999px;
+					background: var(--accent);
+				}
+				.docs-flow {
+					display: grid;
+					grid-template-columns: repeat(3, minmax(0, 1fr));
+					gap: 10px;
+				}
+				.docs-step {
+					padding: 13px;
+					border: 1px solid var(--line);
+					border-radius: 8px;
+					background: var(--surface);
+				}
+				.docs-step-number {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 26px;
+					height: 26px;
+					margin-bottom: 9px;
+					border-radius: 999px;
+					background: var(--brand-soft);
+					color: var(--brand);
+					font-size: 12px;
+					font-weight: 850;
+				}
+				.docs-step h3 {
+					margin: 0 0 5px;
+					font-size: 14px;
+					font-weight: 800;
+				}
+				.docs-step p { margin: 0; color: var(--muted); }
 				.docs-endpoint {
 					border: 1px solid var(--line);
 					border-radius: 8px;
@@ -622,6 +720,38 @@ templ Document(title string) {
 					gap: 12px;
 					padding: 16px;
 				}
+				.docs-agent-use {
+					grid-column: 1 / -1;
+					padding: 12px 14px;
+					border: 1px solid var(--line);
+					border-radius: 8px;
+					background: var(--surface-soft);
+					color: var(--label);
+				}
+				.docs-agent-use strong { color: var(--ink); }
+				.docs-schema {
+					margin-bottom: 12px;
+					overflow: hidden;
+				}
+				.docs-table-wrap { overflow-x: auto; }
+				.docs-table {
+					width: 100%;
+					min-width: 680px;
+					border-collapse: collapse;
+				}
+				.docs-table th, .docs-table td {
+					padding: 10px 12px;
+					border-bottom: 1px solid var(--line-soft);
+					vertical-align: top;
+				}
+				.docs-table th {
+					color: var(--muted);
+					font-size: 12px;
+					letter-spacing: .06em;
+					text-transform: uppercase;
+					background: var(--surface-soft);
+				}
+				.docs-table tr:last-child td { border-bottom: 0; }
 				.method-badge {
 					display: inline-flex;
 					align-items: center;
@@ -638,6 +768,7 @@ templ Document(title string) {
 					.pane + .pane { border-left: 0; border-top: 1px solid var(--line); }
 					.pane { min-height: auto; }
 					.settings-grid { grid-template-columns: 1fr; }
+					.docs-hero, .docs-flow { grid-template-columns: 1fr; }
 				}
 				@media (max-width: 760px) {
 					.topbar { position: static; align-items: stretch; flex-direction: column; padding: 14px; }
@@ -654,6 +785,7 @@ templ Document(title string) {
 					.docs-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
 					.docs-actions .btn, .docs-actions .theme-toggle { width: 100%; }
 					.docs-endpoint-body { grid-template-columns: 1fr; }
+					.docs-fact { grid-template-columns: 1fr; gap: 3px; }
 				}
 			</style>
 		</head>
@@ -735,20 +867,83 @@ templ APIDocsPage(data APIDocsData) {
 		<div class="docs-shell">
 			<div class="docs-header">
 				<div>
-					<p class="eyebrow">Reference</p>
-					<h1 class="page-title">API Docs</h1>
+					<p class="eyebrow">Agent reference</p>
+					<h1 class="page-title">EmailDash API</h1>
 				</div>
 				<div class="docs-actions">
 					@ThemeToggle()
+					<a class="btn btn-outline-secondary" href={ templ.URL("/api/docs/openapi.json") }>OpenAPI JSON</a>
+					<a class="btn btn-outline-secondary" href={ templ.URL("/api/docs/agent.md") }>Agent MD</a>
 					<a class="btn btn-outline-secondary" href={ templ.URL("/") }>Open app</a>
 				</div>
 			</div>
-			<div class="panel mb-3">
-				<div class="panel-body">
-					<div class="d-flex justify-content-between gap-3 flex-wrap">
-						<div><strong>Base URL</strong><div class="text-secondary"><code>{ data.BaseURL }</code></div></div>
-						<div><strong>Auth query</strong><div class="text-secondary"><code>{ data.SampleAuth }</code></div></div>
+			<div class="docs-hero">
+				<div class="docs-card">
+					<div class="docs-card-header">
+						<h2 class="docs-card-title">AI Agent Contract</h2>
 					</div>
+					<div class="docs-card-body">
+						<pre class="docs-code">{ data.AgentPrompt }</pre>
+					</div>
+				</div>
+				<div class="docs-card">
+					<div class="docs-card-header">
+						<h2 class="docs-card-title">Connection Facts</h2>
+					</div>
+					<div class="docs-card-body">
+						<dl class="docs-facts">
+							<div class="docs-fact">
+								<dt>Base URL</dt>
+								<dd><code>{ data.BaseURL }</code></dd>
+							</div>
+							<div class="docs-fact">
+								<dt>Auth</dt>
+								<dd><code>{ data.SampleAuth }</code></dd>
+							</div>
+							<div class="docs-fact">
+								<dt>OpenAPI</dt>
+								<dd><a href={ templ.URL("/api/docs/openapi.json") }><code>{ data.OpenAPIURL }</code></a></dd>
+							</div>
+							<div class="docs-fact">
+								<dt>Agent guide</dt>
+								<dd><a href={ templ.URL("/api/docs/agent.md") }><code>{ data.AgentMarkdownURL }</code></a></dd>
+							</div>
+						</dl>
+					</div>
+				</div>
+			</div>
+			<div class="docs-card mb-3">
+				<div class="docs-card-header">
+					<h2 class="docs-card-title">Rules Agents Should Follow</h2>
+				</div>
+				<div class="docs-card-body">
+					<ul class="docs-list">
+						for _, rule := range data.AgentRules {
+							<li>{ rule }</li>
+						}
+					</ul>
+				</div>
+			</div>
+			<div class="docs-card mb-3">
+				<div class="docs-card-header">
+					<h2 class="docs-card-title">Recommended Workflow</h2>
+				</div>
+				<div class="docs-card-body">
+					<div class="docs-flow">
+						for index, step := range data.Workflow {
+							<div class="docs-step">
+								<span class="docs-step-number">{ StepNumber(index) }</span>
+								<h3>{ step.Title }</h3>
+								<p>{ step.Body }</p>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+			<div class="docs-header mt-4">
+				<div>
+					<p class="eyebrow">Reference</p>
+					<h2 class="h4 mb-0">Endpoints</h2>
 				</div>
 			</div>
 			for _, endpoint := range data.Endpoints {
@@ -763,12 +958,49 @@ templ APIDocsPage(data APIDocsData) {
 					<div class="docs-endpoint-body">
 						<div>
 							<div class="small text-secondary fw-bold mb-1">Request</div>
-							<div class="docs-code">{ endpoint.Example }</div>
+							<pre class="docs-code">{ endpoint.Request }</pre>
 						</div>
 						<div>
 							<div class="small text-secondary fw-bold mb-1">Response</div>
-							<div class="docs-code">{ endpoint.Response }</div>
+							<pre class="docs-code">{ endpoint.Response }</pre>
 						</div>
+						<div class="docs-agent-use">
+							<strong>Agent use:</strong> { endpoint.AgentUse }
+						</div>
+					</div>
+				</div>
+			}
+			<div class="docs-header mt-4">
+				<div>
+					<p class="eyebrow">Schemas</p>
+					<h2 class="h4 mb-0">Response Objects</h2>
+				</div>
+			</div>
+			for _, schema := range data.Schemas {
+				<div class="docs-card docs-schema">
+					<div class="docs-card-header">
+						<h3 class="docs-card-title"><code>{ schema.Name }</code></h3>
+						<p class="text-secondary mb-0 mt-1">{ schema.Description }</p>
+					</div>
+					<div class="docs-table-wrap">
+						<table class="docs-table">
+							<thead>
+								<tr>
+									<th>Field</th>
+									<th>Type</th>
+									<th>Meaning</th>
+								</tr>
+							</thead>
+							<tbody>
+								for _, field := range schema.Fields {
+									<tr>
+										<td><code>{ field.Name }</code></td>
+										<td><code>{ field.Type }</code></td>
+										<td>{ field.Description }</td>
+									</tr>
+								}
+							</tbody>
+						</table>
 					</div>
 				</div>
 			}
@@ -1042,7 +1274,8 @@ templ PasswordTab(data DashboardData) {
 			<div class="panel-body">
 				if data.APIKey != "" {
 					<div class="api-key-box">{ data.APIKey }</div>
-					<div class="mt-3 small text-secondary">Example: <code>?api_key={ data.APIKey }</code></div>
+					<div class="mt-3 small text-secondary">Preferred: <code>Authorization: Bearer { data.APIKey }</code></div>
+					<div class="mt-2 small text-secondary">Fallback: <code>?api_key={ data.APIKey }</code></div>
 					<div class="mt-3"><a class="btn btn-outline-secondary btn-sm" href={ templ.URL("/api/docs") }>Open API docs</a></div>
 				} else {
 					<div class="empty-state p-0 text-start">API key not available yet.</div>

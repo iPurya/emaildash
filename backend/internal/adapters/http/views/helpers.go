@@ -73,6 +73,10 @@ func TabClass(active bool) string {
 	return "top-nav-link"
 }
 
+func StepNumber(index int) string {
+	return strconv.Itoa(index + 1)
+}
+
 func StackItemClass(active bool) string {
 	if active {
 		return "stack-item is-active"

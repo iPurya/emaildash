@@ -29,7 +29,7 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 	router.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{cfg.AllowedOrigin, cfg.PublicBaseURL},
 		AllowMethods:     []string{"GET", "POST", "PATCH", "OPTIONS"},
-		AllowHeaders:     []string{"Content-Type"},
+		AllowHeaders:     []string{"Content-Type", "Authorization", "X-API-Key", "X-Emaildash-Timestamp", "X-Emaildash-Signature"},
 		AllowCredentials: true,
 	}))
 
@@ -40,6 +40,10 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 
 	router.GET("/", services.Pages.Root)
 	router.GET("/api/docs", services.Pages.APIDocsPage)
+	router.GET("/api/docs/openapi.json", services.Pages.OpenAPISpec)
+	router.GET("/api/docs/agent.md", services.Pages.AgentMarkdown)
+	router.HEAD("/api/docs/openapi.json", services.Pages.OpenAPISpec)
+	router.HEAD("/api/docs/agent.md", services.Pages.AgentMarkdown)
 	router.GET("/setup", services.Pages.SetupPage)
 	router.POST("/setup", services.Pages.SetupSubmit)
 	router.GET("/login", services.Pages.LoginPage)
