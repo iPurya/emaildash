@@ -33,6 +33,11 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 		AllowCredentials: true,
 	}))
 
+	router.GET("/favicon.svg", serveFavicon)
+	router.GET("/favicon.ico", redirectLegacyFavicon)
+	router.HEAD("/favicon.svg", serveFavicon)
+	router.HEAD("/favicon.ico", redirectLegacyFavicon)
+
 	router.GET("/", services.Pages.Root)
 	router.GET("/api/docs", services.Pages.APIDocsPage)
 	router.GET("/setup", services.Pages.SetupPage)
