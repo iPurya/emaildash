@@ -11,6 +11,7 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/microcosm-cc/bluemonday"
+	"github.com/purya/emaildash/backend/internal/domain"
 )
 
 var emailPolicy = bluemonday.UGCPolicy()
@@ -63,6 +64,81 @@ func NavClass(active bool) string {
 		return "list-group-item list-group-item-action active"
 	}
 	return "list-group-item list-group-item-action bg-dark text-light border-secondary"
+}
+
+func TabClass(active bool) string {
+	if active {
+		return "top-nav-link is-active"
+	}
+	return "top-nav-link"
+}
+
+func StackItemClass(active bool) string {
+	if active {
+		return "stack-item is-active"
+	}
+	return "stack-item"
+}
+
+func PageTitle(tab string) string {
+	switch tab {
+	case "cloudflare":
+		return "Cloudflare"
+	case "password":
+		return "Password & API"
+	default:
+		return "Inbox"
+	}
+}
+
+func PageEyebrow(tab string) string {
+	switch tab {
+	case "cloudflare":
+		return "Routing"
+	case "password":
+		return "Access"
+	default:
+		return "Messages"
+	}
+}
+
+func TotalUnread(recipients []domain.RecipientSummary) int64 {
+	var total int64
+	for _, recipient := range recipients {
+		total += recipient.UnreadCount
+	}
+	return total
+}
+
+func TotalMessages(recipients []domain.RecipientSummary) int64 {
+	var total int64
+	for _, recipient := range recipients {
+		total += recipient.Count
+	}
+	return total
+}
+
+func SubjectLine(subject string) string {
+	subject = strings.TrimSpace(subject)
+	if subject == "" {
+		return "(No subject)"
+	}
+	return subject
+}
+
+func ValueOrDash(value string) string {
+	value = strings.TrimSpace(value)
+	if value == "" {
+		return "-"
+	}
+	return value
+}
+
+func StatusPillClass(ok bool) string {
+	if ok {
+		return "status-pill ok"
+	}
+	return "status-pill warn"
 }
 
 func FormatTime(value *time.Time) string {
