@@ -3,12 +3,20 @@
 /logs/
 
 # Node artifacts
+node_modules/
 worker/node_modules/
 worker/dist/
+
+# Local snapshots and release bundles
+/app/
+/frontend/
+*.tgz
+*.tmp
 
 # Environment files
 .env
 .env.*
+!deploy/.env.example
 
 # OS/editor noise
 .DS_Store

@@ -3,6 +3,7 @@ package ingest
 import (
 	"context"
 	"crypto/sha256"
+	"encoding/base64"
 	"encoding/hex"
 	"fmt"
 	"os"
@@ -86,7 +87,7 @@ func (s Service) persistAttachments(messageID string, attachments []domain.Attac
 		filename := safeFilename(attachment.Filename)
 		path := filepath.Join(s.attachmentDir, messageID+"-"+filename)
 		if attachment.Content != "" {
-			if err := os.WriteFile(path, []byte(attachment.Content), 0o600); err != nil {
+			if err := os.WriteFile(path, attachmentBytes(attachment.Content), 0o600); err != nil {
 				return nil, fmt.Errorf("write attachment: %w", err)
 			}
 		}
@@ -108,4 +109,16 @@ func safeFilename(name string) string {
 		return "attachment.bin"
 	}
 	return strings.ReplaceAll(name, "..", "_")
+}
+
+func attachmentBytes(content string) []byte {
+	decoded, err := base64.StdEncoding.DecodeString(content)
+	if err == nil {
+		return decoded
+	}
+	decoded, err = base64.RawStdEncoding.DecodeString(content)
+	if err == nil {
+		return decoded
+	}
+	return []byte(content)
 }

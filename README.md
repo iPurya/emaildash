@@ -1,153 +1,149 @@
 # Emaildash
 
-Simple inbound email dashboard built with Go, Gin, templ, HTMX, SQLite, and Cloudflare Email Routing.
+Self-hosted inbound email dashboard for Cloudflare Email Routing.
 
-Goal: minimal setup, single-user auth, automatic Cloudflare domain hookup, catch-all email ingest, grouped inbox by recipient, and REST API access to stored messages.
+Emaildash receives catch-all mail through a Cloudflare Email Worker, verifies a signed webhook, stores messages in SQLite, and serves a single-user dashboard plus REST API from one Go app.
+
+## VPS Install
+
+Prerequisites:
+- A VPS with Docker and Docker Compose installed
+- A domain or subdomain with an `A` or `AAAA` record pointing to the VPS
+- Ports `80` and `443` open
+- A Cloudflare-managed domain and Cloudflare Global API Key for email routing setup
+
+Install and start:
+
+```bash
+git clone https://github.com/iPurya/emaildash.git
+cd emaildash
+cp deploy/.env.example .env
+DOMAIN=emaildash.example.com
+sed -i "s/emaildash.example.com/${DOMAIN}/g" .env
+docker compose --env-file .env -f deploy/docker-compose.prod.yml up -d --build
+```
+
+Open `https://YOUR_DOMAIN`, create the first password, then use the Cloudflare tab to save credentials and provision the domain.
+
+Runtime data is stored in `./data`:
+- `data/emaildash.db`
+- `data/.masterkey`
+- `data/attachments/`
+
+Back this directory up. Losing `.masterkey` means encrypted Cloudflare credentials and webhook secrets cannot be decrypted.
+
+## Update
+
+```bash
+git pull --ff-only
+docker compose --env-file .env -f deploy/docker-compose.prod.yml up -d --build
+```
+
+## Local Docker
+
+```bash
+docker compose -f deploy/docker-compose.yml up --build
+```
+
+Open `http://localhost:8080`.
 
 ## Stack
 
-- Backend/UI/API: Go + Gin + templ + HTMX + Bootstrap
+- Backend, UI, REST API: Go, Gin, templ, HTMX, Bootstrap
 - Database: SQLite via `modernc.org/sqlite`
-- Worker: TypeScript + Cloudflare Email Worker + `postal-mime`
-- Deploy: Docker Compose
+- Worker: Cloudflare Email Worker, TypeScript, `postal-mime`
+- Deploy: Docker Compose and Caddy
 
 ## Architecture
 
 ```text
 Cloudflare Email Routing
-  -> Catch-all rule
-  -> Cloudflare Worker (`worker/src/index.ts`)
-  -> Signed POST webhook
-  -> Go app (`/api/ingest/cloudflare/email`)
-  -> SQLite + attachment storage
-  -> Same Go app serves dashboard + REST API
+  -> catch-all rule
+  -> Cloudflare Worker
+  -> signed POST /api/ingest/cloudflare/email
+  -> Go app
+  -> SQLite and attachment storage
+  -> dashboard and REST API
 ```
 
-### Main directories
+Main directories:
 
 ```text
-backend/   Go server, templ UI, auth, SQLite, Cloudflare automation, ingest API
-worker/    Cloudflare Email Worker
-deploy/    Dockerfile and compose files
-data/      SQLite DB, secrets, attachments at runtime
+backend/   Go app, dashboard, REST API, auth, SQLite, Cloudflare automation
+worker/    Cloudflare Email Worker source and build config
+deploy/    Dockerfile, compose files, Caddyfile, example env
+data/      Runtime SQLite DB, master key, and attachments
 ```
 
-## Features
+## Important Routes
 
-### Backend and UI
-- single-user setup and password auth
-- server-rendered dashboard UI with templ
-- HTMX inbox refresh and dashboard interactions
-- session cookie auth
-- encrypted secret storage for Cloudflare credentials and webhook secret
-- SQLite schema and migration bootstrap
-- inbox list/detail/read endpoints
-- grouped recipients endpoint
-- Cloudflare credential save, zone listing, provisioning, and status
-- signed ingest webhook
-
-### Worker
-- parses inbound email with `postal-mime`
-- extracts sender, recipient, subject, text, HTML, headers, attachments
-- signs webhook payload with HMAC SHA-256
-
-## Routes
-
-### Browser routes
+Browser:
 - `GET /`
 - `GET /setup`
-- `POST /setup`
 - `GET /login`
-- `POST /login`
-- `POST /logout`
 - `GET /dashboard`
-- `GET /ui/inbox/recipients`
-- `GET /ui/inbox/emails`
-- `GET /ui/inbox/viewer`
-- `POST /dashboard/password`
-- `POST /dashboard/cloudflare/credentials`
-- `POST /dashboard/cloudflare/provision`
+- `GET /api/docs`
 
-### JSON API
+REST API:
 - `GET /api/setup/status`
-- `POST /api/setup/initialize`
 - `POST /api/auth/login`
-- `POST /api/auth/logout`
 - `GET /api/auth/me`
-- `POST /api/settings/password`
-- `POST /api/cloudflare/credentials`
-- `GET /api/cloudflare/zones`
-- `POST /api/cloudflare/zones/:zoneId/provision`
-- `GET /api/cloudflare/status`
-- `GET /api/emails` (`recipient`, `to_mail`, `from_mail`, `unread`, `limit` optional filters)
+- `GET /api/emails`
 - `GET /api/emails/:id`
-- `PATCH /api/emails/:id/read`
 - `GET /api/recipients`
+- `PATCH /api/emails/:id/read`
+- `POST /api/cloudflare/credentials`
+- `POST /api/cloudflare/zones/:zoneId/provision`
 - `POST /api/ingest/cloudflare/email`
 
-### Example API usage
+Protected REST endpoints accept either the browser session cookie or `?api_key=YOUR_API_KEY`. The dashboard shows the API key under `Password & API`.
 
-List all emails with session cookie:
-
-```bash
-curl -b cookies.txt http://localhost:8080/api/emails
-```
-
-List all emails with API key:
+## API Examples
 
 ```bash
-curl "http://localhost:8080/api/emails?api_key=YOUR_API_KEY"
+curl "https://emaildash.example.com/api/emails?api_key=YOUR_API_KEY"
+curl "https://emaildash.example.com/api/emails?api_key=YOUR_API_KEY&to_mail=test@example.com"
+curl "https://emaildash.example.com/api/emails?api_key=YOUR_API_KEY&from_mail=sender@example.com"
+curl "https://emaildash.example.com/api/recipients?api_key=YOUR_API_KEY"
 ```
 
-API key behavior:
-- password changes rotate the API key automatically
-- the new key is shown once on the dashboard password tab after a successful password change
-- protected REST API endpoints accept either a valid session cookie or `api_key` query parameter
+## Configuration
 
-Filter by sender:
+Production values are read from `.env` by Docker Compose:
 
-```bash
-curl "http://localhost:8080/api/emails?api_key=YOUR_API_KEY&from_mail=alice@example.com"
+```env
+EMAILDASH_DOMAIN=emaildash.example.com
+EMAILDASH_PUBLIC_BASE_URL=https://emaildash.example.com
+EMAILDASH_ALLOWED_ORIGIN=https://emaildash.example.com
 ```
 
-Filter by recipient:
+Backend environment variables:
 
-```bash
-curl "http://localhost:8080/api/emails?api_key=YOUR_API_KEY&to_mail=team@example.com"
-```
+| Variable | Default | Purpose |
+|---|---|---|
+| `PORT` | `8080` | HTTP port inside the container |
+| `EMAILDASH_DATA_DIR` | `../data` | Runtime data directory |
+| `EMAILDASH_DB_PATH` | `<data>/emaildash.db` | SQLite database path |
+| `EMAILDASH_ATTACHMENT_DIR` | `<data>/attachments` | Attachment storage path |
+| `EMAILDASH_MASTER_KEY_PATH` | `<data>/.masterkey` | AES key file for encrypted secrets |
+| `EMAILDASH_PUBLIC_BASE_URL` | `http://localhost:8080` | Public app URL used in Worker webhook config |
+| `EMAILDASH_ALLOWED_ORIGIN` | `http://localhost:8080` | CORS origin for API clients |
+| `EMAILDASH_WORKER_SCRIPT_NAME` | `emaildash-ingest` | Cloudflare Worker script name |
+| `EMAILDASH_WORKER_SUBDOMAIN` | `emaildash-receiver` | Cloudflare Workers subdomain |
+| `EMAILDASH_WORKER_BUNDLE` | `../worker/dist/index.js` | Built Worker bundle path |
+| `EMAILDASH_SESSION_TTL_HOURS` | `336` | Session lifetime |
 
-Filter by sender and recipient:
+## Development
 
-```bash
-curl "http://localhost:8080/api/emails?api_key=YOUR_API_KEY&from_mail=alice@example.com&to_mail=team@example.com"
-```
-
-## Local setup
-
-### Prerequisites
-- Go 1.24+
-- Node.js 22+
-- npm 10+
-- Docker Desktop + Docker Compose if using container workflow
-
-Cloudflare requirements for real end-to-end test:
-- Cloudflare-managed domain
-- Cloudflare account email
-- Cloudflare Global API Key
-- public HTTPS URL for backend webhook
-
-## Local run
-
-### Backend
+Backend:
 
 ```bash
 cd backend
-go mod tidy
 go run github.com/a-h/templ/cmd/templ@v0.3.1001 generate
 go run ./cmd/emaildash
 ```
 
-### Worker build
+Worker:
 
 ```bash
 cd worker
@@ -155,87 +151,21 @@ npm install
 npm run build
 ```
 
-Open:
-- `http://localhost:8080/`
-
-## Docker Compose
-
-From repo root:
+Verification:
 
 ```bash
-docker compose -f deploy/docker-compose.yml up --build
-```
-
-App:
-- `http://localhost:8080`
-
-Mounted runtime data:
-- `./data/emaildash.db`
-- `./data/attachments/`
-- `./data/.masterkey`
-
-## Production deployment
-
-Production compose file:
-
-```bash
-docker compose -f deploy/docker-compose.prod.yml up -d --build
-```
-
-Production shape:
-- `app` container runs Go dashboard + REST API + webhook
-- `caddy` container provides HTTPS edge proxy
-- Worker bundle is built into app image and uploaded to Cloudflare during provisioning
-
-## Environment variables
-
-Backend reads these environment variables:
-
-| Variable | Default | Purpose |
-|---|---|---|
-| `PORT` | `8080` | backend HTTP port |
-| `EMAILDASH_DATA_DIR` | `../data` | runtime data directory |
-| `EMAILDASH_DB_PATH` | `<data>/emaildash.db` | SQLite path |
-| `EMAILDASH_ATTACHMENT_DIR` | `<data>/attachments` | attachment storage path |
-| `EMAILDASH_MASTER_KEY_PATH` | `<data>/.masterkey` | AES key file for secrets |
-| `EMAILDASH_PUBLIC_BASE_URL` | `http://localhost:8080` | public backend URL used by Worker webhook |
-| `EMAILDASH_COOKIE_NAME` | `emaildash_session` | auth cookie name |
-| `EMAILDASH_WORKER_SCRIPT_NAME` | `emaildash-ingest` | deployed Worker script name |
-| `EMAILDASH_WORKER_SUBDOMAIN` | `emaildash-receiver` | Cloudflare Workers subdomain |
-| `EMAILDASH_WORKER_BUNDLE` | `../worker/dist/index.js` | built worker bundle path |
-| `EMAILDASH_SESSION_TTL_HOURS` | `336` | session lifetime |
-| `EMAILDASH_ALLOWED_ORIGIN` | `http://localhost:8080` | app origin |
-
-## Build verification
-
-### Backend
-
-```bash
-cd backend
-go run github.com/a-h/templ/cmd/templ@v0.3.1001 generate
-go build ./...
-go test ./...
-```
-
-### Worker
-
-```bash
-cd worker
-npm run build
-```
-
-### Docker Compose config
-
-```bash
+cd backend && go test ./...
+cd ../worker && npm run build
 docker compose -f deploy/docker-compose.yml config
-docker compose -f deploy/docker-compose.yml build
+docker compose --env-file .env -f deploy/docker-compose.prod.yml config
 ```
 
-## Known limitations
+## Notes
 
-- attachment binary persistence still needs a follow-up pass if corruption appears in real mail tests
-- Cloudflare adapter still needs broader live validation against more real accounts/zones
-- generated templ files are committed to keep clone/build flow simple
+- Caddy handles HTTPS automatically for `EMAILDASH_DOMAIN`.
+- The Cloudflare Worker is built into the app image and uploaded during provisioning.
+- Cloudflare automation still depends on live Cloudflare API behavior for the selected account and zone.
+- Generated templ files are committed so a fresh clone can build without extra generated artifacts.
 
 ## License
 

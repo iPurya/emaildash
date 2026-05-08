@@ -8,18 +8,20 @@ services:
       - "8080"
     environment:
       PORT: 8080
-      EMAILDASH_PUBLIC_BASE_URL: https://emaildash.purya.dev
-      EMAILDASH_ALLOWED_ORIGIN: https://emaildash.purya.dev
+      EMAILDASH_PUBLIC_BASE_URL: ${EMAILDASH_PUBLIC_BASE_URL:?set EMAILDASH_PUBLIC_BASE_URL in .env}
+      EMAILDASH_ALLOWED_ORIGIN: ${EMAILDASH_ALLOWED_ORIGIN:?set EMAILDASH_ALLOWED_ORIGIN in .env}
       EMAILDASH_DATA_DIR: /data
       EMAILDASH_WORKER_BUNDLE: /app/worker/dist/index.js
     volumes:
-      - ../../data:/data
+      - ../data:/data
 
   caddy:
     image: caddy:2
     restart: unless-stopped
     depends_on:
       - app
+    environment:
+      EMAILDASH_DOMAIN: ${EMAILDASH_DOMAIN:?set EMAILDASH_DOMAIN in .env}
     ports:
       - "80:80"
       - "443:443"

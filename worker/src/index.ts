@@ -17,6 +17,25 @@ async function hex(input: ArrayBuffer): Promise<string> {
   return Array.from(new Uint8Array(input)).map((b) => b.toString(16).padStart(2, '0')).join('')
 }
 
+function attachmentBytes(content: string | ArrayBuffer | Uint8Array): Uint8Array {
+  if (typeof content === 'string') {
+    return new TextEncoder().encode(content)
+  }
+  if (content instanceof Uint8Array) {
+    return content
+  }
+  return new Uint8Array(content)
+}
+
+function base64(bytes: Uint8Array): string {
+  let output = ''
+  const chunkSize = 0x8000
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    output += String.fromCharCode(...bytes.subarray(i, i + chunkSize))
+  }
+  return btoa(output)
+}
+
 async function sign(secret: string, timestamp: string, body: string): Promise<string> {
   const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign'])
   const payload = new TextEncoder().encode(`${timestamp}.${body}`)
@@ -24,9 +43,9 @@ async function sign(secret: string, timestamp: string, body: string): Promise<st
   return `v1=${await hex(signature)}`
 }
 
-async function digestBase64(content: string): Promise<string> {
-  const bytes = Uint8Array.from(atob(content), (c) => c.charCodeAt(0))
-  const hash = await crypto.subtle.digest('SHA-256', bytes)
+async function digest(bytes: Uint8Array): Promise<string> {
+  const copy = new Uint8Array(bytes)
+  const hash = await crypto.subtle.digest('SHA-256', copy.buffer)
   return hex(hash)
 }
 
@@ -36,13 +55,13 @@ export default {
     const parsed = await parser.parse(message.raw)
     const attachments: ParsedAttachment[] = await Promise.all(
       (parsed.attachments ?? []).map(async (attachment) => {
-        const content = typeof attachment.content === 'string' ? attachment.content : btoa(String.fromCharCode(...new Uint8Array(attachment.content as ArrayBuffer)))
+        const bytes = attachmentBytes(attachment.content as string | ArrayBuffer | Uint8Array)
         return {
           filename: attachment.filename ?? 'attachment.bin',
           contentType: attachment.mimeType ?? 'application/octet-stream',
-          size: attachment.content ? (attachment.content as ArrayBuffer).byteLength ?? content.length : content.length,
-          sha256: await digestBase64(content),
-          content,
+          size: bytes.byteLength,
+          sha256: await digest(bytes),
+          content: base64(bytes),
         }
       }),
     )
