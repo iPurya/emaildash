@@ -9,20 +9,113 @@ templ Document(title string) {
 			<title>{ title }</title>
 			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
 			<script src="https://unpkg.com/htmx.org@1.9.12"></script>
+			<script>
+				(function() {
+					const key = "emaildash-theme";
+					const root = document.documentElement;
+					let saved = "";
+					try {
+						saved = localStorage.getItem(key) || "";
+					} catch (error) {}
+					const initial = saved === "light" || saved === "dark" ? saved : "dark";
+					function apply(theme) {
+						root.dataset.theme = theme;
+						root.style.colorScheme = theme;
+						document.querySelectorAll("[data-theme-label]").forEach(function(label) {
+							label.textContent = theme === "dark" ? "Dark" : "Light";
+						});
+						document.querySelectorAll("[data-theme-toggle]").forEach(function(button) {
+							button.setAttribute("aria-pressed", theme === "dark" ? "true" : "false");
+						});
+					}
+					apply(initial);
+					window.emaildashToggleTheme = function() {
+						const next = root.dataset.theme === "dark" ? "light" : "dark";
+						try {
+							localStorage.setItem(key, next);
+						} catch (error) {}
+						apply(next);
+					};
+					document.addEventListener("DOMContentLoaded", function() {
+						apply(root.dataset.theme || initial);
+					});
+				})();
+			</script>
 			<style>
 				:root {
+					color-scheme: dark;
+					--bg: #070b14;
+					--surface: #0f1726;
+					--surface-soft: #121c2d;
+					--surface-raised: #172236;
+					--ink: #e8eef8;
+					--muted: #98a8bd;
+					--label: #c9d5e6;
+					--line: #26354c;
+					--line-soft: #1b293e;
+					--brand: #69a7ff;
+					--brand-strong: #3b82f6;
+					--brand-soft: #10284d;
+					--brand-soft-strong: #173a70;
+					--accent: #2dd4bf;
+					--warning: #f6c453;
+					--danger: #ff8a80;
+					--success-bg: #063a30;
+					--success-ink: #5eead4;
+					--warning-bg: #3a2a08;
+					--neutral-bg: #1c2738;
+					--topbar-bg: rgba(10, 15, 26, 0.9);
+					--brand-mark-bg: #e8eef8;
+					--brand-mark-ink: #0b1020;
+					--auth-brand-bg: #0b1220;
+					--auth-brand-ink: #f8fafc;
+					--auth-brand-muted: #a7b7cd;
+					--nav-hover: #172236;
+					--active-bg: #132a4d;
+					--item-hover: #121e31;
+					--code-bg: #050916;
+					--code-ink: #dbeafe;
+					--message-bg: #ffffff;
+					--message-ink: #101828;
+					--toggle-track: #2563eb;
+					--shadow: 0 18px 44px rgba(0, 0, 0, 0.34);
+				}
+				:root[data-theme="light"] {
+					color-scheme: light;
 					--bg: #f4f6f9;
 					--surface: #ffffff;
 					--surface-soft: #f8fafc;
+					--surface-raised: #ffffff;
 					--ink: #101828;
 					--muted: #667085;
+					--label: #344054;
 					--line: #d8dee8;
 					--line-soft: #eaedf3;
 					--brand: #2563eb;
 					--brand-strong: #1746a2;
+					--brand-soft: #eef4ff;
+					--brand-soft-strong: #dbeafe;
 					--accent: #0f766e;
 					--warning: #b7791f;
 					--danger: #b42318;
+					--success-bg: #ecfdf3;
+					--success-ink: #027a48;
+					--warning-bg: #fffaeb;
+					--neutral-bg: #f2f4f7;
+					--topbar-bg: rgba(255, 255, 255, 0.92);
+					--brand-mark-bg: #111827;
+					--brand-mark-ink: #ffffff;
+					--auth-brand-bg: #111827;
+					--auth-brand-ink: #ffffff;
+					--auth-brand-muted: #cbd5e1;
+					--nav-hover: #eef2f7;
+					--active-bg: #ffffff;
+					--item-hover: #f8fbff;
+					--code-bg: #0f172a;
+					--code-ink: #e2e8f0;
+					--message-bg: #ffffff;
+					--message-ink: #101828;
+					--toggle-track: #d8dee8;
 					--shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
 				}
 				* { box-sizing: border-box; }
@@ -38,7 +131,7 @@ templ Document(title string) {
 				code, .docs-code, .api-key-box {
 					font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
 				}
-				code { overflow-wrap: anywhere; word-break: break-word; }
+				code { color: var(--brand); overflow-wrap: anywhere; word-break: break-word; }
 				.app-shell { min-height: 100vh; }
 				.topbar {
 					position: sticky;
@@ -50,7 +143,7 @@ templ Document(title string) {
 					gap: 20px;
 					min-height: 68px;
 					padding: 12px 28px;
-					background: rgba(255, 255, 255, 0.92);
+					background: var(--topbar-bg);
 					border-bottom: 1px solid var(--line);
 					backdrop-filter: blur(18px);
 				}
@@ -68,8 +161,8 @@ templ Document(title string) {
 					width: 34px;
 					height: 34px;
 					border-radius: 8px;
-					background: #111827;
-					color: #fff;
+					background: var(--brand-mark-bg);
+					color: var(--brand-mark-ink);
 					font-size: 12px;
 					letter-spacing: 0;
 				}
@@ -93,13 +186,50 @@ templ Document(title string) {
 					text-decoration: none;
 					white-space: nowrap;
 				}
-				.top-nav-link:hover { color: var(--ink); background: #eef2f7; }
+				.top-nav-link:hover { color: var(--ink); background: var(--nav-hover); }
 				.top-nav-link.is-active {
-					background: var(--surface);
+					background: var(--active-bg);
 					color: var(--brand);
 					box-shadow: 0 1px 3px rgba(16, 24, 40, 0.12);
 				}
 				.top-actions { display: flex; align-items: center; gap: 10px; }
+				.theme-toggle {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					gap: 8px;
+					min-height: 38px;
+					padding: 6px 10px;
+					border: 1px solid var(--line);
+					border-radius: 8px;
+					background: var(--surface);
+					color: var(--ink);
+					font-weight: 750;
+					white-space: nowrap;
+				}
+				.theme-toggle:hover { background: var(--surface-soft); }
+				.theme-toggle-track {
+					position: relative;
+					display: inline-flex;
+					width: 40px;
+					height: 22px;
+					border-radius: 999px;
+					background: var(--toggle-track);
+					box-shadow: inset 0 0 0 1px rgba(255,255,255,.12);
+				}
+				.theme-toggle-knob {
+					position: absolute;
+					top: 3px;
+					left: 3px;
+					width: 16px;
+					height: 16px;
+					border-radius: 999px;
+					background: #fff;
+					box-shadow: 0 2px 6px rgba(0,0,0,.22);
+					transform: translateX(18px);
+					transition: transform .18s ease;
+				}
+				:root[data-theme="light"] .theme-toggle-knob { transform: translateX(0); }
 				.app-main {
 					width: min(1680px, 100%);
 					margin: 0 auto;
@@ -145,6 +275,16 @@ templ Document(title string) {
 					border-width: 1px;
 					box-shadow: none;
 				}
+				.alert-danger {
+					background: color-mix(in srgb, var(--danger) 16%, var(--surface));
+					border-color: color-mix(in srgb, var(--danger) 34%, var(--line));
+					color: var(--ink);
+				}
+				.alert-success {
+					background: color-mix(in srgb, var(--accent) 14%, var(--surface));
+					border-color: color-mix(in srgb, var(--accent) 30%, var(--line));
+					color: var(--ink);
+				}
 				.btn {
 					border-radius: 6px;
 					font-weight: 700;
@@ -163,6 +303,11 @@ templ Document(title string) {
 					border-color: var(--line);
 					background: var(--surface);
 				}
+				.btn-outline-secondary:hover {
+					color: var(--ink);
+					border-color: var(--line);
+					background: var(--surface-soft);
+				}
 				.form-control, .form-select {
 					min-height: 42px;
 					border-radius: 6px;
@@ -174,8 +319,10 @@ templ Document(title string) {
 					border-color: var(--brand);
 					box-shadow: 0 0 0 .2rem rgba(37, 99, 235, .14);
 				}
+				.form-control::placeholder { color: var(--muted); }
+				.text-secondary { color: var(--muted) !important; }
 				.form-label {
-					color: #344054;
+					color: var(--label);
 					font-size: 13px;
 					font-weight: 700;
 				}
@@ -197,17 +344,25 @@ templ Document(title string) {
 				}
 				.auth-brand {
 					padding: 34px;
-					background: #111827;
-					color: #fff;
+					background: var(--auth-brand-bg);
+					color: var(--auth-brand-ink);
 				}
 				.auth-brand h1 {
 					margin: 18px 0 12px;
 					font-size: 34px;
 					font-weight: 800;
 				}
-				.auth-brand p { color: #cbd5e1; margin: 0; max-width: 28rem; }
+				.auth-brand p { color: var(--auth-brand-muted); margin: 0; max-width: 28rem; }
 				.auth-form { padding: 34px; align-self: center; }
+				.auth-form-head {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					gap: 16px;
+					margin-bottom: 20px;
+				}
 				.auth-form h2 { margin: 0 0 20px; font-size: 24px; font-weight: 760; }
+				.auth-form-head h2 { margin: 0; }
 				.inbox-layout {
 					display: grid;
 					grid-template-columns: minmax(230px, .78fr) minmax(310px, 1fr) minmax(420px, 1.42fr);
@@ -216,7 +371,7 @@ templ Document(title string) {
 					border-radius: 8px;
 					overflow: hidden;
 					background: var(--line);
-					box-shadow: 0 8px 26px rgba(15, 23, 42, 0.04);
+					box-shadow: var(--shadow);
 				}
 				.pane {
 					min-width: 0;
@@ -239,7 +394,7 @@ templ Document(title string) {
 					font-weight: 800;
 					letter-spacing: .08em;
 					text-transform: uppercase;
-					color: #475467;
+					color: var(--muted);
 				}
 				.count-pill, .status-pill {
 					display: inline-flex;
@@ -249,14 +404,14 @@ templ Document(title string) {
 					min-height: 24px;
 					padding: 3px 8px;
 					border-radius: 999px;
-					background: #eef4ff;
+					background: var(--brand-soft);
 					color: var(--brand);
 					font-size: 12px;
 					font-weight: 800;
 				}
-				.status-pill.ok { background: #ecfdf3; color: #027a48; }
-				.status-pill.warn { background: #fffaeb; color: var(--warning); }
-				.status-pill.neutral { background: #f2f4f7; color: #475467; }
+				.status-pill.ok { background: var(--success-bg); color: var(--success-ink); }
+				.status-pill.warn { background: var(--warning-bg); color: var(--warning); }
+				.status-pill.neutral { background: var(--neutral-bg); color: var(--muted); }
 				.stack-list { display: grid; }
 				.stack-item {
 					display: block;
@@ -265,9 +420,9 @@ templ Document(title string) {
 					color: var(--ink);
 					text-decoration: none;
 				}
-				.stack-item:hover { background: #f8fbff; }
+				.stack-item:hover { background: var(--item-hover); }
 				.stack-item.is-active {
-					background: #eff6ff;
+					background: var(--active-bg);
 					box-shadow: inset 3px 0 0 var(--brand);
 				}
 				.item-main {
@@ -324,7 +479,7 @@ templ Document(title string) {
 					color: var(--muted);
 					font-size: 13px;
 				}
-				.meta-grid strong { color: #344054; font-weight: 760; }
+				.meta-grid strong { color: var(--label); font-weight: 760; }
 				.viewer-body {
 					padding: 18px 22px 22px;
 					background: var(--surface-soft);
@@ -334,8 +489,8 @@ templ Document(title string) {
 					max-width: 980px;
 					border: 1px solid var(--line);
 					border-radius: 8px;
-					background: #fff;
-					color: var(--ink);
+					background: var(--message-bg);
+					color: var(--message-ink);
 					overflow: auto;
 				}
 				.message-body.email-html { padding: 18px; }
@@ -370,7 +525,7 @@ templ Document(title string) {
 					border: 1px solid var(--line);
 					border-radius: 8px;
 					background: var(--surface);
-					box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+					box-shadow: var(--shadow);
 				}
 				.panel-header {
 					padding: 16px 18px;
@@ -425,8 +580,8 @@ templ Document(title string) {
 					word-break: break-word;
 					border: 1px solid var(--line);
 					border-radius: 8px;
-					background: #0f172a;
-					color: #e2e8f0;
+					background: var(--code-bg);
+					color: var(--code-ink);
 					padding: 14px;
 				}
 				.docs-shell { width: min(1180px, 100%); margin: 0 auto; padding: 28px; }
@@ -436,6 +591,11 @@ templ Document(title string) {
 					justify-content: space-between;
 					gap: 16px;
 					margin-bottom: 18px;
+				}
+				.docs-actions {
+					display: flex;
+					align-items: center;
+					gap: 10px;
 				}
 				.docs-endpoint {
 					border: 1px solid var(--line);
@@ -465,7 +625,7 @@ templ Document(title string) {
 					min-height: 24px;
 					padding: 2px 8px;
 					border-radius: 6px;
-					background: #dbeafe;
+					background: var(--brand-soft-strong);
 					color: var(--brand-strong);
 					font-size: 12px;
 					font-weight: 850;
@@ -479,8 +639,8 @@ templ Document(title string) {
 				@media (max-width: 760px) {
 					.topbar { position: static; align-items: stretch; flex-direction: column; padding: 14px; }
 					.top-nav { width: 100%; overflow-x: auto; }
-					.top-actions { width: 100%; }
-					.top-actions .btn, .top-actions form { width: 100%; }
+					.top-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+					.top-actions .btn, .top-actions form, .top-actions .theme-toggle { width: 100%; }
 					.app-main { padding: 18px 14px 24px; }
 					.page-heading { align-items: start; flex-direction: column; }
 					.metric-strip { justify-content: start; }
@@ -488,6 +648,8 @@ templ Document(title string) {
 					.auth-brand, .auth-form { padding: 24px; }
 					.docs-shell { padding: 18px 14px; }
 					.docs-header, .docs-endpoint-head { flex-direction: column; align-items: start; }
+					.docs-actions { width: 100%; display: grid; grid-template-columns: 1fr 1fr; }
+					.docs-actions .btn, .docs-actions .theme-toggle { width: 100%; }
 					.docs-endpoint-body { grid-template-columns: 1fr; }
 				}
 			</style>
@@ -496,6 +658,13 @@ templ Document(title string) {
 			{ children... }
 		</body>
 	</html>
+}
+
+templ ThemeToggle() {
+	<button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle dark mode" onclick="window.emaildashToggleTheme && window.emaildashToggleTheme()">
+		<span class="theme-toggle-track" aria-hidden="true"><span class="theme-toggle-knob"></span></span>
+		<span data-theme-label>Dark</span>
+	</button>
 }
 
 templ SetupPage(data SetupPageData) {
@@ -508,7 +677,10 @@ templ SetupPage(data SetupPageData) {
 					<p>Private mail capture, grouped inbox, and API access from one self-hosted app.</p>
 				</div>
 				<div class="auth-form">
-					<h2>Initialize workspace</h2>
+					<div class="auth-form-head">
+						<h2>Initialize workspace</h2>
+						@ThemeToggle()
+					</div>
 					if data.Error != "" {
 						<div class="alert alert-danger">{ data.Error }</div>
 					}
@@ -535,7 +707,10 @@ templ LoginPage(data LoginPageData) {
 					<p>Review routed mail, inspect payloads, and manage Cloudflare delivery.</p>
 				</div>
 				<div class="auth-form">
-					<h2>Sign in</h2>
+					<div class="auth-form-head">
+						<h2>Sign in</h2>
+						@ThemeToggle()
+					</div>
 					if data.Error != "" {
 						<div class="alert alert-danger">{ data.Error }</div>
 					}
@@ -560,7 +735,10 @@ templ APIDocsPage(data APIDocsData) {
 					<p class="eyebrow">Reference</p>
 					<h1 class="page-title">API Docs</h1>
 				</div>
-				<a class="btn btn-outline-secondary" href={ templ.URL("/") }>Open app</a>
+				<div class="docs-actions">
+					@ThemeToggle()
+					<a class="btn btn-outline-secondary" href={ templ.URL("/") }>Open app</a>
+				</div>
 			</div>
 			<div class="panel mb-3">
 				<div class="panel-body">
@@ -610,6 +788,7 @@ templ DashboardPage(data DashboardData) {
 					<a href={ templ.URL("/api/docs") } class={ TabClass(false) }>API Docs</a>
 				</nav>
 				<div class="top-actions">
+					@ThemeToggle()
 					<form method="post" action={ templ.URL("/logout") }>
 						<button class="btn btn-outline-secondary" type="submit">Logout</button>
 					</form>
