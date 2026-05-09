@@ -59,6 +59,8 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 	pages.POST("/dashboard/password", services.Pages.PasswordSubmit)
 	pages.POST("/dashboard/cloudflare/credentials", services.Pages.CloudflareCredentialsSubmit)
 	pages.POST("/dashboard/cloudflare/provision", services.Pages.CloudflareProvisionSubmit)
+	pages.POST("/dashboard/cloudflare/enable-receiving", services.Pages.CloudflareEnableReceivingSubmit)
+	pages.POST("/dashboard/cloudflare/disable-receiving", services.Pages.CloudflareDisableReceivingSubmit)
 
 	api := router.Group("/api")
 	api.GET("/setup/status", services.Setup.Status)
@@ -79,6 +81,8 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 	authed.POST("/settings/password", services.Auth.ChangePassword)
 	authed.POST("/cloudflare/credentials", services.Cloudflare.SaveCredentials)
 	authed.POST("/cloudflare/zones/:zoneId/provision", services.Cloudflare.Provision)
+	authed.POST("/cloudflare/zones/:zoneId/enable-receiving", services.Cloudflare.EnableReceiving)
+	authed.POST("/cloudflare/zones/:zoneId/disable-receiving", services.Cloudflare.DisableReceiving)
 	authed.PATCH("/emails/:id/read", services.Emails.MarkRead)
 
 	return router

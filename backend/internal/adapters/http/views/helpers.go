@@ -145,6 +145,49 @@ func StatusPillClass(ok bool) string {
 	return "status-pill warn"
 }
 
+func DomainReadyLabel(ready bool) string {
+	if ready {
+		return "Ready"
+	}
+	return "Not ready"
+}
+
+func DomainReason(domain domain.ReceivingDomain) string {
+	if domain.Ready {
+		return "ready"
+	}
+	return ValueOrDash(domain.Reason)
+}
+
+func DomainDetails(domain domain.ReceivingDomain) string {
+	if domain.StatusError != "" {
+		return domain.StatusError
+	}
+	if domain.CatchAllDestination != "" {
+		return "catch-all: " + domain.CatchAllDestination
+	}
+	return ValueOrDash(domain.Reason)
+}
+
+func ReadyDomainCount(domains []domain.ReceivingDomain) int {
+	count := 0
+	for _, item := range domains {
+		if item.Ready {
+			count++
+		}
+	}
+	return count
+}
+
+func ReceivingWorkerName(domains []domain.ReceivingDomain) string {
+	for _, item := range domains {
+		if item.WorkerScriptName != "" {
+			return item.WorkerScriptName
+		}
+	}
+	return "-"
+}
+
 func FormatTime(value *time.Time) string {
 	if value == nil {
 		return "—"

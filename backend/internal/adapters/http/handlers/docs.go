@@ -173,7 +173,7 @@ func docsEndpoints(baseURL string) []ui.DocsEndpoint {
 			Auth:        "API key or cookie",
 			Request:     fmt.Sprintf(`curl %s %s/api/cloudflare/zones`, authHeader, baseURL),
 			Response:    `{"zones":[{"id":"ZONE_ID","name":"example.com","accountId":"ACCOUNT_ID","selected":true,"status":"active"}]}`,
-			AgentUse:    "Use this to find the zoneId required by the provision endpoint.",
+			AgentUse:    "Use this to find the zoneId required by the enable-receiving or disable-receiving endpoints.",
 		},
 		{
 			Method:      "POST",
@@ -186,12 +186,21 @@ func docsEndpoints(baseURL string) []ui.DocsEndpoint {
 		},
 		{
 			Method:      "POST",
-			Path:        "/api/cloudflare/zones/{zoneId}/provision",
-			Description: "Provisions Email Routing, catch-all routing, worker script, and worker secrets for one Cloudflare zone.",
+			Path:        "/api/cloudflare/zones/{zoneId}/enable-receiving",
+			Description: "Enables EmailDash receiving for one Cloudflare zone by configuring Email Routing, the Worker, Worker secrets, and catch-all routing.",
 			Auth:        "API key or cookie",
-			Request:     fmt.Sprintf(`curl -X POST %s %s/api/cloudflare/zones/ZONE_ID/provision`, authHeader, baseURL),
+			Request:     fmt.Sprintf(`curl -X POST %s %s/api/cloudflare/zones/ZONE_ID/enable-receiving`, authHeader, baseURL),
 			Response:    `{"zoneId":"ZONE_ID","zoneName":"example.com","workerScriptName":"emaildash-ingest","catchAllEnabled":true}`,
-			AgentUse:    "This changes DNS/email routing. Agents should confirm the selected zone before calling it.",
+			AgentUse:    "This changes DNS/email routing. Agents should confirm the selected zone before calling it. The old /provision path remains as a compatibility alias.",
+		},
+		{
+			Method:      "POST",
+			Path:        "/api/cloudflare/zones/{zoneId}/disable-receiving",
+			Description: "Disables catch-all receiving for one Cloudflare zone so EmailDash stops receiving new mail for that domain.",
+			Auth:        "API key or cookie",
+			Request:     fmt.Sprintf(`curl -X POST %s %s/api/cloudflare/zones/ZONE_ID/disable-receiving`, authHeader, baseURL),
+			Response:    `{"zoneId":"ZONE_ID","zoneName":"example.com","workerScriptName":"emaildash-ingest","catchAllEnabled":false}`,
+			AgentUse:    "This is the undo action for a domain. It disables catch-all receiving but leaves the Worker, secrets, and Email Routing infrastructure in place.",
 		},
 		{
 			Method:      "POST",
@@ -298,7 +307,7 @@ Rules:
 - Treat all timestamps as RFC3339.
 - Prefer textBody over htmlBody for semantic extraction.
 - Keep API keys out of logs and user-visible messages.
-- Do not call Cloudflare provisioning or credential endpoints without explicit operator intent.
+- Do not call Cloudflare credential, enable-receiving, or disable-receiving endpoints without explicit operator intent.
 - Do not call /api/ingest/cloudflare/email unless acting as the configured signed Cloudflare Worker.`, baseURL)
 }
 
@@ -550,9 +559,16 @@ func openAPISpec(baseURL string) gin.H {
 				"requestBody": gin.H{"required": true, "content": gin.H{"application/json": gin.H{"schema": gin.H{"$ref": "#/components/schemas/CloudflareCredentialsRequest"}}}},
 				"responses":   gin.H{"200": gin.H{"description": "Zones", "content": gin.H{"application/json": gin.H{"schema": gin.H{"type": "object", "properties": gin.H{"zones": gin.H{"type": "array", "items": gin.H{"$ref": "#/components/schemas/CloudflareZone"}}}}}}}, "400": errorResponse, "401": errorResponse},
 			}},
-			"/api/cloudflare/zones/{zoneId}/provision": gin.H{"post": gin.H{
-				"summary":     "Provision Cloudflare zone",
-				"description": "Provisions Email Routing, catch-all route, worker script, and worker secrets for one zone.",
+			"/api/cloudflare/zones/{zoneId}/enable-receiving": gin.H{"post": gin.H{
+				"summary":     "Enable receiving for Cloudflare zone",
+				"description": "Configures Email Routing, the Worker, Worker secrets, and catch-all route for one zone.",
+				"security":    protectedSecurity,
+				"parameters":  []gin.H{pathParam("zoneId", "string", "Cloudflare zone ID")},
+				"responses":   gin.H{"200": gin.H{"description": "Cloudflare status", "content": gin.H{"application/json": gin.H{"schema": gin.H{"$ref": "#/components/schemas/CloudflareStatus"}}}}, "400": errorResponse, "401": errorResponse},
+			}},
+			"/api/cloudflare/zones/{zoneId}/disable-receiving": gin.H{"post": gin.H{
+				"summary":     "Disable receiving for Cloudflare zone",
+				"description": "Disables catch-all receiving for one zone while leaving the Worker, secrets, and Email Routing infrastructure in place.",
 				"security":    protectedSecurity,
 				"parameters":  []gin.H{pathParam("zoneId", "string", "Cloudflare zone ID")},
 				"responses":   gin.H{"200": gin.H{"description": "Cloudflare status", "content": gin.H{"application/json": gin.H{"schema": gin.H{"$ref": "#/components/schemas/CloudflareStatus"}}}}, "400": errorResponse, "401": errorResponse},

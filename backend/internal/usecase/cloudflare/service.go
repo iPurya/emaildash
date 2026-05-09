@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/purya/emaildash/backend/internal/domain"
 	"github.com/purya/emaildash/backend/internal/ports"
@@ -21,7 +23,7 @@ type Store interface {
 	GetSecret(ctx context.Context, key string) (string, error)
 	ReplaceZones(ctx context.Context, zones []domain.CloudflareZone) error
 	ListZones(ctx context.Context) ([]domain.CloudflareZone, error)
-	SelectZone(ctx context.Context, zoneID, status string) error
+	UpdateZoneStatus(ctx context.Context, zoneID, status string) error
 	GetSelectedZone(ctx context.Context) (domain.CloudflareZone, error)
 	InsertAuditLog(ctx context.Context, eventType string, details map[string]any) error
 }
@@ -30,6 +32,7 @@ type Service struct {
 	store            Store
 	client           ports.CloudflareClient
 	sealer           ports.SecretSealer
+	domainCache      *receivingDomainsCache
 	workerScriptName string
 	workerSubdomain  string
 	workerBundlePath string
@@ -41,6 +44,7 @@ func NewService(store Store, client ports.CloudflareClient, sealer ports.SecretS
 		store:            store,
 		client:           client,
 		sealer:           sealer,
+		domainCache:      &receivingDomainsCache{},
 		workerScriptName: workerScriptName,
 		workerSubdomain:  workerSubdomain,
 		workerBundlePath: workerBundlePath,
@@ -73,6 +77,7 @@ func (s Service) SaveCredentials(ctx context.Context, creds domain.CloudflareCre
 	if err := s.store.ReplaceZones(ctx, zones); err != nil {
 		return nil, err
 	}
+	s.clearReceivingDomainsCache()
 	_ = s.store.InsertAuditLog(ctx, "cloudflare.credentials.saved", map[string]any{"zoneCount": len(zones)})
 	return zones, nil
 }
@@ -82,6 +87,10 @@ func (s Service) ListCachedZones(ctx context.Context) ([]domain.CloudflareZone, 
 }
 
 func (s Service) ProvisionZone(ctx context.Context, zoneID string) (domain.CloudflareStatus, error) {
+	return s.EnableReceiving(ctx, zoneID)
+}
+
+func (s Service) EnableReceiving(ctx context.Context, zoneID string) (domain.CloudflareStatus, error) {
 	creds, err := s.credentials(ctx)
 	if err != nil {
 		return domain.CloudflareStatus{}, err
@@ -130,10 +139,39 @@ func (s Service) ProvisionZone(ctx context.Context, zoneID string) (domain.Cloud
 	status.ZoneName = zone.Name
 	status.AccountID = zone.AccountID
 	status.WorkerScriptName = s.workerScriptName
-	if err := s.store.SelectZone(ctx, zone.ID, status.EmailRoutingStatus); err != nil {
+	if err := s.store.UpdateZoneStatus(ctx, zone.ID, status.EmailRoutingStatus); err != nil {
 		return domain.CloudflareStatus{}, err
 	}
-	_ = s.store.InsertAuditLog(ctx, "cloudflare.zone.provisioned", map[string]any{"zoneId": zone.ID, "zoneName": zone.Name})
+	s.clearReceivingDomainsCache()
+	_ = s.store.InsertAuditLog(ctx, "cloudflare.zone.receiving_enabled", map[string]any{"zoneId": zone.ID, "zoneName": zone.Name})
+	return status, nil
+}
+
+func (s Service) DisableReceiving(ctx context.Context, zoneID string) (domain.CloudflareStatus, error) {
+	creds, err := s.credentials(ctx)
+	if err != nil {
+		return domain.CloudflareStatus{}, err
+	}
+	zone, err := s.client.GetZone(ctx, creds, zoneID)
+	if err != nil {
+		return domain.CloudflareStatus{}, err
+	}
+	if err := s.client.DisableCatchAll(ctx, creds, zone.ID); err != nil {
+		return domain.CloudflareStatus{}, err
+	}
+	status, err := s.client.GetCatchAllStatus(ctx, creds, zone.ID)
+	if err != nil {
+		return domain.CloudflareStatus{}, err
+	}
+	status.ZoneID = zone.ID
+	status.ZoneName = zone.Name
+	status.AccountID = zone.AccountID
+	status.WorkerScriptName = s.workerScriptName
+	if err := s.store.UpdateZoneStatus(ctx, zone.ID, status.EmailRoutingStatus); err != nil {
+		return domain.CloudflareStatus{}, err
+	}
+	s.clearReceivingDomainsCache()
+	_ = s.store.InsertAuditLog(ctx, "cloudflare.zone.receiving_disabled", map[string]any{"zoneId": zone.ID, "zoneName": zone.Name})
 	return status, nil
 }
 
@@ -158,6 +196,19 @@ func (s Service) Status(ctx context.Context) (domain.CloudflareStatus, error) {
 }
 
 func (s Service) ReceivingDomains(ctx context.Context) ([]domain.ReceivingDomain, error) {
+	return s.receivingDomains(ctx, false)
+}
+
+func (s Service) RefreshReceivingDomains(ctx context.Context) ([]domain.ReceivingDomain, error) {
+	return s.receivingDomains(ctx, true)
+}
+
+func (s Service) receivingDomains(ctx context.Context, refresh bool) ([]domain.ReceivingDomain, error) {
+	if !refresh {
+		if domains, ok := s.domainCache.get(); ok {
+			return domains, nil
+		}
+	}
 	creds, err := s.credentials(ctx)
 	if err != nil {
 		if isReceivingDomainNotConfigured(err) {
@@ -189,11 +240,59 @@ func (s Service) ReceivingDomains(ctx context.Context) ([]domain.ReceivingDomain
 		status.WorkerScriptName = s.workerScriptName
 		domains = append(domains, receivingDomainFromStatus(status))
 	}
+	s.domainCache.set(domains)
 	return domains, nil
 }
 
 func (s Service) WebhookSecret(ctx context.Context) (string, error) {
 	return s.ensureWebhookSecret(ctx)
+}
+
+func (s Service) clearReceivingDomainsCache() {
+	s.domainCache.clear()
+}
+
+const receivingDomainsCacheTTL = time.Hour
+
+type receivingDomainsCache struct {
+	mu        sync.Mutex
+	domains   []domain.ReceivingDomain
+	expiresAt time.Time
+	valid     bool
+}
+
+func (cache *receivingDomainsCache) get() ([]domain.ReceivingDomain, bool) {
+	if cache == nil {
+		return nil, false
+	}
+	cache.mu.Lock()
+	defer cache.mu.Unlock()
+	if !cache.valid || !time.Now().UTC().Before(cache.expiresAt) {
+		return nil, false
+	}
+	return append([]domain.ReceivingDomain(nil), cache.domains...), true
+}
+
+func (cache *receivingDomainsCache) set(domains []domain.ReceivingDomain) {
+	if cache == nil {
+		return
+	}
+	cache.mu.Lock()
+	defer cache.mu.Unlock()
+	cache.domains = append([]domain.ReceivingDomain(nil), domains...)
+	cache.expiresAt = time.Now().UTC().Add(receivingDomainsCacheTTL)
+	cache.valid = true
+}
+
+func (cache *receivingDomainsCache) clear() {
+	if cache == nil {
+		return
+	}
+	cache.mu.Lock()
+	defer cache.mu.Unlock()
+	cache.domains = nil
+	cache.expiresAt = time.Time{}
+	cache.valid = false
 }
 
 func receivingDomainReason(status domain.CloudflareStatus, ready bool) string {

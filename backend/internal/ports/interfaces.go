@@ -32,5 +32,6 @@ type CloudflareClient interface {
 	PutWorkerSecret(ctx context.Context, creds domain.CloudflareCredentials, accountID, scriptName, name, value string) error
 	EnableWorkersDev(ctx context.Context, creds domain.CloudflareCredentials, accountID, scriptName string) error
 	UpdateCatchAllToWorker(ctx context.Context, creds domain.CloudflareCredentials, zoneID, scriptName string) error
+	DisableCatchAll(ctx context.Context, creds domain.CloudflareCredentials, zoneID string) error
 	GetCatchAllStatus(ctx context.Context, creds domain.CloudflareCredentials, zoneID string) (domain.CloudflareStatus, error)
 }

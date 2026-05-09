@@ -219,6 +219,17 @@ func (s *Store) SelectZone(ctx context.Context, zoneID, status string) error {
 	return tx.Commit()
 }
 
+func (s *Store) UpdateZoneStatus(ctx context.Context, zoneID, status string) error {
+	result, err := s.db.ExecContext(ctx, `UPDATE cloudflare_zones SET status = ?, updated_at = ? WHERE id = ?`, status, time.Now().UTC().Format(time.RFC3339), zoneID)
+	if err != nil {
+		return fmt.Errorf("update zone status: %w", err)
+	}
+	if affected, _ := result.RowsAffected(); affected == 0 {
+		return fmt.Errorf("zone not found")
+	}
+	return nil
+}
+
 func (s *Store) ListZones(ctx context.Context) ([]domain.CloudflareZone, error) {
 	rows, err := s.db.QueryContext(ctx, `SELECT id, name, account_id, selected, status, updated_at FROM cloudflare_zones ORDER BY name`)
 	if err != nil {

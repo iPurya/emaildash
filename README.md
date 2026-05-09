@@ -94,6 +94,8 @@ REST API:
 - `GET /api/recipients`
 - `PATCH /api/emails/:id/read`
 - `POST /api/cloudflare/credentials`
+- `POST /api/cloudflare/zones/:zoneId/enable-receiving`
+- `POST /api/cloudflare/zones/:zoneId/disable-receiving`
 - `POST /api/cloudflare/zones/:zoneId/provision`
 - `POST /api/ingest/cloudflare/email`
 

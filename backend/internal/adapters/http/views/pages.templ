@@ -1208,43 +1208,48 @@ templ CloudflareTab(data DashboardData) {
 		</section>
 		<section class="panel">
 			<div class="panel-header">
-				<h2 class="panel-title">Current status</h2>
+				<h2 class="panel-title">Receiving summary</h2>
 			</div>
 			<div class="panel-body">
-				if data.Status == nil {
-					<div class="empty-state p-0 text-start">No selected zone status yet.</div>
-				} else {
-					<dl class="status-list">
-						<div class="status-row"><dt>Zone</dt><dd>{ data.Status.ZoneName }</dd></div>
-						<div class="status-row"><dt>Routing</dt><dd><span class={ StatusPillClass(data.Status.EmailRoutingEnabled) }>{ data.Status.EmailRoutingStatus }</span></dd></div>
-						<div class="status-row"><dt>Catch-all</dt><dd>{ ValueOrDash(data.Status.CatchAllDestination) }</dd></div>
-						<div class="status-row"><dt>Worker</dt><dd>{ data.Status.WorkerScriptName }</dd></div>
-					</dl>
-				}
+				<dl class="status-list">
+					<div class="status-row"><dt>Ready domains</dt><dd>{ ReadyDomainCount(data.ReceivingDomains) } / { len(data.ReceivingDomains) }</dd></div>
+					<div class="status-row"><dt>Worker</dt><dd>{ ReceivingWorkerName(data.ReceivingDomains) }</dd></div>
+					<div class="status-row"><dt>Source</dt><dd>Cloudflare live status</dd></div>
+				</dl>
 			</div>
 		</section>
 	</div>
 	<section class="panel mt-3">
 		<div class="panel-header">
-			<h2 class="panel-title">Zones</h2>
+			<h2 class="panel-title">Receiving domains</h2>
 		</div>
 		<div class="panel-body p-0">
-			if len(data.Zones) == 0 {
+			if len(data.ReceivingDomains) == 0 {
 				<div class="empty-state">No cached zones. Save credentials first.</div>
 			} else {
 				<div class="table-responsive">
 					<table class="table align-middle">
-						<thead><tr><th>Domain</th><th>Status</th><th class="text-end">Action</th></tr></thead>
+						<thead><tr><th>Domain</th><th>Readiness</th><th>Details</th><th class="text-end">Actions</th></tr></thead>
 						<tbody>
-							for _, zone := range data.Zones {
+							for _, domain := range data.ReceivingDomains {
 								<tr>
-									<td class="fw-bold">{ zone.Name }</td>
-									<td><span class="status-pill neutral">{ ValueOrDash(zone.Status) }</span></td>
+									<td class="fw-bold">{ domain.Domain }</td>
+									<td><span class={ StatusPillClass(domain.Ready) }>{ DomainReadyLabel(domain.Ready) }</span></td>
+									<td>
+										<div class="small fw-bold">{ DomainReason(domain) }</div>
+										<div class="small text-secondary">{ DomainDetails(domain) }</div>
+									</td>
 									<td class="text-end">
-										<form method="post" action={ templ.URL("/dashboard/cloudflare/provision") }>
-											<input type="hidden" name="zoneId" value={ zone.ID }/>
-											<button class="btn btn-outline-secondary btn-sm" type="submit">Provision</button>
-										</form>
+										<div class="d-inline-flex gap-2 justify-content-end">
+											<form method="post" action={ templ.URL("/dashboard/cloudflare/enable-receiving") }>
+												<input type="hidden" name="zoneId" value={ domain.ZoneID }/>
+												<button class="btn btn-outline-secondary btn-sm" type="submit">Enable receiving</button>
+											</form>
+											<form method="post" action={ templ.URL("/dashboard/cloudflare/disable-receiving") }>
+												<input type="hidden" name="zoneId" value={ domain.ZoneID }/>
+												<button class="btn btn-outline-secondary btn-sm" type="submit">Disable receiving</button>
+											</form>
+										</div>
 									</td>
 								</tr>
 							}

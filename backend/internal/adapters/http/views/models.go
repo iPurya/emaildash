@@ -51,16 +51,15 @@ type APIDocsData struct {
 }
 
 type DashboardData struct {
-	Title           string
-	ActiveTab       string
-	Error           string
-	Notice          string
-	APIKey          string
-	ActiveRecipient string
-	SelectedEmailID int64
-	Recipients      []domain.RecipientSummary
-	Emails          []domain.Email
-	ActiveEmail     *domain.Email
-	Zones           []domain.CloudflareZone
-	Status          *domain.CloudflareStatus
+	Title            string
+	ActiveTab        string
+	Error            string
+	Notice           string
+	APIKey           string
+	ActiveRecipient  string
+	SelectedEmailID  int64
+	Recipients       []domain.RecipientSummary
+	Emails           []domain.Email
+	ActiveEmail      *domain.Email
+	ReceivingDomains []domain.ReceivingDomain
 }

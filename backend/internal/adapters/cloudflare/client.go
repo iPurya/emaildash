@@ -142,9 +142,19 @@ func (c Client) EnableWorkersDev(ctx context.Context, creds domain.CloudflareCre
 func (c Client) UpdateCatchAllToWorker(ctx context.Context, creds domain.CloudflareCredentials, zoneID, scriptName string) error {
 	body := map[string]any{
 		"matchers": []map[string]string{{"type": "all"}},
-		"actions": []map[string]any{{"type": "worker", "value": []string{scriptName}}},
-		"enabled": true,
-		"name":    "catch-all",
+		"actions":  []map[string]any{{"type": "worker", "value": []string{scriptName}}},
+		"enabled":  true,
+		"name":     "catch-all",
+	}
+	return c.put(ctx, creds, "/zones/"+zoneID+"/email/routing/rules/catch_all", body, nil)
+}
+
+func (c Client) DisableCatchAll(ctx context.Context, creds domain.CloudflareCredentials, zoneID string) error {
+	body := map[string]any{
+		"matchers": []map[string]string{{"type": "all"}},
+		"actions":  []map[string]any{{"type": "drop"}},
+		"enabled":  false,
+		"name":     "catch-all",
 	}
 	return c.put(ctx, creds, "/zones/"+zoneID+"/email/routing/rules/catch_all", body, nil)
 }

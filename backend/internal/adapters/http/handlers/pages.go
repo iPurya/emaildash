@@ -185,16 +185,33 @@ func (h PagesHandler) CloudflareCredentialsSubmit(c *gin.Context) {
 }
 
 func (h PagesHandler) CloudflareProvisionSubmit(c *gin.Context) {
+	h.CloudflareEnableReceivingSubmit(c)
+}
+
+func (h PagesHandler) CloudflareEnableReceivingSubmit(c *gin.Context) {
 	zoneID := c.PostForm("zoneId")
 	if zoneID == "" {
 		h.redirectDashboard(c, "cloudflare", "", 0, url.Values{"error": {"zone required"}})
 		return
 	}
-	if _, err := h.cloudflare.ProvisionZone(c.Request.Context(), zoneID); err != nil {
+	if _, err := h.cloudflare.EnableReceiving(c.Request.Context(), zoneID); err != nil {
 		h.redirectDashboard(c, "cloudflare", "", 0, url.Values{"error": {err.Error()}})
 		return
 	}
-	h.redirectDashboard(c, "cloudflare", "", 0, url.Values{"provisioned": {"1"}})
+	h.redirectDashboard(c, "cloudflare", "", 0, url.Values{"receiving_enabled": {"1"}})
+}
+
+func (h PagesHandler) CloudflareDisableReceivingSubmit(c *gin.Context) {
+	zoneID := c.PostForm("zoneId")
+	if zoneID == "" {
+		h.redirectDashboard(c, "cloudflare", "", 0, url.Values{"error": {"zone required"}})
+		return
+	}
+	if _, err := h.cloudflare.DisableReceiving(c.Request.Context(), zoneID); err != nil {
+		h.redirectDashboard(c, "cloudflare", "", 0, url.Values{"error": {err.Error()}})
+		return
+	}
+	h.redirectDashboard(c, "cloudflare", "", 0, url.Values{"receiving_disabled": {"1"}})
 }
 
 func (h PagesHandler) dashboardData(c *gin.Context) (ui.DashboardData, error) {
@@ -211,12 +228,9 @@ func (h PagesHandler) dashboardData(c *gin.Context) (ui.DashboardData, error) {
 
 	switch data.ActiveTab {
 	case "cloudflare":
-		zones, err := h.cloudflare.ListCachedZones(c.Request.Context())
+		domains, err := h.cloudflare.ReceivingDomains(c.Request.Context())
 		if err == nil {
-			data.Zones = zones
-		}
-		if status, err := h.cloudflare.Status(c.Request.Context()); err == nil {
-			data.Status = &status
+			data.ReceivingDomains = domains
 		}
 	case "password":
 		if data.APIKey == "" {
@@ -258,7 +272,11 @@ func (h PagesHandler) notice(c *gin.Context) string {
 	case c.Query("saved") == "1":
 		return "Cloudflare credentials saved."
 	case c.Query("provisioned") == "1":
-		return "Cloudflare zone provisioned."
+		return "Cloudflare receiving enabled."
+	case c.Query("receiving_enabled") == "1":
+		return "Cloudflare receiving enabled."
+	case c.Query("receiving_disabled") == "1":
+		return "Cloudflare receiving disabled."
 	default:
 		return ""
 	}
