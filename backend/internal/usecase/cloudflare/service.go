@@ -158,25 +158,38 @@ func (s Service) Status(ctx context.Context) (domain.CloudflareStatus, error) {
 }
 
 func (s Service) ReceivingDomains(ctx context.Context) ([]domain.ReceivingDomain, error) {
-	status, err := s.Status(ctx)
+	creds, err := s.credentials(ctx)
 	if err != nil {
 		if isReceivingDomainNotConfigured(err) {
 			return []domain.ReceivingDomain{}, nil
 		}
 		return nil, err
 	}
-	ready := status.EmailRoutingEnabled && status.CatchAllEnabled && status.CatchAllDestination == status.WorkerScriptName
-	return []domain.ReceivingDomain{{
-		Domain:              status.ZoneName,
-		ZoneID:              status.ZoneID,
-		Ready:               ready,
-		Reason:              receivingDomainReason(status, ready),
-		EmailRoutingEnabled: status.EmailRoutingEnabled,
-		EmailRoutingStatus:  status.EmailRoutingStatus,
-		CatchAllEnabled:     status.CatchAllEnabled,
-		CatchAllDestination: status.CatchAllDestination,
-		WorkerScriptName:    status.WorkerScriptName,
-	}}, nil
+	zones, err := s.store.ListZones(ctx)
+	if err != nil {
+		return nil, err
+	}
+	domains := make([]domain.ReceivingDomain, 0, len(zones))
+	for _, zone := range zones {
+		status, err := s.client.GetCatchAllStatus(ctx, creds, zone.ID)
+		if err != nil {
+			domains = append(domains, domain.ReceivingDomain{
+				Domain:           zone.Name,
+				ZoneID:           zone.ID,
+				Ready:            false,
+				Reason:           "status_check_failed",
+				StatusError:      err.Error(),
+				WorkerScriptName: s.workerScriptName,
+			})
+			continue
+		}
+		status.ZoneID = zone.ID
+		status.ZoneName = zone.Name
+		status.AccountID = zone.AccountID
+		status.WorkerScriptName = s.workerScriptName
+		domains = append(domains, receivingDomainFromStatus(status))
+	}
+	return domains, nil
 }
 
 func (s Service) WebhookSecret(ctx context.Context) (string, error) {
@@ -197,6 +210,21 @@ func receivingDomainReason(status domain.CloudflareStatus, ready bool) string {
 		return "catch_all_not_pointing_to_worker"
 	}
 	return "not_ready"
+}
+
+func receivingDomainFromStatus(status domain.CloudflareStatus) domain.ReceivingDomain {
+	ready := status.EmailRoutingEnabled && status.CatchAllEnabled && status.CatchAllDestination == status.WorkerScriptName
+	return domain.ReceivingDomain{
+		Domain:              status.ZoneName,
+		ZoneID:              status.ZoneID,
+		Ready:               ready,
+		Reason:              receivingDomainReason(status, ready),
+		EmailRoutingEnabled: status.EmailRoutingEnabled,
+		EmailRoutingStatus:  status.EmailRoutingStatus,
+		CatchAllEnabled:     status.CatchAllEnabled,
+		CatchAllDestination: status.CatchAllDestination,
+		WorkerScriptName:    status.WorkerScriptName,
+	}
 }
 
 func isReceivingDomainNotConfigured(err error) bool {

@@ -69,6 +69,7 @@ type ReceivingDomain struct {
 	ZoneID              string `json:"zoneId"`
 	Ready               bool   `json:"ready"`
 	Reason              string `json:"reason"`
+	StatusError         string `json:"statusError,omitempty"`
 	EmailRoutingEnabled bool   `json:"emailRoutingEnabled"`
 	EmailRoutingStatus  string `json:"emailRoutingStatus"`
 	CatchAllEnabled     bool   `json:"catchAllEnabled"`

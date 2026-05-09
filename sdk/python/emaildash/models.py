@@ -27,6 +27,7 @@ class ReceivingDomain:
     zone_id: str = ""
     ready: bool = False
     reason: str = ""
+    status_error: str = ""
     email_routing_enabled: bool = False
     email_routing_status: str = ""
     catch_all_enabled: bool = False
@@ -40,6 +41,7 @@ class ReceivingDomain:
             zone_id=str(data.get("zoneId", "")),
             ready=bool(data.get("ready", False)),
             reason=str(data.get("reason", "")),
+            status_error=str(data.get("statusError", "")),
             email_routing_enabled=bool(data.get("emailRoutingEnabled", False)),
             email_routing_status=str(data.get("emailRoutingStatus", "")),
             catch_all_enabled=bool(data.get("catchAllEnabled", False)),
