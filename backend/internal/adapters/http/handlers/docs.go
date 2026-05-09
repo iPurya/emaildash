@@ -126,11 +126,11 @@ func docsEndpoints(baseURL string) []ui.DocsEndpoint {
 		{
 			Method:      "GET",
 			Path:        "/api/emails",
-			Description: "Lists messages. Query filters: recipient, to_mail, from_mail, unread=true, limit.",
+			Description: "Lists messages. Query filters: recipient, to_mail, from_mail, unread=true, received_after, limit.",
 			Auth:        "API key or cookie",
-			Request:     fmt.Sprintf(`curl %s "%s/api/emails?recipient=test@example.com&unread=true&limit=25"`, authHeader, baseURL),
-			Response:    `{"emails":[{"id":42,"mailFrom":"alice@example.com","recipients":["test@example.com"],"subject":"Hello","readAt":null,"receivedAt":"2026-05-08T21:00:00Z","attachments":[]}]}`,
-			AgentUse:    "For polling, use unread=true and a bounded limit. Then fetch selected IDs with GET /api/emails/{id}.",
+			Request:     fmt.Sprintf(`curl %s "%s/api/emails?recipient=test@example.com&received_after=2026-05-09T10:00:00Z&unread=true&limit=25"`, authHeader, baseURL),
+			Response:    `{"emails":[{"id":42,"mailFrom":"alice@example.com","recipients":["test@example.com"],"subject":"Hello","readAt":null,"receivedAt":"2026-05-09T10:00:03Z","attachments":[]}]}`,
+			AgentUse:    "For polling a temporary address, use received_after with the time the address was issued plus a bounded limit. Then fetch selected IDs with GET /api/emails/{id}.",
 		},
 		{
 			Method:      "GET",
@@ -266,7 +266,7 @@ Main workflow:
 2. GET /api/auth/me with the API key to validate credentials
 3. GET /api/domains to list configured domains ready to receive email
 4. GET /api/recipients to discover inbox addresses
-5. GET /api/emails?recipient=<address>&unread=true&limit=25 to find actionable messages
+5. GET /api/emails?recipient=<address>&received_after=<issued_at>&limit=25 to find actionable messages
 6. GET /api/emails/{id} for full body and headers
 7. PATCH /api/emails/{id}/read only after successful processing
 
@@ -389,6 +389,7 @@ func openAPISpec(baseURL string) gin.H {
 					queryParam("to_mail", "string", "Recipient address filter."),
 					queryParam("from_mail", "string", "Sender address filter."),
 					queryParam("unread", "boolean", "When true, return unread messages only."),
+					queryParam("received_after", "string", "RFC3339 timestamp. Returns messages received at or after this time."),
 					queryParam("limit", "integer", "Maximum rows to return. Default is 50."),
 				},
 				"responses": gin.H{"200": gin.H{"description": "Emails", "content": gin.H{"application/json": gin.H{"schema": gin.H{"type": "object", "properties": gin.H{"emails": gin.H{"type": "array", "items": gin.H{"$ref": "#/components/schemas/Email"}}}}}}}, "401": errorResponse},

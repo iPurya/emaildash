@@ -77,11 +77,12 @@ type ReceivingDomain struct {
 }
 
 type EmailListFilter struct {
-	Recipient  string `json:"recipient,omitempty"`
-	FromMail   string `json:"fromMail,omitempty"`
-	ToMail     string `json:"toMail,omitempty"`
-	UnreadOnly bool   `json:"unreadOnly,omitempty"`
-	Limit      int    `json:"limit,omitempty"`
+	Recipient     string     `json:"recipient,omitempty"`
+	FromMail      string     `json:"fromMail,omitempty"`
+	ToMail        string     `json:"toMail,omitempty"`
+	UnreadOnly    bool       `json:"unreadOnly,omitempty"`
+	ReceivedAfter *time.Time `json:"receivedAfter,omitempty"`
+	Limit         int        `json:"limit,omitempty"`
 }
 
 type Attachment struct {

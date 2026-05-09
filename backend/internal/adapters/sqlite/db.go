@@ -319,6 +319,10 @@ func (s *Store) ListEmails(ctx context.Context, filter domain.EmailListFilter) (
 	if filter.UnreadOnly {
 		builder.WriteString(` AND e.read_at IS NULL`)
 	}
+	if filter.ReceivedAfter != nil {
+		builder.WriteString(` AND e.received_at >= ?`)
+		args = append(args, filter.ReceivedAfter.UTC().Format(time.RFC3339))
+	}
 	builder.WriteString(` ORDER BY e.received_at DESC LIMIT ?`)
 	args = append(args, filter.Limit)
 	rows, err := s.db.QueryContext(ctx, builder.String(), args...)

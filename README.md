@@ -88,6 +88,7 @@ REST API:
 - `GET /api/setup/status`
 - `POST /api/auth/login`
 - `GET /api/auth/me`
+- `GET /api/domains`
 - `GET /api/emails`
 - `GET /api/emails/:id`
 - `GET /api/recipients`
@@ -96,15 +97,43 @@ REST API:
 - `POST /api/cloudflare/zones/:zoneId/provision`
 - `POST /api/ingest/cloudflare/email`
 
-Protected REST endpoints accept either the browser session cookie or `?api_key=YOUR_API_KEY`. The dashboard shows the API key under `Password & API`.
+Protected REST endpoints accept the browser session cookie, `Authorization: Bearer YOUR_API_KEY`, `X-API-Key`, or `?api_key=YOUR_API_KEY`. The dashboard shows the API key under `Password & API`.
 
 ## API Examples
 
 ```bash
-curl "https://emaildash.example.com/api/emails?api_key=YOUR_API_KEY"
-curl "https://emaildash.example.com/api/emails?api_key=YOUR_API_KEY&to_mail=test@example.com"
-curl "https://emaildash.example.com/api/emails?api_key=YOUR_API_KEY&from_mail=sender@example.com"
-curl "https://emaildash.example.com/api/recipients?api_key=YOUR_API_KEY"
+curl -H "Authorization: Bearer YOUR_API_KEY" "https://emaildash.example.com/api/domains"
+curl -H "Authorization: Bearer YOUR_API_KEY" "https://emaildash.example.com/api/emails"
+curl -H "Authorization: Bearer YOUR_API_KEY" "https://emaildash.example.com/api/emails?to_mail=test@example.com&received_after=2026-05-09T10:00:00Z"
+curl -H "Authorization: Bearer YOUR_API_KEY" "https://emaildash.example.com/api/recipients"
+```
+
+## Python SDK
+
+Install directly from GitHub:
+
+```bash
+pip install "emaildash @ git+https://github.com/iPurya/emaildash.git#subdirectory=sdk/python"
+```
+
+Use it to issue a catch-all address and wait for the first email received after issue time:
+
+```python
+import os
+
+from emaildash import EmailDash
+
+client = EmailDash(
+    base_url=os.environ["EMAILDASH_URL"],
+    api_key=os.environ["EMAILDASH_API_KEY"],
+)
+
+address = client.new_address()
+print(address)
+
+email = client.wait_for_latest_email(address, timeout=180)
+print(email.subject)
+print(email.body)
 ```
 
 ## Configuration

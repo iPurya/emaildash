@@ -3,6 +3,7 @@ package handlers
 import (
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/purya/emaildash/backend/internal/domain"
@@ -23,12 +24,22 @@ func (h EmailsHandler) List(c *gin.Context) {
 	if toMail == "" {
 		toMail = c.Query("recipient")
 	}
+	var receivedAfter *time.Time
+	if raw := c.Query("received_after"); raw != "" {
+		parsed, err := time.Parse(time.RFC3339, raw)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "received_after must be RFC3339"})
+			return
+		}
+		receivedAfter = &parsed
+	}
 	filter := domain.EmailListFilter{
-		Recipient:  c.Query("recipient"),
-		FromMail:   c.Query("from_mail"),
-		ToMail:     toMail,
-		UnreadOnly: c.Query("unread") == "true",
-		Limit:      limit,
+		Recipient:     c.Query("recipient"),
+		FromMail:      c.Query("from_mail"),
+		ToMail:        toMail,
+		UnreadOnly:    c.Query("unread") == "true",
+		ReceivedAfter: receivedAfter,
+		Limit:         limit,
 	}
 	emails, err := h.service.ListEmails(c.Request.Context(), filter)
 	if err != nil {
