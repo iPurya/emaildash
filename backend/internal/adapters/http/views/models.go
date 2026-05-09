@@ -43,6 +43,7 @@ type APIDocsData struct {
 	AgentMarkdownURL string
 	SampleAuth       string
 	AgentPrompt      string
+	PythonSDKGuide   string
 	AgentRules       []string
 	Workflow         []DocsStep
 	Endpoints        []DocsEndpoint

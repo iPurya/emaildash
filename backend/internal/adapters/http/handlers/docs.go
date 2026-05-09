@@ -33,18 +33,25 @@ func apiDocsData(baseURL string) ui.APIDocsData {
 		AgentMarkdownURL: baseURL + "/api/docs/agent.md",
 		SampleAuth:       "Authorization: Bearer YOUR_API_KEY",
 		AgentPrompt:      agentPrompt(baseURL),
+		PythonSDKGuide:   pythonSDKGuide(baseURL),
 		AgentRules: []string{
 			"Use the API key from the dashboard Password & API page. For agents, prefer the Authorization header over the api_key query parameter.",
+			"When Python package install is available, prefer the EmailDash Python SDK for issuing temporary addresses and polling for the newest message.",
 			"All request and response bodies are JSON except 204 No Content responses and the markdown/OpenAPI docs.",
 			"Date-time values are RFC3339 strings. Treat missing nullable fields as null or absent.",
 			"Use limit on list endpoints. Default email list limit is 50.",
+			"Use available_domains(refresh=True) or /api/domains?refresh=true only after domain configuration changes; normal calls are cached for speed.",
+			"Respect domain_blacklist and exclude_domains when generating temporary addresses.",
 			"Do not call /api/ingest/cloudflare/email directly unless you are the configured Cloudflare Worker and can sign the webhook payload.",
 			"Never invent endpoints. If an operation is not listed here or in the OpenAPI JSON, it is not part of the supported API.",
 		},
 		Workflow: []ui.DocsStep{
 			{Title: "Check readiness", Body: "Call GET /api/setup/status. If initialized is false, setup must be completed before protected endpoints can be used."},
 			{Title: "Authenticate", Body: "Send Authorization: Bearer YOUR_API_KEY on protected endpoints. X-API-Key and ?api_key= are accepted for compatibility."},
-			{Title: "Find receiving domains", Body: "Call GET /api/domains. Use readyDomains for the simple list of domains configured and ready to receive email."},
+			{Title: "Use the SDK when possible", Body: "For Python agents, install the SDK and use EmailDash.from_env(), issue_address(), and wait_for_latest_email() for the temporary mailbox flow."},
+			{Title: "Find receiving domains", Body: "Call client.available_domains() or GET /api/domains. Use readyDomains for the simple list of domains configured and ready to receive email."},
+			{Title: "Issue a temporary address", Body: "Use client.issue_address() so the SDK remembers issued_at. Pass exclude_domains for one-run blacklists or domain_blacklist for client-wide blacklists."},
+			{Title: "Wait for new mail", Body: "Use client.wait_for_latest_email(address) to poll only for messages received after the address was issued."},
 			{Title: "Discover inboxes", Body: "Call GET /api/recipients to find recipient addresses, unread counts, and latest message hints."},
 			{Title: "List messages", Body: "Call GET /api/emails with recipient, to_mail, from_mail, unread, and limit filters as needed."},
 			{Title: "Read one message", Body: "Call GET /api/emails/{id}. Prefer textBody for plain text processing; use htmlBody only when HTML context matters."},
@@ -265,11 +272,26 @@ Content type for JSON requests: application/json
 Main workflow:
 1. GET /api/setup/status
 2. GET /api/auth/me with the API key to validate credentials
-3. GET /api/domains to list configured domains ready to receive email; use ?refresh=true only after domain setup changes
-4. GET /api/recipients to discover inbox addresses
-5. GET /api/emails?recipient=<address>&received_after=<issued_at>&limit=25 to find actionable messages
-6. GET /api/emails/{id} for full body and headers
-7. PATCH /api/emails/{id}/read only after successful processing
+3. Prefer the Python SDK for temporary mailbox workflows when Python package install is available
+4. GET /api/domains to list configured domains ready to receive email; use ?refresh=true only after domain setup changes
+5. Generate one catch-all address, give it to the user or target service, then poll only for messages received after issue time
+6. GET /api/recipients to discover existing inbox addresses
+7. GET /api/emails?recipient=<address>&received_after=<issued_at>&limit=25 to find actionable messages
+8. GET /api/emails/{id} for full body and headers
+9. PATCH /api/emails/{id}/read only after successful processing
+
+Python SDK quick path:
+1. pip install --upgrade --force-reinstall "emaildash @ git+https://github.com/iPurya/emaildash.git@sdk-python-v0.1.2#subdirectory=sdk/python"
+2. Set EMAILDASH_URL and EMAILDASH_API_KEY.
+3. client = EmailDash.from_env()
+4. issued = client.issue_address(exclude_domains=["blocked-domain.com"])
+5. email = client.wait_for_latest_email(issued.address, timeout=180, mark_read=True)
+
+SDK behavior:
+- available_domains() and new_address() use a one-hour ready-domain cache for speed.
+- Use available_domains(refresh=True) or new_address(refresh_domains=True) only after domain setup changes.
+- domain_blacklist and exclude_domains prevent address generation on unwanted domains.
+- Generated usernames never contain underscores.
 
 Rules:
 - Use only endpoints listed on this page or in /api/docs/openapi.json.
@@ -278,6 +300,95 @@ Rules:
 - Keep API keys out of logs and user-visible messages.
 - Do not call Cloudflare provisioning or credential endpoints without explicit operator intent.
 - Do not call /api/ingest/cloudflare/email unless acting as the configured signed Cloudflare Worker.`, baseURL)
+}
+
+func pythonSDKGuide(baseURL string) string {
+	return fmt.Sprintf(`# Python SDK usage guide for agents
+
+Goal:
+- Generate a human-looking catch-all temporary email address on a ready domain.
+- Give that address to the user or target service.
+- Wait for the newest email that arrives after the address issue time.
+- Read or process the message, then optionally mark it as read.
+
+Install or upgrade:
+pip install --upgrade --force-reinstall "emaildash @ git+https://github.com/iPurya/emaildash.git@sdk-python-v0.1.2#subdirectory=sdk/python"
+
+Environment:
+export EMAILDASH_URL="%s"
+export EMAILDASH_API_KEY="YOUR_API_KEY"
+export EMAILDASH_DOMAIN_BLACKLIST="optional-domain.com,another-domain.com"
+export EMAILDASH_DOMAIN_CACHE_TTL_SECONDS="3600"
+
+Basic workflow:
+from emaildash import EmailDash, EmailTimeoutError
+
+client = EmailDash.from_env()
+
+# Fast after the first call. Cached by the SDK and API for one hour.
+domains = client.available_domains()
+if not domains:
+    raise RuntimeError("No ready receiving domains are configured")
+
+# Exclude domains the user does not want to use for this run.
+issued = client.issue_address(exclude_domains=["do-not-use.example"])
+print(issued.address)
+print(issued.username)
+print(issued.domain)
+print(issued.issued_at)
+
+try:
+    email = client.wait_for_latest_email(
+        issued.address,
+        timeout=180,
+        interval=3,
+        mark_read=True,
+    )
+except EmailTimeoutError:
+    email = None
+
+if email is not None:
+    print(email.id)
+    print(email.subject)
+    print(email.mail_from)
+    print(email.body)  # textBody when present, otherwise htmlBody
+
+Important methods:
+- client.available_domains(exclude_domains=None, refresh=False) -> list[str]
+- client.new_username(prefix=None) -> str
+- client.issue_address(domain=None, username=None, prefix=None, exclude_domains=None, refresh_domains=False) -> IssuedAddress
+- client.new_address(domain=None, username=None, prefix=None, exclude_domains=None, refresh_domains=False) -> str
+- client.latest_email(address, since=None, unread=None, limit=25) -> Email | None
+- client.wait_for_latest_email(address, since=None, timeout=120, interval=3, unread=None, mark_read=False) -> Email
+- client.mark_read(email_id) -> None
+- client.clear_domain_cache() -> None
+
+Domain selection:
+- Use available_domains() to see domains ready to receive mail.
+- Use domain_blacklist at client creation for domains that should never be used by that client:
+  client = EmailDash(base_url=URL, api_key=KEY, domain_blacklist=["bad.example"])
+- Use exclude_domains for one run or one address:
+  issued = client.issue_address(exclude_domains=["bad.example"])
+- If the operator just changed Cloudflare/domain setup, refresh once:
+  domains = client.available_domains(refresh=True)
+  address = client.new_address(refresh_domains=True)
+
+Username generation:
+- The SDK generates readable local-parts that look like normal aliases.
+- It avoids obvious automation words such as test, temp, bot, fake, random, robot, spam, trash.
+- It does not generate underscores.
+- Prefixes are cleaned and validated. For example, prefix="Nora_Calder" becomes "nora.calder".
+
+Polling rules for agents:
+- For a newly issued address, wait_for_latest_email(address) automatically uses the SDK's remembered issue time.
+- If the process restarts, pass since=<issued_at> yourself to avoid reading older mail.
+- Use a bounded timeout and interval. Do not spin in a tight loop.
+- Prefer email.body or email.text_body for semantic parsing.
+- Set mark_read=True only after the agent is ready to treat the message as processed.
+
+Direct API fallback:
+- If the SDK cannot be installed, call GET /api/domains, create any local-part you control on a ready domain, then poll GET /api/emails?to_mail=<address>&received_after=<issued_at>&limit=25.
+- Use /api/domains?refresh=true only after domain configuration changes.`, baseURL)
 }
 
 func (h PagesHandler) OpenAPISpec(c *gin.Context) {
@@ -295,6 +406,8 @@ func agentMarkdown(baseURL string) string {
 	data := apiDocsData(baseURL)
 	builder.WriteString("# EmailDash API Agent Guide\n\n")
 	builder.WriteString(data.AgentPrompt)
+	builder.WriteString("\n\n## Python SDK\n\n")
+	builder.WriteString(data.PythonSDKGuide)
 	builder.WriteString("\n\n## Endpoints\n\n")
 	for _, endpoint := range data.Endpoints {
 		builder.WriteString(fmt.Sprintf("### %s %s\n\n", endpoint.Method, endpoint.Path))
@@ -320,6 +433,12 @@ func openAPISpec(baseURL string) gin.H {
 			"description": "API for EmailDash inbox automation, Cloudflare routing setup, and dashboard auth. AI agents should use bearer API-key auth for protected endpoints.",
 		},
 		"servers": []gin.H{{"url": baseURL}},
+		"x-python-sdk": gin.H{
+			"package":        "emaildash",
+			"version":        "0.1.2",
+			"installCommand": `pip install --upgrade --force-reinstall "emaildash @ git+https://github.com/iPurya/emaildash.git@sdk-python-v0.1.2#subdirectory=sdk/python"`,
+			"guide":          pythonSDKGuide(baseURL),
+		},
 		"components": gin.H{
 			"securitySchemes": gin.H{
 				"bearerAuth":   gin.H{"type": "http", "scheme": "bearer", "description": "Preferred for agents. Value is the EmailDash API key."},
