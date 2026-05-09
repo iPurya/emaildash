@@ -11,6 +11,7 @@ class UsernameGeneratorTest(unittest.TestCase):
         self.assertGreater(len(values), 80)
         for value in values:
             self.assertTrue(generator.is_valid(value), value)
+            self.assertNotIn("_", value)
             self.assertFalse(any(part in value for part in ("temp", "test", "bot", "fake", "random")))
             self.assertLessEqual(len(value), 32)
 
@@ -18,6 +19,8 @@ class UsernameGeneratorTest(unittest.TestCase):
         generator = UsernameGenerator()
 
         self.assertEqual(generator.generate(prefix="Nora.Calder"), "nora.calder")
+        self.assertEqual(generator.generate(prefix="Nora_Calder"), "nora.calder")
+        self.assertFalse(generator.is_valid("nora_calder"))
         with self.assertRaises(ValueError):
             generator.generate(prefix="temp-bot-test")
 

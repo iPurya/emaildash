@@ -6,6 +6,7 @@ import time
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections.abc import Iterable
 from datetime import datetime, timezone
 from typing import Any
 
@@ -22,11 +23,13 @@ class EmailDash:
         *,
         timeout: float = 15.0,
         username_generator: UsernameGenerator | None = None,
+        domain_blacklist: Iterable[str] | str | None = None,
     ) -> None:
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key
         self.timeout = timeout
         self.username_generator = username_generator or UsernameGenerator()
+        self._domain_blacklist = _normalize_domains(domain_blacklist)
         self._issued_at: dict[str, datetime] = {}
 
     @classmethod
@@ -34,30 +37,52 @@ class EmailDash:
         return cls(
             base_url=os.environ["EMAILDASH_URL"],
             api_key=os.environ.get("EMAILDASH_API_KEY"),
+            domain_blacklist=_env_domain_blacklist(),
         )
+
+    @property
+    def domain_blacklist(self) -> tuple[str, ...]:
+        return tuple(sorted(self._domain_blacklist))
+
+    def set_domain_blacklist(self, domains: Iterable[str] | str | None) -> None:
+        self._domain_blacklist = _normalize_domains(domains)
+
+    def add_domain_blacklist(self, *domains: str) -> None:
+        self._domain_blacklist.update(_normalize_domains(domains))
+
+    def clear_domain_blacklist(self) -> None:
+        self._domain_blacklist.clear()
 
     def domain_status(self) -> list[ReceivingDomain]:
         data = self._request("GET", "/api/domains")
-        return [ReceivingDomain.from_dict(item) for item in data.get("domains", [])]
+        return _domain_statuses(data)
 
-    def available_domains(self) -> list[str]:
+    def available_domains(self, *, exclude_domains: Iterable[str] | str | None = None) -> list[str]:
         data = self._request("GET", "/api/domains")
-        ready = [str(item) for item in data.get("readyDomains", [])]
-        if ready:
-            return ready
-        return [item.domain for item in self.domain_status() if item.ready]
+        return _filter_domains(_ready_domains(data), self._blocked_domains(exclude_domains))
 
     def new_username(self, prefix: str | None = None) -> str:
         return self.username_generator.generate(prefix=prefix)
 
-    def issue_address(self, *, domain: str | None = None, username: str | None = None, prefix: str | None = None) -> IssuedAddress:
-        ready_domains = self.available_domains()
+    def issue_address(
+        self,
+        *,
+        domain: str | None = None,
+        username: str | None = None,
+        prefix: str | None = None,
+        exclude_domains: Iterable[str] | str | None = None,
+    ) -> IssuedAddress:
+        ready_domains = self.available_domains(exclude_domains=exclude_domains)
         if domain is None:
             if not ready_domains:
                 raise NoReadyDomainError("no domains are ready to receive email")
             domain = secrets_choice(ready_domains)
-        elif domain not in ready_domains:
-            raise NoReadyDomainError(f"{domain} is not ready to receive email")
+        else:
+            domain = _normalize_domain(domain)
+            if domain in self._blocked_domains(exclude_domains):
+                raise NoReadyDomainError(f"{domain} is blacklisted")
+            if domain not in ready_domains:
+                raise NoReadyDomainError(f"{domain} is not ready to receive email")
 
         for _ in range(100):
             if username:
@@ -72,8 +97,20 @@ class EmailDash:
             username = None
         raise RuntimeError("unable to issue a unique address in this client session")
 
-    def new_address(self, *, domain: str | None = None, username: str | None = None, prefix: str | None = None) -> str:
-        return self.issue_address(domain=domain, username=username, prefix=prefix).address
+    def new_address(
+        self,
+        *,
+        domain: str | None = None,
+        username: str | None = None,
+        prefix: str | None = None,
+        exclude_domains: Iterable[str] | str | None = None,
+    ) -> str:
+        return self.issue_address(
+            domain=domain,
+            username=username,
+            prefix=prefix,
+            exclude_domains=exclude_domains,
+        ).address
 
     def list_recipients(self) -> list[RecipientSummary]:
         data = self._request("GET", "/api/recipients")
@@ -178,7 +215,7 @@ class EmailDash:
         body = None
         headers = {
             "Accept": "application/json",
-            "User-Agent": "emaildash-python/0.1.0",
+            "User-Agent": "emaildash-python/0.1.1",
         }
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
@@ -201,6 +238,11 @@ class EmailDash:
             raise EmailDashHTTPError(error.code, message, payload) from error
         except urllib.error.URLError as error:
             raise EmailDashHTTPError(0, f"EmailDash API request failed: {error.reason}") from error
+
+    def _blocked_domains(self, extra_domains: Iterable[str] | str | None = None) -> set[str]:
+        blocked = set(self._domain_blacklist)
+        blocked.update(_normalize_domains(extra_domains))
+        return blocked
 
 
 def _query_value(value: Any) -> str:
@@ -227,6 +269,51 @@ def _error_message(payload: str) -> str:
         return payload.strip()
     error = data.get("error")
     return str(error) if error else payload.strip()
+
+
+def _domain_statuses(data: dict[str, Any]) -> list[ReceivingDomain]:
+    return [ReceivingDomain.from_dict(item) for item in data.get("domains") or []]
+
+
+def _ready_domains(data: dict[str, Any]) -> list[str]:
+    ready = _normalize_domain_list(data.get("readyDomains") or [])
+    if ready:
+        return ready
+    return _normalize_domain_list(status.domain for status in _domain_statuses(data) if status.ready)
+
+
+def _normalize_domain_list(domains: Iterable[Any]) -> list[str]:
+    values: list[str] = []
+    seen: set[str] = set()
+    for domain in domains:
+        normalized = _normalize_domain(str(domain))
+        if normalized and normalized not in seen:
+            values.append(normalized)
+            seen.add(normalized)
+    return values
+
+
+def _filter_domains(domains: list[str], blocked: set[str]) -> list[str]:
+    if not blocked:
+        return domains
+    return [domain for domain in domains if _normalize_domain(domain) not in blocked]
+
+
+def _normalize_domains(domains: Iterable[str] | str | None) -> set[str]:
+    if domains is None:
+        return set()
+    if isinstance(domains, str):
+        domains = [domains]
+    return {normalized for domain in domains if (normalized := _normalize_domain(str(domain)))}
+
+
+def _normalize_domain(domain: str) -> str:
+    return domain.strip().lower().rstrip(".")
+
+
+def _env_domain_blacklist() -> set[str]:
+    value = os.environ.get("EMAILDASH_DOMAIN_BLACKLIST", "")
+    return _normalize_domains(item.strip() for item in value.split(","))
 
 
 def secrets_choice(values: list[str]) -> str:

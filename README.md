@@ -116,6 +116,12 @@ Install directly from GitHub:
 pip install "emaildash @ git+https://github.com/iPurya/emaildash.git#subdirectory=sdk/python"
 ```
 
+Install or upgrade the current SDK tag:
+
+```bash
+pip install --upgrade --force-reinstall "emaildash @ git+https://github.com/iPurya/emaildash.git@sdk-python-v0.1.1#subdirectory=sdk/python"
+```
+
 Use it to issue a catch-all address and wait for the first email received after issue time:
 
 ```python
@@ -126,9 +132,10 @@ from emaildash import EmailDash
 client = EmailDash(
     base_url=os.environ["EMAILDASH_URL"],
     api_key=os.environ["EMAILDASH_API_KEY"],
+    domain_blacklist=["old-domain.com"],
 )
 
-address = client.new_address()
+address = client.new_address(exclude_domains=["testing-only.com"])
 print(address)
 
 email = client.wait_for_latest_email(address, timeout=180)

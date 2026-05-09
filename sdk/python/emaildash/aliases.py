@@ -117,7 +117,7 @@ _BANNED_PARTS = {
     "trash",
 }
 
-_USERNAME_RE = re.compile(r"^[a-z0-9](?:[a-z0-9._-]{1,62}[a-z0-9])?$")
+_USERNAME_RE = re.compile(r"^[a-z0-9](?:[a-z0-9.-]{1,62}[a-z0-9])?$")
 
 
 class UsernameGenerator:
@@ -153,7 +153,7 @@ class UsernameGenerator:
             weights=(50, 18, 14, 18),
             k=1,
         )[0]
-        separator = self._random.choices((".", "_", ""), weights=(58, 14, 28), k=1)[0]
+        separator = self._random.choices((".", ""), weights=(66, 34), k=1)[0]
         first = self._random.choice(_FIRST_NAMES)
         last = self._random.choice(_LAST_NAMES)
         noun = self._random.choice(_SOFT_NOUNS)
@@ -163,19 +163,19 @@ class UsernameGenerator:
         elif pattern == "noun":
             base = f"{first}{separator}{noun}"
         elif pattern == "name_noun":
-            base = f"{first}{separator}{last}{self._random.choice(('', '', '.', '_'))}{noun}"
+            base = f"{first}{separator}{last}{self._random.choice(('', '', '.'))}{noun}"
         else:
             base = f"{first}{separator}{last}"
 
         if self._random.random() < 0.18:
             suffix = str(self._random.choice((7, 11, 12, 14, 17, 19, 21, 23, 24, 27, 31, 42, 64, 81)))
-            base = f"{base}{self._random.choice(('', '', '.', '_'))}{suffix}"
+            base = f"{base}{self._random.choice(('', '', '.'))}{suffix}"
 
         return self._clean(base)
 
     @staticmethod
     def _clean(value: str) -> str:
-        value = value.strip().lower()
-        value = re.sub(r"[^a-z0-9._-]+", "", value)
-        value = re.sub(r"[._-]{2,}", ".", value)
-        return value.strip("._-")
+        value = value.strip().lower().replace("_", ".")
+        value = re.sub(r"[^a-z0-9.-]+", "", value)
+        value = re.sub(r"[.-]{2,}", ".", value)
+        return value.strip(".-")
