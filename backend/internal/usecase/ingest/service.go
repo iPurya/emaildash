@@ -5,6 +5,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -16,6 +17,8 @@ import (
 )
 
 const webhookSecretKey = "webhook_signing_secret"
+
+var ErrUnauthorized = errors.New("webhook authentication failed")
 
 type Store interface {
 	GetSecret(ctx context.Context, key string) (string, error)
@@ -39,7 +42,7 @@ func (s Service) Ingest(ctx context.Context, timestamp, signature string, rawBod
 		return domain.Email{}, err
 	}
 	if err := s.signer.Verify([]byte(secret), timestamp, signature, rawBody, 5*time.Minute); err != nil {
-		return domain.Email{}, err
+		return domain.Email{}, fmt.Errorf("%w: %v", ErrUnauthorized, err)
 	}
 	if payload.Provider == "" {
 		payload.Provider = "cloudflare"

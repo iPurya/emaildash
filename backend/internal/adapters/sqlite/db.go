@@ -32,8 +32,15 @@ func NewStore(dbPath string) (*Store, error) {
 	if err != nil {
 		return nil, fmt.Errorf("open sqlite: %w", err)
 	}
+	db.SetMaxOpenConns(1)
+	db.SetMaxIdleConns(1)
 	store := &Store{db: db}
+	if err := store.configureConnection(); err != nil {
+		_ = db.Close()
+		return nil, err
+	}
 	if err := store.applyMigrations(); err != nil {
+		_ = db.Close()
 		return nil, err
 	}
 	return store, nil
@@ -41,6 +48,21 @@ func NewStore(dbPath string) (*Store, error) {
 
 func (s *Store) Close() error {
 	return s.db.Close()
+}
+
+func (s *Store) configureConnection() error {
+	pragmas := []string{
+		`PRAGMA busy_timeout = 5000`,
+		`PRAGMA journal_mode = WAL`,
+		`PRAGMA synchronous = NORMAL`,
+		`PRAGMA foreign_keys = ON`,
+	}
+	for _, pragma := range pragmas {
+		if _, err := s.db.Exec(pragma); err != nil {
+			return fmt.Errorf("configure sqlite %q: %w", pragma, err)
+		}
+	}
+	return nil
 }
 
 func (s *Store) applyMigrations() error {
@@ -246,6 +268,9 @@ func (s *Store) ListZones(ctx context.Context) ([]domain.CloudflareZone, error) 
 		zone.UpdatedAt, _ = time.Parse(time.RFC3339, updatedAt)
 		zones = append(zones, zone)
 	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate zones: %w", err)
+	}
 	return zones, nil
 }
 
@@ -278,7 +303,7 @@ func (s *Store) InsertEmail(ctx context.Context, email domain.Email) (domain.Ema
 	}
 	affected, _ := result.RowsAffected()
 	if affected == 0 {
-		row := s.db.QueryRowContext(ctx, `SELECT id, created_at FROM emails WHERE provider = ? AND provider_message_id = ?`, email.Provider, email.ProviderMessageID)
+		row := tx.QueryRowContext(ctx, `SELECT id, created_at FROM emails WHERE provider = ? AND provider_message_id = ?`, email.Provider, email.ProviderMessageID)
 		var existingID int64
 		var createdAt string
 		if err := row.Scan(&existingID, &createdAt); err != nil {
@@ -286,7 +311,7 @@ func (s *Store) InsertEmail(ctx context.Context, email domain.Email) (domain.Ema
 		}
 		email.ID = existingID
 		email.CreatedAt, _ = time.Parse(time.RFC3339, createdAt)
-		return email, nil
+		return email, tx.Commit()
 	}
 	emailID, _ := result.LastInsertId()
 	email.ID = emailID
@@ -341,13 +366,23 @@ func (s *Store) ListEmails(ctx context.Context, filter domain.EmailListFilter) (
 		return nil, fmt.Errorf("query emails: %w", err)
 	}
 	defer rows.Close()
-	results := make([]domain.Email, 0)
+	ids := make([]int64, 0)
 	for rows.Next() {
 		email, err := scanEmail(rows)
 		if err != nil {
 			return nil, err
 		}
-		full, err := s.GetEmail(ctx, email.ID)
+		ids = append(ids, email.ID)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate emails: %w", err)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, fmt.Errorf("close email rows: %w", err)
+	}
+	results := make([]domain.Email, 0, len(ids))
+	for _, id := range ids {
+		full, err := s.GetEmail(ctx, id)
 		if err != nil {
 			return nil, err
 		}
@@ -374,6 +409,9 @@ func (s *Store) GetEmail(ctx context.Context, id int64) (domain.Email, error) {
 		}
 		email.Recipients = append(email.Recipients, recipient)
 	}
+	if err := recipientRows.Err(); err != nil {
+		return domain.Email{}, fmt.Errorf("iterate recipients: %w", err)
+	}
 	attachmentRows, err := s.db.QueryContext(ctx, `SELECT id, filename, content_type, size, sha256, storage_path FROM attachments WHERE email_id = ? ORDER BY id`, id)
 	if err != nil {
 		return domain.Email{}, fmt.Errorf("query attachments: %w", err)
@@ -385,6 +423,9 @@ func (s *Store) GetEmail(ctx context.Context, id int64) (domain.Email, error) {
 			return domain.Email{}, fmt.Errorf("scan attachment: %w", err)
 		}
 		email.Attachments = append(email.Attachments, attachment)
+	}
+	if err := attachmentRows.Err(); err != nil {
+		return domain.Email{}, fmt.Errorf("iterate attachments: %w", err)
 	}
 	return email, nil
 }
@@ -423,6 +464,9 @@ func (s *Store) ListRecipients(ctx context.Context) ([]domain.RecipientSummary, 
 			summary.LatestReceived = &parsed
 		}
 		results = append(results, summary)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("iterate recipient summaries: %w", err)
 	}
 	return results, nil
 }

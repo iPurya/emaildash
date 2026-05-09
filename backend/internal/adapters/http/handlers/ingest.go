@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 
@@ -31,7 +32,11 @@ func (h IngestHandler) Receive(c *gin.Context) {
 	}
 	email, err := h.service.Ingest(c.Request.Context(), c.GetHeader("X-Emaildash-Timestamp"), c.GetHeader("X-Emaildash-Signature"), body, payload)
 	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		if errors.Is(err, ingest.ErrUnauthorized) {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			return
+		}
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "email ingest failed"})
 		return
 	}
 	c.JSON(http.StatusCreated, email)

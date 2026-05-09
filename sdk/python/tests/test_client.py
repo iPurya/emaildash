@@ -1,5 +1,5 @@
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from emaildash import EmailDash, NoReadyDomainError
@@ -45,6 +45,10 @@ class FakeEmailDash(EmailDash):
                 else [{"domain": domain, "ready": True, "reason": "ready"} for domain in self.ready_domains],
             }
         if path == "/api/emails":
+            received_at = "2026-05-09T10:00:03Z"
+            if query and query.get("received_after"):
+                requested_after = datetime.fromisoformat(str(query["received_after"]).replace("Z", "+00:00"))
+                received_at = (requested_after + timedelta(seconds=3)).strftime("%Y-%m-%dT%H:%M:%SZ")
             return {
                 "emails": [
                     {
@@ -58,8 +62,8 @@ class FakeEmailDash(EmailDash):
                         "htmlBody": "",
                         "headers": {},
                         "rawSize": 42,
-                        "receivedAt": "2026-05-09T10:00:03Z",
-                        "createdAt": "2026-05-09T10:00:04Z",
+                        "receivedAt": received_at,
+                        "createdAt": received_at,
                         "attachments": [],
                     }
                 ]
