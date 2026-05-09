@@ -64,6 +64,18 @@ type CloudflareStatus struct {
 	CatchAllDestination string `json:"catchAllDestination"`
 }
 
+type ReceivingDomain struct {
+	Domain              string `json:"domain"`
+	ZoneID              string `json:"zoneId"`
+	Ready               bool   `json:"ready"`
+	Reason              string `json:"reason"`
+	EmailRoutingEnabled bool   `json:"emailRoutingEnabled"`
+	EmailRoutingStatus  string `json:"emailRoutingStatus"`
+	CatchAllEnabled     bool   `json:"catchAllEnabled"`
+	CatchAllDestination string `json:"catchAllDestination"`
+	WorkerScriptName    string `json:"workerScriptName"`
+}
+
 type EmailListFilter struct {
 	Recipient  string `json:"recipient,omitempty"`
 	FromMail   string `json:"fromMail,omitempty"`

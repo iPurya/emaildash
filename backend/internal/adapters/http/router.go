@@ -70,6 +70,7 @@ func NewRouter(cfg config.Config, services Services) *gin.Engine {
 	authed := api.Group("")
 	authed.Use(middleware.RequireAuth(cfg.CookieName, services.AuthSvc))
 	authed.GET("/auth/me", services.Auth.Me)
+	authed.GET("/domains", services.Cloudflare.Domains)
 	authed.GET("/cloudflare/zones", services.Cloudflare.ListZones)
 	authed.GET("/cloudflare/status", services.Cloudflare.Status)
 	authed.GET("/emails", services.Emails.List)

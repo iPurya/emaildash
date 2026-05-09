@@ -42,6 +42,21 @@ func (h CloudflareHandler) ListZones(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"zones": zones})
 }
 
+func (h CloudflareHandler) Domains(c *gin.Context) {
+	domains, err := h.service.ReceivingDomains(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	readyDomains := make([]string, 0, len(domains))
+	for _, item := range domains {
+		if item.Ready {
+			readyDomains = append(readyDomains, item.Domain)
+		}
+	}
+	c.JSON(http.StatusOK, gin.H{"domains": domains, "readyDomains": readyDomains})
+}
+
 func (h CloudflareHandler) Provision(c *gin.Context) {
 	status, err := h.service.ProvisionZone(c.Request.Context(), c.Param("zoneId"))
 	if err != nil {

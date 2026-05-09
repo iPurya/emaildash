@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/purya/emaildash/backend/internal/domain"
 	"github.com/purya/emaildash/backend/internal/ports"
@@ -156,8 +157,53 @@ func (s Service) Status(ctx context.Context) (domain.CloudflareStatus, error) {
 	return status, nil
 }
 
+func (s Service) ReceivingDomains(ctx context.Context) ([]domain.ReceivingDomain, error) {
+	status, err := s.Status(ctx)
+	if err != nil {
+		if isReceivingDomainNotConfigured(err) {
+			return []domain.ReceivingDomain{}, nil
+		}
+		return nil, err
+	}
+	ready := status.EmailRoutingEnabled && status.CatchAllEnabled && status.CatchAllDestination == status.WorkerScriptName
+	return []domain.ReceivingDomain{{
+		Domain:              status.ZoneName,
+		ZoneID:              status.ZoneID,
+		Ready:               ready,
+		Reason:              receivingDomainReason(status, ready),
+		EmailRoutingEnabled: status.EmailRoutingEnabled,
+		EmailRoutingStatus:  status.EmailRoutingStatus,
+		CatchAllEnabled:     status.CatchAllEnabled,
+		CatchAllDestination: status.CatchAllDestination,
+		WorkerScriptName:    status.WorkerScriptName,
+	}}, nil
+}
+
 func (s Service) WebhookSecret(ctx context.Context) (string, error) {
 	return s.ensureWebhookSecret(ctx)
+}
+
+func receivingDomainReason(status domain.CloudflareStatus, ready bool) string {
+	if ready {
+		return "ready"
+	}
+	if !status.EmailRoutingEnabled {
+		return "email_routing_not_enabled"
+	}
+	if !status.CatchAllEnabled {
+		return "catch_all_not_enabled"
+	}
+	if status.CatchAllDestination != status.WorkerScriptName {
+		return "catch_all_not_pointing_to_worker"
+	}
+	return "not_ready"
+}
+
+func isReceivingDomainNotConfigured(err error) bool {
+	message := strings.ToLower(err.Error())
+	return strings.Contains(message, "cloudflare email not configured") ||
+		strings.Contains(message, "cloudflare api key not configured") ||
+		strings.Contains(message, "selected zone not found")
 }
 
 func (s Service) credentials(ctx context.Context) (domain.CloudflareCredentials, error) {

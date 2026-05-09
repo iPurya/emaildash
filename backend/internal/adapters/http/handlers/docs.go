@@ -44,6 +44,7 @@ func apiDocsData(baseURL string) ui.APIDocsData {
 		Workflow: []ui.DocsStep{
 			{Title: "Check readiness", Body: "Call GET /api/setup/status. If initialized is false, setup must be completed before protected endpoints can be used."},
 			{Title: "Authenticate", Body: "Send Authorization: Bearer YOUR_API_KEY on protected endpoints. X-API-Key and ?api_key= are accepted for compatibility."},
+			{Title: "Find receiving domains", Body: "Call GET /api/domains. Use readyDomains for the simple list of domains configured and ready to receive email."},
 			{Title: "Discover inboxes", Body: "Call GET /api/recipients to find recipient addresses, unread counts, and latest message hints."},
 			{Title: "List messages", Body: "Call GET /api/emails with recipient, to_mail, from_mail, unread, and limit filters as needed."},
 			{Title: "Read one message", Body: "Call GET /api/emails/{id}. Prefer textBody for plain text processing; use htmlBody only when HTML context matters."},
@@ -94,6 +95,15 @@ func docsEndpoints(baseURL string) []ui.DocsEndpoint {
 			Request:     fmt.Sprintf(`curl %s %s/api/auth/me`, authHeader, baseURL),
 			Response:    `{"authenticated":true,"auth":"apiKey"}`,
 			AgentUse:    "Use this to validate that the API key is accepted before running a longer workflow.",
+		},
+		{
+			Method:      "GET",
+			Path:        "/api/domains",
+			Description: "Returns the configured email receiving domains and a simple readyDomains array.",
+			Auth:        "API key or cookie",
+			Request:     fmt.Sprintf(`curl %s %s/api/domains`, authHeader, baseURL),
+			Response:    `{"readyDomains":["example.com"],"domains":[{"domain":"example.com","zoneId":"ZONE_ID","ready":true,"reason":"ready","emailRoutingEnabled":true,"catchAllEnabled":true,"catchAllDestination":"emaildash-ingest","workerScriptName":"emaildash-ingest"}]}`,
+			AgentUse:    "Use this endpoint when the agent needs to know which domains are configured and ready to receive email. The fastest answer is readyDomains.",
 		},
 		{
 			Method:      "POST",
@@ -199,6 +209,17 @@ func docsEndpoints(baseURL string) []ui.DocsEndpoint {
 
 func docsSchemas() []ui.DocsSchema {
 	return []ui.DocsSchema{
+		{Name: "ReceivingDomain", Description: "Configured domain readiness returned by /api/domains.", Fields: []ui.DocsField{
+			{Name: "domain", Type: "string", Description: "Domain name that can receive email when ready is true."},
+			{Name: "zoneId", Type: "string", Description: "Cloudflare zone ID."},
+			{Name: "ready", Type: "boolean", Description: "True when Email Routing and catch-all worker routing are both active."},
+			{Name: "reason", Type: "string", Description: "Machine-readable readiness reason, such as ready or catch_all_not_enabled."},
+			{Name: "emailRoutingEnabled", Type: "boolean", Description: "Whether Cloudflare Email Routing appears enabled."},
+			{Name: "emailRoutingStatus", Type: "string", Description: "Cloudflare routing status as known by EmailDash."},
+			{Name: "catchAllEnabled", Type: "boolean", Description: "Whether catch-all routing is enabled."},
+			{Name: "catchAllDestination", Type: "string", Description: "Worker script that receives catch-all mail."},
+			{Name: "workerScriptName", Type: "string", Description: "EmailDash worker script expected to receive email."},
+		}},
 		{Name: "Email", Description: "Primary message object returned by /api/emails and /api/emails/{id}.", Fields: []ui.DocsField{
 			{Name: "id", Type: "integer", Description: "Stable numeric EmailDash ID."},
 			{Name: "provider", Type: "string", Description: "Provider that delivered the email, usually cloudflare."},
@@ -243,10 +264,11 @@ Content type for JSON requests: application/json
 Main workflow:
 1. GET /api/setup/status
 2. GET /api/auth/me with the API key to validate credentials
-3. GET /api/recipients to discover inbox addresses
-4. GET /api/emails?recipient=<address>&unread=true&limit=25 to find actionable messages
-5. GET /api/emails/{id} for full body and headers
-6. PATCH /api/emails/{id}/read only after successful processing
+3. GET /api/domains to list configured domains ready to receive email
+4. GET /api/recipients to discover inbox addresses
+5. GET /api/emails?recipient=<address>&unread=true&limit=25 to find actionable messages
+6. GET /api/emails/{id} for full body and headers
+7. PATCH /api/emails/{id}/read only after successful processing
 
 Rules:
 - Use only endpoints listed on this page or in /api/docs/openapi.json.
@@ -339,6 +361,18 @@ func openAPISpec(baseURL string) gin.H {
 				"description": "Returns whether the current cookie or API key is accepted.",
 				"security":    protectedSecurity,
 				"responses":   gin.H{"200": gin.H{"description": "Authenticated", "content": gin.H{"application/json": gin.H{"schema": gin.H{"$ref": "#/components/schemas/AuthMeResponse"}}}}, "401": errorResponse},
+			}},
+			"/api/domains": gin.H{"get": gin.H{
+				"summary":     "List ready receiving domains",
+				"description": "Returns domains configured for EmailDash email receiving. Use readyDomains for a simple string list of domains where ready is true.",
+				"security":    protectedSecurity,
+				"responses": gin.H{
+					"200": gin.H{"description": "Receiving domains", "content": gin.H{"application/json": gin.H{"schema": gin.H{"type": "object", "properties": gin.H{
+						"readyDomains": gin.H{"type": "array", "items": gin.H{"type": "string"}},
+						"domains":      gin.H{"type": "array", "items": gin.H{"$ref": "#/components/schemas/ReceivingDomain"}},
+					}}}}},
+					"401": errorResponse,
+				},
 			}},
 			"/api/recipients": gin.H{"get": gin.H{
 				"summary":     "List recipient summaries",
@@ -459,6 +493,17 @@ func openAPISchemas() gin.H {
 			"size":        gin.H{"type": "integer", "format": "int64"},
 			"sha256":      gin.H{"type": "string"},
 			"storagePath": gin.H{"type": "string", "description": "Internal path may be omitted from API responses."},
+		}},
+		"ReceivingDomain": gin.H{"type": "object", "properties": gin.H{
+			"domain":              gin.H{"type": "string"},
+			"zoneId":              gin.H{"type": "string"},
+			"ready":               gin.H{"type": "boolean"},
+			"reason":              gin.H{"type": "string"},
+			"emailRoutingEnabled": gin.H{"type": "boolean"},
+			"emailRoutingStatus":  gin.H{"type": "string"},
+			"catchAllEnabled":     gin.H{"type": "boolean"},
+			"catchAllDestination": gin.H{"type": "string"},
+			"workerScriptName":    gin.H{"type": "string"},
 		}},
 		"Email": gin.H{"type": "object", "properties": gin.H{
 			"id":                gin.H{"type": "integer", "format": "int64"},
