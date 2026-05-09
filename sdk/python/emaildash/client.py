@@ -15,6 +15,9 @@ from .exceptions import EmailDashAuthError, EmailDashHTTPError, EmailTimeoutErro
 from .models import Email, IssuedAddress, ReceivingDomain, RecipientSummary, format_datetime, parse_datetime
 
 
+DEFAULT_DOMAIN_CACHE_TTL = 3600.0
+
+
 class EmailDash:
     def __init__(
         self,
@@ -24,12 +27,16 @@ class EmailDash:
         timeout: float = 15.0,
         username_generator: UsernameGenerator | None = None,
         domain_blacklist: Iterable[str] | str | None = None,
+        domain_cache_ttl: float = DEFAULT_DOMAIN_CACHE_TTL,
     ) -> None:
         self.base_url = base_url.rstrip("/")
         self.api_key = api_key
         self.timeout = timeout
         self.username_generator = username_generator or UsernameGenerator()
         self._domain_blacklist = _normalize_domains(domain_blacklist)
+        self.domain_cache_ttl = _normalize_cache_ttl(domain_cache_ttl)
+        self._ready_domains_cache: list[str] | None = None
+        self._ready_domains_cache_expires_at = 0.0
         self._issued_at: dict[str, datetime] = {}
 
     @classmethod
@@ -38,6 +45,7 @@ class EmailDash:
             base_url=os.environ["EMAILDASH_URL"],
             api_key=os.environ.get("EMAILDASH_API_KEY"),
             domain_blacklist=_env_domain_blacklist(),
+            domain_cache_ttl=_env_domain_cache_ttl(),
         )
 
     @property
@@ -53,13 +61,21 @@ class EmailDash:
     def clear_domain_blacklist(self) -> None:
         self._domain_blacklist.clear()
 
+    def clear_domain_cache(self) -> None:
+        self._ready_domains_cache = None
+        self._ready_domains_cache_expires_at = 0.0
+
     def domain_status(self) -> list[ReceivingDomain]:
         data = self._request("GET", "/api/domains")
         return _domain_statuses(data)
 
-    def available_domains(self, *, exclude_domains: Iterable[str] | str | None = None) -> list[str]:
-        data = self._request("GET", "/api/domains")
-        return _filter_domains(_ready_domains(data), self._blocked_domains(exclude_domains))
+    def available_domains(
+        self,
+        *,
+        exclude_domains: Iterable[str] | str | None = None,
+        refresh: bool = False,
+    ) -> list[str]:
+        return _filter_domains(self._load_ready_domains(refresh=refresh), self._blocked_domains(exclude_domains))
 
     def new_username(self, prefix: str | None = None) -> str:
         return self.username_generator.generate(prefix=prefix)
@@ -71,8 +87,9 @@ class EmailDash:
         username: str | None = None,
         prefix: str | None = None,
         exclude_domains: Iterable[str] | str | None = None,
+        refresh_domains: bool = False,
     ) -> IssuedAddress:
-        ready_domains = self.available_domains(exclude_domains=exclude_domains)
+        ready_domains = self.available_domains(exclude_domains=exclude_domains, refresh=refresh_domains)
         if domain is None:
             if not ready_domains:
                 raise NoReadyDomainError("no domains are ready to receive email")
@@ -104,12 +121,14 @@ class EmailDash:
         username: str | None = None,
         prefix: str | None = None,
         exclude_domains: Iterable[str] | str | None = None,
+        refresh_domains: bool = False,
     ) -> str:
         return self.issue_address(
             domain=domain,
             username=username,
             prefix=prefix,
             exclude_domains=exclude_domains,
+            refresh_domains=refresh_domains,
         ).address
 
     def list_recipients(self) -> list[RecipientSummary]:
@@ -215,7 +234,7 @@ class EmailDash:
         body = None
         headers = {
             "Accept": "application/json",
-            "User-Agent": "emaildash-python/0.1.1",
+            "User-Agent": "emaildash-python/0.1.2",
         }
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
@@ -243,6 +262,26 @@ class EmailDash:
         blocked = set(self._domain_blacklist)
         blocked.update(_normalize_domains(extra_domains))
         return blocked
+
+    def _load_ready_domains(self, *, refresh: bool = False) -> list[str]:
+        now = time.monotonic()
+        if (
+            not refresh
+            and self.domain_cache_ttl > 0
+            and self._ready_domains_cache is not None
+            and now < self._ready_domains_cache_expires_at
+        ):
+            return list(self._ready_domains_cache)
+
+        query = {"refresh": True} if refresh else None
+        data = self._request("GET", "/api/domains", query=query)
+        ready_domains = _ready_domains(data)
+        if self.domain_cache_ttl > 0:
+            self._ready_domains_cache = list(ready_domains)
+            self._ready_domains_cache_expires_at = now + self.domain_cache_ttl
+        else:
+            self.clear_domain_cache()
+        return ready_domains
 
 
 def _query_value(value: Any) -> str:
@@ -314,6 +353,23 @@ def _normalize_domain(domain: str) -> str:
 def _env_domain_blacklist() -> set[str]:
     value = os.environ.get("EMAILDASH_DOMAIN_BLACKLIST", "")
     return _normalize_domains(item.strip() for item in value.split(","))
+
+
+def _env_domain_cache_ttl() -> float:
+    value = os.environ.get("EMAILDASH_DOMAIN_CACHE_TTL_SECONDS", "")
+    if not value.strip():
+        return DEFAULT_DOMAIN_CACHE_TTL
+    try:
+        return _normalize_cache_ttl(float(value))
+    except ValueError as error:
+        raise ValueError("EMAILDASH_DOMAIN_CACHE_TTL_SECONDS must be a non-negative number") from error
+
+
+def _normalize_cache_ttl(value: float) -> float:
+    value = float(value)
+    if value < 0:
+        raise ValueError("domain_cache_ttl must be non-negative")
+    return value
 
 
 def secrets_choice(values: list[str]) -> str:

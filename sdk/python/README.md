@@ -13,13 +13,13 @@ pip install "emaildash @ git+https://github.com/iPurya/emaildash.git#subdirector
 Pinned to the latest SDK tag:
 
 ```bash
-pip install "emaildash @ git+https://github.com/iPurya/emaildash.git@sdk-python-v0.1.1#subdirectory=sdk/python"
+pip install "emaildash @ git+https://github.com/iPurya/emaildash.git@sdk-python-v0.1.2#subdirectory=sdk/python"
 ```
 
 Upgrade an existing GitHub install:
 
 ```bash
-pip install --upgrade --force-reinstall "emaildash @ git+https://github.com/iPurya/emaildash.git@sdk-python-v0.1.1#subdirectory=sdk/python"
+pip install --upgrade --force-reinstall "emaildash @ git+https://github.com/iPurya/emaildash.git@sdk-python-v0.1.2#subdirectory=sdk/python"
 ```
 
 ## Quick Start
@@ -63,12 +63,24 @@ Optional domain blacklist:
 export EMAILDASH_DOMAIN_BLACKLIST="old-domain.com,testing-only.com"
 ```
 
+Optional ready-domain cache TTL, in seconds. The default is `3600` so repeated address generation does not wait on Cloudflare/domain checks.
+
+```bash
+export EMAILDASH_DOMAIN_CACHE_TTL_SECONDS="3600"
+```
+
 ## Common Tasks
 
 List domains ready to receive email:
 
 ```python
 domains = client.available_domains()
+```
+
+The SDK and API both cache this lookup for one hour by default. Refresh it manually after changing domain configuration:
+
+```python
+domains = client.available_domains(refresh=True)
 ```
 
 List ready domains while excluding specific domains for this run:
@@ -99,6 +111,12 @@ Exclude a domain for only one generated address:
 
 ```python
 address = client.new_address(exclude_domains=["marketing-domain.com"])
+```
+
+Force a domain refresh before issuing an address:
+
+```python
+address = client.new_address(refresh_domains=True)
 ```
 
 Issue an address on a specific domain:

@@ -67,6 +67,10 @@ class FakeEmailDash(EmailDash):
         raise AssertionError(f"unexpected request: {method} {path}")
 
 
+def _domain_call_count(client: FakeEmailDash) -> int:
+    return len([call for call in client.calls if call[1] == "/api/domains"])
+
+
 class ClientTest(unittest.TestCase):
     def test_issues_address_and_uses_received_after_for_latest_email(self) -> None:
         client = FakeEmailDash()
@@ -121,6 +125,39 @@ class ClientTest(unittest.TestCase):
         )
 
         self.assertEqual(client.available_domains(), ["example.com"])
+
+    def test_available_domains_uses_cache_until_refresh(self) -> None:
+        client = FakeEmailDash(ready_domains=["example.com"])
+
+        self.assertEqual(client.available_domains(), ["example.com"])
+        client.ready_domains = ["changed.com"]
+
+        self.assertEqual(client.available_domains(), ["example.com"])
+        self.assertEqual(_domain_call_count(client), 1)
+
+        self.assertEqual(client.available_domains(refresh=True), ["changed.com"])
+        self.assertEqual(client.new_address(), "nora.calder@changed.com")
+        self.assertEqual(_domain_call_count(client), 2)
+        self.assertEqual(client.calls[-1][2], {"refresh": True})
+
+    def test_new_address_can_refresh_domain_cache(self) -> None:
+        client = FakeEmailDash(ready_domains=["example.com"])
+
+        self.assertEqual(client.available_domains(), ["example.com"])
+        client.ready_domains = ["changed.com"]
+
+        self.assertEqual(client.new_address(refresh_domains=True), "nora.calder@changed.com")
+        self.assertEqual(_domain_call_count(client), 2)
+        self.assertEqual(client.calls[-1][2], {"refresh": True})
+
+    def test_domain_cache_can_be_disabled(self) -> None:
+        client = FakeEmailDash(ready_domains=["example.com"], domain_cache_ttl=0)
+
+        self.assertEqual(client.available_domains(), ["example.com"])
+        client.ready_domains = ["changed.com"]
+
+        self.assertEqual(client.available_domains(), ["changed.com"])
+        self.assertEqual(_domain_call_count(client), 2)
 
 
 if __name__ == "__main__":

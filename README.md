@@ -103,6 +103,7 @@ Protected REST endpoints accept the browser session cookie, `Authorization: Bear
 
 ```bash
 curl -H "Authorization: Bearer YOUR_API_KEY" "https://emaildash.example.com/api/domains"
+curl -H "Authorization: Bearer YOUR_API_KEY" "https://emaildash.example.com/api/domains?refresh=true"
 curl -H "Authorization: Bearer YOUR_API_KEY" "https://emaildash.example.com/api/emails"
 curl -H "Authorization: Bearer YOUR_API_KEY" "https://emaildash.example.com/api/emails?to_mail=test@example.com&received_after=2026-05-09T10:00:00Z"
 curl -H "Authorization: Bearer YOUR_API_KEY" "https://emaildash.example.com/api/recipients"
@@ -119,7 +120,7 @@ pip install "emaildash @ git+https://github.com/iPurya/emaildash.git#subdirector
 Install or upgrade the current SDK tag:
 
 ```bash
-pip install --upgrade --force-reinstall "emaildash @ git+https://github.com/iPurya/emaildash.git@sdk-python-v0.1.1#subdirectory=sdk/python"
+pip install --upgrade --force-reinstall "emaildash @ git+https://github.com/iPurya/emaildash.git@sdk-python-v0.1.2#subdirectory=sdk/python"
 ```
 
 Use it to issue a catch-all address and wait for the first email received after issue time:
@@ -142,6 +143,8 @@ email = client.wait_for_latest_email(address, timeout=180)
 print(email.subject)
 print(email.body)
 ```
+
+The API and SDK cache ready domains for one hour by default, so repeated `available_domains()` and `new_address()` calls do not repeatedly wait on Cloudflare/domain status checks. Use `client.available_domains(refresh=True)` or `/api/domains?refresh=true` after changing domain configuration.
 
 ## Configuration
 

@@ -99,11 +99,11 @@ func docsEndpoints(baseURL string) []ui.DocsEndpoint {
 		{
 			Method:      "GET",
 			Path:        "/api/domains",
-			Description: "Checks every cached Cloudflare zone and returns the domains ready to receive EmailDash mail.",
+			Description: "Returns domains ready to receive EmailDash mail. Results are cached for one hour; add ?refresh=true after changing domain configuration.",
 			Auth:        "API key or cookie",
 			Request:     fmt.Sprintf(`curl %s %s/api/domains`, authHeader, baseURL),
 			Response:    `{"readyDomains":["example.com"],"domains":[{"domain":"example.com","zoneId":"ZONE_ID","ready":true,"reason":"ready","emailRoutingEnabled":true,"catchAllEnabled":true,"catchAllDestination":"emaildash-ingest","workerScriptName":"emaildash-ingest"}]}`,
-			AgentUse:    "Use this endpoint when the agent needs to know which domains are configured and ready to receive email. The fastest answer is readyDomains.",
+			AgentUse:    "Use readyDomains as the fast simple list. Call /api/domains?refresh=true only when the operator just changed Cloudflare/domain setup.",
 		},
 		{
 			Method:      "POST",
@@ -265,7 +265,7 @@ Content type for JSON requests: application/json
 Main workflow:
 1. GET /api/setup/status
 2. GET /api/auth/me with the API key to validate credentials
-3. GET /api/domains to list configured domains ready to receive email
+3. GET /api/domains to list configured domains ready to receive email; use ?refresh=true only after domain setup changes
 4. GET /api/recipients to discover inbox addresses
 5. GET /api/emails?recipient=<address>&received_after=<issued_at>&limit=25 to find actionable messages
 6. GET /api/emails/{id} for full body and headers
@@ -365,8 +365,11 @@ func openAPISpec(baseURL string) gin.H {
 			}},
 			"/api/domains": gin.H{"get": gin.H{
 				"summary":     "List ready receiving domains",
-				"description": "Returns domains configured for EmailDash email receiving. Use readyDomains for a simple string list of domains where ready is true.",
+				"description": "Returns domains configured for EmailDash email receiving. Use readyDomains for a simple string list of domains where ready is true. Results are cached for one hour unless refresh=true is passed.",
 				"security":    protectedSecurity,
+				"parameters": []gin.H{
+					{"name": "refresh", "in": "query", "required": false, "schema": gin.H{"type": "boolean"}, "description": "Bypass the one-hour server cache and re-check Cloudflare/domain status."},
+				},
 				"responses": gin.H{
 					"200": gin.H{"description": "Receiving domains", "content": gin.H{"application/json": gin.H{"schema": gin.H{"type": "object", "properties": gin.H{
 						"readyDomains": gin.H{"type": "array", "items": gin.H{"type": "string"}},
