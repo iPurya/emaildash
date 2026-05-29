@@ -110,6 +110,50 @@ func TestDisableReceivingClearsCachedReadyDomain(t *testing.T) {
 	}
 }
 
+func TestReloadZonesPreservesExistingStateAndAddsNewZones(t *testing.T) {
+	ctx := context.Background()
+	store := newFakeStore()
+	store.zones = []domain.CloudflareZone{
+		{ID: "zone-1", Name: "purya.dev", AccountID: "account-1", Selected: true, Status: "configured"},
+		{ID: "zone-2", Name: "old.example", AccountID: "account-1", Status: "pending"},
+	}
+	client := newFakeCloudflareClient()
+	client.zones = []domain.CloudflareZone{
+		{ID: "zone-1", Name: "purya.dev", AccountID: "account-1"},
+		{ID: "zone-3", Name: "new.example", AccountID: "account-1"},
+	}
+	client.statuses["zone-1"] = readyStatus("emaildash-ingest")
+	service := newTestService(t, store, client)
+
+	if _, err := service.ReceivingDomains(ctx); err != nil {
+		t.Fatalf("ReceivingDomains returned error: %v", err)
+	}
+	if client.statusCalls != 2 {
+		t.Fatalf("expected first receiving domain lookup to check 2 cached zones, got %d calls", client.statusCalls)
+	}
+
+	zones, err := service.ReloadZones(ctx)
+	if err != nil {
+		t.Fatalf("ReloadZones returned error: %v", err)
+	}
+	if len(zones) != 2 {
+		t.Fatalf("expected 2 reloaded zones, got %d", len(zones))
+	}
+	if zones[0].ID != "zone-1" || !zones[0].Selected || zones[0].Status != "configured" {
+		t.Fatalf("expected existing zone state to be preserved, got %+v", zones[0])
+	}
+	if zones[1].ID != "zone-3" || zones[1].Status != "" || zones[1].Selected {
+		t.Fatalf("expected new zone to be added with empty state, got %+v", zones[1])
+	}
+
+	if _, err := service.ReceivingDomains(ctx); err != nil {
+		t.Fatalf("ReceivingDomains after reload returned error: %v", err)
+	}
+	if client.statusCalls != 4 {
+		t.Fatalf("expected receiving domain cache to be cleared after reload, got %d status calls", client.statusCalls)
+	}
+}
+
 func newTestService(t *testing.T, store *fakeStore, client *fakeCloudflareClient) Service {
 	t.Helper()
 	bundle, err := os.CreateTemp(t.TempDir(), "worker-*.js")
@@ -201,13 +245,14 @@ func newFakeCloudflareClient() *fakeCloudflareClient {
 
 type fakeCloudflareClient struct {
 	statuses      map[string]domain.CloudflareStatus
+	zones         []domain.CloudflareZone
 	statusCalls   int
 	workerUpdates int
 	disableCalls  int
 }
 
 func (c *fakeCloudflareClient) ListZones(_ context.Context, _ domain.CloudflareCredentials) ([]domain.CloudflareZone, error) {
-	return nil, nil
+	return append([]domain.CloudflareZone(nil), c.zones...), nil
 }
 
 func (c *fakeCloudflareClient) GetZone(_ context.Context, _ domain.CloudflareCredentials, zoneID string) (domain.CloudflareZone, error) {

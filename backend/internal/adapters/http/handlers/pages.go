@@ -184,6 +184,14 @@ func (h PagesHandler) CloudflareCredentialsSubmit(c *gin.Context) {
 	h.redirectDashboard(c, "cloudflare", "", 0, url.Values{"saved": {"1"}})
 }
 
+func (h PagesHandler) CloudflareReloadZonesSubmit(c *gin.Context) {
+	if _, err := h.cloudflare.ReloadZones(c.Request.Context()); err != nil {
+		h.redirectDashboard(c, "cloudflare", "", 0, url.Values{"error": {err.Error()}})
+		return
+	}
+	h.redirectDashboard(c, "cloudflare", "", 0, url.Values{"zones_reloaded": {"1"}})
+}
+
 func (h PagesHandler) CloudflareProvisionSubmit(c *gin.Context) {
 	h.CloudflareEnableReceivingSubmit(c)
 }
@@ -271,6 +279,8 @@ func (h PagesHandler) notice(c *gin.Context) string {
 		return "Password updated and API key rotated."
 	case c.Query("saved") == "1":
 		return "Cloudflare credentials saved."
+	case c.Query("zones_reloaded") == "1":
+		return "Cloudflare domains reloaded."
 	case c.Query("provisioned") == "1":
 		return "Cloudflare receiving enabled."
 	case c.Query("receiving_enabled") == "1":

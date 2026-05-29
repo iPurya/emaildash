@@ -1209,12 +1209,16 @@ templ CloudflareTab(data DashboardData) {
 		<section class="panel">
 			<div class="panel-header">
 				<h2 class="panel-title">Receiving summary</h2>
+				<form method="post" action={ templ.URL("/dashboard/cloudflare/reload-zones") }>
+					<button class="btn btn-outline-secondary btn-sm" type="submit">Reload domains</button>
+				</form>
 			</div>
 			<div class="panel-body">
 				<dl class="status-list">
 					<div class="status-row"><dt>Ready domains</dt><dd>{ ReadyDomainCount(data.ReceivingDomains) } / { len(data.ReceivingDomains) }</dd></div>
 					<div class="status-row"><dt>Worker</dt><dd>{ ReceivingWorkerName(data.ReceivingDomains) }</dd></div>
 					<div class="status-row"><dt>Source</dt><dd>Cloudflare live status</dd></div>
+					<div class="status-row"><dt>Reload</dt><dd>Fetches the latest zones from Cloudflare using saved credentials.</dd></div>
 				</dl>
 			</div>
 		</section>

@@ -43,6 +43,15 @@ func (h CloudflareHandler) ListZones(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"zones": zones})
 }
 
+func (h CloudflareHandler) ReloadZones(c *gin.Context) {
+	zones, err := h.service.ReloadZones(c.Request.Context())
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"zones": zones})
+}
+
 func (h CloudflareHandler) Domains(c *gin.Context) {
 	var (
 		domains []domain.ReceivingDomain

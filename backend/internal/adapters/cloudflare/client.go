@@ -29,21 +29,30 @@ func NewClient() Client {
 }
 
 func (c Client) ListZones(ctx context.Context, creds domain.CloudflareCredentials) ([]domain.CloudflareZone, error) {
-	var response struct {
-		Result []struct {
-			ID      string `json:"id"`
-			Name    string `json:"name"`
-			Account struct {
-				ID string `json:"id"`
-			} `json:"account"`
-		} `json:"result"`
-	}
-	if err := c.get(ctx, creds, "/zones?per_page=100", &response); err != nil {
-		return nil, err
-	}
-	zones := make([]domain.CloudflareZone, 0, len(response.Result))
-	for _, item := range response.Result {
-		zones = append(zones, domain.CloudflareZone{ID: item.ID, Name: item.Name, AccountID: item.Account.ID})
+	zones := []domain.CloudflareZone{}
+	for page := 1; ; page++ {
+		var response struct {
+			Result []struct {
+				ID      string `json:"id"`
+				Name    string `json:"name"`
+				Account struct {
+					ID string `json:"id"`
+				} `json:"account"`
+			} `json:"result"`
+			ResultInfo struct {
+				Page       int `json:"page"`
+				TotalPages int `json:"total_pages"`
+			} `json:"result_info"`
+		}
+		if err := c.get(ctx, creds, fmt.Sprintf("/zones?per_page=100&page=%d", page), &response); err != nil {
+			return nil, err
+		}
+		for _, item := range response.Result {
+			zones = append(zones, domain.CloudflareZone{ID: item.ID, Name: item.Name, AccountID: item.Account.ID})
+		}
+		if response.ResultInfo.TotalPages <= page || len(response.Result) == 0 {
+			break
+		}
 	}
 	return zones, nil
 }

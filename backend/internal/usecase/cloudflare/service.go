@@ -82,6 +82,37 @@ func (s Service) SaveCredentials(ctx context.Context, creds domain.CloudflareCre
 	return zones, nil
 }
 
+func (s Service) ReloadZones(ctx context.Context) ([]domain.CloudflareZone, error) {
+	creds, err := s.credentials(ctx)
+	if err != nil {
+		return nil, err
+	}
+	zones, err := s.client.ListZones(ctx, creds)
+	if err != nil {
+		return nil, err
+	}
+	existing, err := s.store.ListZones(ctx)
+	if err != nil {
+		return nil, err
+	}
+	existingByID := make(map[string]domain.CloudflareZone, len(existing))
+	for _, zone := range existing {
+		existingByID[zone.ID] = zone
+	}
+	for index := range zones {
+		if current, ok := existingByID[zones[index].ID]; ok {
+			zones[index].Selected = current.Selected
+			zones[index].Status = current.Status
+		}
+	}
+	if err := s.store.ReplaceZones(ctx, zones); err != nil {
+		return nil, err
+	}
+	s.clearReceivingDomainsCache()
+	_ = s.store.InsertAuditLog(ctx, "cloudflare.zones.reloaded", map[string]any{"zoneCount": len(zones)})
+	return zones, nil
+}
+
 func (s Service) ListCachedZones(ctx context.Context) ([]domain.CloudflareZone, error) {
 	return s.store.ListZones(ctx)
 }
